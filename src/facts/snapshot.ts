@@ -17,6 +17,11 @@ export function canonicalJson(value: unknown): string {
         // undefined array items serialize as null, like JSON.stringify
         return `[${value.map((v) => (v === undefined ? "null" : canonicalJson(v))).join(",")}]`;
       }
+      const proto = Object.getPrototypeOf(value);
+      if (proto !== Object.prototype && proto !== null) {
+        // Date, Map, class instances would all serialize as {} and collide.
+        throw new Error("canonicalJson: only plain objects and arrays are supported");
+      }
       const o = value as Record<string, unknown>;
       const parts = Object.keys(o)
         .sort()

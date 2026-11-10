@@ -3,7 +3,8 @@
 import type { EvaluationResult, PriceLine, PriceResult, Rule } from "./types";
 
 export function price(rule: Rule, result: EvaluationResult, listCents: number): PriceResult {
-  if (!Number.isInteger(listCents) || listCents <= 0) {
+  // Upper bound keeps listCents * 100 well inside the safe-integer range.
+  if (!Number.isInteger(listCents) || listCents <= 0 || listCents > 100_000_000) {
     throw new Error(`listCents must be a positive integer, got ${listCents}`);
   }
   const percentOf = (id: string) => rule.tiers.find((t) => t.id === id)?.discountPercent;

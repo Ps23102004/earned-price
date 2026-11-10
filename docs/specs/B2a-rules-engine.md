@@ -112,3 +112,7 @@ Example: tier `{id:"t1", label:"core contributor", discountPercent:50, condition
 
 ## Out of scope
 GitHub fetching, database, PayPal HTTP, AI calls, UI, rule storage, the loophole hunt.
+
+## Changes after review
+- `price` throws if `listCents > 100_000_000` (keeps `listCents * pct` in the safe-integer range).
+- `canonicalJson` throws on non-plain objects (Date, Map, class instances serialize as `{}` and would collide).
