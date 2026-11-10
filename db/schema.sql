@@ -64,3 +64,18 @@ create table if not exists refunds (
 );
 
 create unique index if not exists refunds_one_live_per_order on refunds(order_id) where state <> 'failed';
+
+-- Added after the first migration, so applied with ALTER guarded for idempotency (docs/ARCHITECTURE.md section 3.5 states).
+do $$
+begin
+  if not exists (select 1 from pg_constraint where conrelid = 'orders'::regclass and conname = 'orders_earned_ck') then
+    alter table orders add constraint orders_earned_ck check (earned_cents = list_cents - discount_cents and earned_cents >= 0);
+  end if;
+  if not exists (select 1 from pg_constraint where conrelid = 'orders'::regclass and conname = 'orders_state_ck') then
+    alter table orders add constraint orders_state_ck check (state in (
+      'quoted', 'created', 'approved', 'capturing', 'captured', 'refunding', 'refund_pending', 'refunded_partial',
+      'failed', 'cancelled', 'expired', 'mismatch'));
+  end if;
+end $$;
+
+create unique index if not exists orders_capture_uq on orders(paypal_capture_id) where paypal_capture_id is not null;

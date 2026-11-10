@@ -27,7 +27,8 @@ function cents(value: unknown): number | undefined {
   }
 }
 
-export function decideCaptureOutcome(input: CaptureInput, earnedCents: number): Decision {
+/** `expectedCustomId` is "<orderId>:<snapshotHash>"; a COMPLETED capture that carries another custom_id is not ours. */
+export function decideCaptureOutcome(input: CaptureInput, earnedCents: number, expectedCustomId: string): Decision {
   const keep = (message = PROCESSING): Decision => ({ nextState: "capturing", releaseRedemption: false, issueLicence: false, message });
   if (input.kind === "network_error") return keep();
 
@@ -44,11 +45,16 @@ export function decideCaptureOutcome(input: CaptureInput, earnedCents: number): 
       reason: typeof c.status_details?.reason === "string" ? c.status_details.reason : undefined,
     };
     switch (c.status) {
-      case "COMPLETED":
+      case "COMPLETED": {
+        const customId = c.custom_id ?? body?.purchase_units?.[0]?.custom_id;
+        if (customId !== expectedCustomId) {
+          return { nextState: "mismatch", capture, releaseRedemption: false, issueLicence: false, message: "PayPal's record does not belong to this order. No licence was issued." };
+        }
         if (capture.currency === "USD" && capture.amountCents === earnedCents) {
           return { nextState: "captured", capture, releaseRedemption: false, issueLicence: true, message: "Payment captured." };
         }
         return { nextState: "mismatch", capture, releaseRedemption: false, issueLicence: false, message: "PayPal captured an amount that differs from the quoted price. No licence was issued." };
+      }
       case "PENDING":
         return { ...keep(`Payment is pending at PayPal${capture.reason ? ` (${capture.reason})` : ""}; the licence is issued when it completes.`), capture };
       case "DECLINED":

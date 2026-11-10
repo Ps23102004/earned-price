@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { Chip, Notice, buttonClass, card, usd, type Tone } from "./_components/ui";
+import { captureLanding } from "./capture-landing";
 
 type Quote = { orderId: string; earnedCents: number };
 type Phase = "idle" | "quoting" | "quoted" | "cancelled" | "failed";
@@ -62,20 +63,18 @@ export function ShopClient({ clientId }: { clientId: string }) {
       router.push(`/receipt/${quote!.orderId}`);
       return;
     }
-    if (r.status >= 500) {
-      router.push(`/receipt/${quote!.orderId}`);
-      return;
-    }
-    if (!r.ok) {
-      setConfirming(false);
-      throw new Error(r.json.error ?? `HTTP ${r.status}`);
-    }
-    if (r.json.restart) {
+    if (r.ok && r.json.restart) {
       setConfirming(false);
       actions.restart();
       return;
     }
-    router.push(`/receipt/${r.json.orderId}`);
+    // Any reply naming an order (a 409 mismatch included) may mean money moved: show that receipt, never "not charged".
+    const receipt = captureLanding(r.status, r.json, quote!.orderId);
+    if (!receipt) {
+      setConfirming(false);
+      throw new Error(r.json.error ?? `HTTP ${r.status}`);
+    }
+    router.push(`/receipt/${receipt}`);
   }
 
   async function onCancel() {

@@ -1,10 +1,10 @@
-import { createHash } from "node:crypto";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import { paypal } from "@/paypal/client";
 import { getSession } from "@/session";
+import { verifyCustomId } from "@/store/custom-id";
 import { getOrderForSession, reconcileOrder } from "@/store/orders";
 import { CopyButton } from "../../_components/copy-button";
 import { Chip, Notice, buttonClass, card } from "../../_components/ui";
@@ -21,13 +21,16 @@ const money = (m: Json): string | null =>
 export default async function Receipt({ params }: PageProps<"/receipt/[id]">) {
   const { id } = await params;
 
-  const session = await getSession().catch(() => null);
+  const session = await getSession().catch((err) => {
+    console.error("receipt: no session:", err instanceof Error ? err.message : err);
+    return null;
+  });
   if (!session) notFound();
   const first = await getOrderForSession(id, session.sid);
   if (!first) notFound();
 
   // Settle anything still in flight, then reload so the state shown is the settled one.
-  await reconcileOrder(id).catch(() => undefined);
+  await reconcileOrder(id, "read").catch((err) => console.error("receipt: reconcile failed:", err instanceof Error ? err.message : err));
   const order = (await getOrderForSession(id, session.sid)) ?? first;
 
   const retry = (
@@ -81,11 +84,8 @@ function Details({ order, po, retry }: { order: Order; po: Json; retry: ReactNod
   const capture = unit?.payments?.captures?.[0];
   const customId: string | undefined = unit?.custom_id ?? capture?.custom_id;
 
-  // custom_id is "<orderId>:<snapshotHash>"; recompute the hash from the stored snapshot.
-  const sep = customId?.indexOf(":") ?? -1;
-  const paypalHash = customId && sep >= 0 ? customId.slice(sep + 1) : null;
-  const ourHash = createHash("sha256").update(order.snapshotJson, "utf8").digest("hex");
-  const hashOk = paypalHash !== null && paypalHash === ourHash;
+  // custom_id is "<orderId>:<snapshotHash>": it must name this order and carry the hash recomputed from the stored snapshot.
+  const hashOk = verifyCustomId(customId, order.id, order.snapshotJson);
 
   const showLicence = order.state === "captured" && hashOk && order.licenceKey;
 

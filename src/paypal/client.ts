@@ -12,9 +12,18 @@ export function assertSandbox(env: Record<string, string | undefined> = process.
 }
 
 let cached: { token: string; expiresAt: number } | undefined;
+let inflight: Promise<string> | undefined;
 
-async function accessToken(): Promise<string> {
-  if (cached && Date.now() < cached.expiresAt) return cached.token;
+/** One token request at a time: concurrent callers share the same promise. */
+function accessToken(): Promise<string> {
+  if (cached && Date.now() < cached.expiresAt) return Promise.resolve(cached.token);
+  inflight ??= fetchToken().finally(() => {
+    inflight = undefined;
+  });
+  return inflight;
+}
+
+async function fetchToken(): Promise<string> {
   const id = process.env.PAYPAL_CLIENT_ID;
   const secret = process.env.PAYPAL_CLIENT_SECRET;
   if (!id || !secret) throw new Error("PAYPAL_CLIENT_ID / PAYPAL_CLIENT_SECRET are not set");
