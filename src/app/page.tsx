@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import Link from "next/link";
 import { cookies } from "next/headers";
 import { connection } from "next/server";
 import { getIronSession } from "iron-session";
@@ -49,6 +50,11 @@ export default function Home() {
 
   return (
     <div className="flex flex-col gap-6">
+      <nav aria-label="Site" className="-mb-2 text-sm">
+        <Link href="/merchant" className="underline underline-offset-4">
+          Merchant view
+        </Link>
+      </nav>
       <Suspense fallback={<ShopClient clientId={clientId} identity={null} sampleDates={sampleDates} />}>
         <Shop />
       </Suspense>

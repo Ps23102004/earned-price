@@ -1,5 +1,5 @@
 // Price quotes (docs/ARCHITECTURE.md section 3.5, Quote): facts -> evaluate -> price -> one `quoted` order row.
-// The client never sends a price; the rule is always the shop's published default.
+// The client never sends a price; the rule is the shop's default, or the one this session published.
 
 import { randomUUID } from "node:crypto";
 import { fetchGithubFacts } from "../facts/github";
@@ -14,11 +14,11 @@ import { price } from "../rules/price";
 import { allow } from "../ratelimit";
 import { query } from "./db";
 import { createGuestQuote } from "./orders";
-import { ensureRule } from "./rules";
+import { ensureRule, loadRuleRow } from "./rules";
 
 const LIST_CENTS = 4900;
 type Result = { status: number; body: unknown };
-type Who = { sid: string; ip: string; github?: { id: number; login: string }; sample?: SampleName };
+type Who = { sid: string; ip: string; github?: { id: number; login: string }; sample?: SampleName; activeRuleId?: string };
 
 export async function createQuote(who: Who): Promise<Result> {
   if (!who.sample && !who.github) {
@@ -29,6 +29,8 @@ export async function createQuote(who: Who): Promise<Result> {
     return { status: 200, body: { orderId, listCents: LIST_CENTS, earnedCents: LIST_CENTS, discountCents: 0, view, source: "guest", truncated: false } };
   }
 
+  const active = who.activeRuleId ? await loadRuleRow(who.activeRuleId) : undefined; // gone or invalid: the default
+  const rule = active?.rule ?? DEFAULT_RULE;
   let snapshot: GithubSnapshot;
   let buyerSource: string; // what buyer_key becomes if the quote earns a discount
   if (who.sample) {
@@ -42,7 +44,7 @@ export async function createQuote(who: Who): Promise<Result> {
     try {
       const token = process.env.GITHUB_SERVER_TOKEN;
       if (!token) throw new Error("GITHUB_SERVER_TOKEN is not set");
-      const facts = await fetchGithubFacts(github.login, DEFAULT_RULE, { token });
+      const facts = await fetchGithubFacts(github.login, rule, { token });
       if (facts.databaseId !== github.id) return { status: 409, body: { error: "account changed" } };
       snapshot = facts.snapshot;
     } catch (err) {
@@ -52,10 +54,10 @@ export async function createQuote(who: Who): Promise<Result> {
     buyerSource = `github:${github.id}`;
   }
 
-  const result = evaluate(DEFAULT_RULE, snapshot, snapshot.recordedAt ? new Date(snapshot.recordedAt) : undefined);
-  const p = price(DEFAULT_RULE, result, LIST_CENTS);
-  const view = explain(DEFAULT_RULE, result, p);
-  const rule = await ensureRule("default");
+  const result = evaluate(rule, snapshot, snapshot.recordedAt ? new Date(snapshot.recordedAt) : undefined);
+  const p = price(rule, result, LIST_CENTS);
+  const view = explain(rule, result, p);
+  const ruleRow = active ?? (await ensureRule("default"));
   const json = canonicalJson(snapshot);
   const hash = snapshotHash(snapshot);
   const buyerKey = p.discountCents > 0 ? buyerSource : null; // a zero-discount purchase is a guest order
@@ -65,7 +67,7 @@ export async function createQuote(who: Who): Promise<Result> {
     `select id from orders where session_id = $1 and state = 'quoted' and expires_at > now() + interval '5 minutes'
        and snapshot_hash = $2 and rule_id = $3 and rule_version = $4 and buyer_key is not distinct from $5
      order by created_at desc limit 1`,
-    [who.sid, hash, rule.id, rule.version, buyerKey],
+    [who.sid, hash, ruleRow.id, ruleRow.version, buyerKey],
   );
   let orderId = open.rows[0]?.id;
   if (!orderId) {
@@ -74,7 +76,7 @@ export async function createQuote(who: Who): Promise<Result> {
       `insert into orders (id, state, rule_id, rule_version, session_id, buyer_key, snapshot_json, snapshot_hash,
          list_cents, earned_cents, discount_cents, expires_at)
        values ($1, 'quoted', $2, $3, $4, $5, $6, $7, $8, $9, $10, now() + interval '15 minutes')`,
-      [orderId, rule.id, rule.version, who.sid, buyerKey, json, hash, LIST_CENTS, p.earnedCents, p.discountCents],
+      [orderId, ruleRow.id, ruleRow.version, who.sid, buyerKey, json, hash, LIST_CENTS, p.earnedCents, p.discountCents],
     );
   }
   return {

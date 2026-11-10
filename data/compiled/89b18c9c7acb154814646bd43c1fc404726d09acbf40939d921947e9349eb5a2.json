@@ -1,0 +1,50 @@
+{
+  "sentence": "half off for anyone with a PR merged into a 1,000-star repo this year; 20% off for any merged PR; 10% off for accounts older than 3 years",
+  "rule": {
+    "version": 1,
+    "tiers": [
+      {
+        "id": "t1",
+        "label": "1000-star PR",
+        "discountPercent": 50,
+        "conditions": [
+          {
+            "field": "max_repo_stars_merged_pr",
+            "op": "gte",
+            "value": 1000,
+            "pr": {
+              "mergedSince": "year_start"
+            }
+          }
+        ]
+      },
+      {
+        "id": "t2",
+        "label": "Any merged PR",
+        "discountPercent": 20,
+        "conditions": [
+          {
+            "field": "merged_prs",
+            "op": "gte",
+            "value": 1
+          }
+        ]
+      },
+      {
+        "id": "t3",
+        "label": "Old Account",
+        "discountPercent": 10,
+        "conditions": [
+          {
+            "field": "account_age_days",
+            "op": "gte",
+            "value": 1095
+          }
+        ]
+      }
+    ]
+  },
+  "readback": "50% off (1000-star PR) if the account has a merged pull request into a repository with at least 1,000 stars (merged this calendar year).\n20% off (Any merged PR) if the account has at least 1 merged pull request.\n10% off (Old Account) if the GitHub account is at least 1,095 days old.\nOnly the single best matching tier applies.",
+  "model": "gemma4:12b-mlx",
+  "compiledAt": "2026-11-10T21:32:41.000Z"
+}

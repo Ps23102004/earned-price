@@ -105,3 +105,8 @@ export function evaluate(rule: Rule, snapshot: FactSnapshot, now?: Date): Evalua
   }
   return { now: clock.toISOString(), tiers, ...(best ? { appliedTierId: best.tierId } : {}) };
 }
+
+/** The merged PRs that pass a condition's filters (deduplicated), for callers that need to see why a tier passed. */
+export function qualifyingPrs(c: Condition, snapshot: GithubSnapshot, now: Date): MergedPr[] {
+  return dedupe(snapshot.mergedPrs).filter((p) => passesFilters(p, c.pr, snapshot.user, now));
+}

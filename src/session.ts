@@ -12,6 +12,8 @@ export type SessionData = {
   hasOrders?: boolean;
   github?: { id: number; login: string; avatarUrl: string };
   sample?: SampleName;
+  /** The merchant rule published to this browser's shop only; absent means the default rule. */
+  activeRuleId?: string;
 };
 export type Session = IronSession<SessionData> & { sid: string };
 export type ApiResult = { status: number; body: unknown };

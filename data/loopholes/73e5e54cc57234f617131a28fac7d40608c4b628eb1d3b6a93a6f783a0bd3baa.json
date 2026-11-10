@@ -1,0 +1,3718 @@
+{
+  "computedAt": "2026-11-10T23:11:36.493Z",
+  "strategies": [
+    {
+      "spiritCheck": "tiny_pr",
+      "title": "The Typo Fix",
+      "why": "A user can gain the 20% discount by fixing a single typo in a popular repository.",
+      "tierId": "t20"
+    },
+    {
+      "spiritCheck": "own_repo",
+      "title": "Self-Merging",
+      "why": "A user can create a repository and merge a pull request into it to instantly qualify for the 20% discount.",
+      "tierId": "t20"
+    },
+    {
+      "spiritCheck": "fork_repo",
+      "title": "Forked Star Farming",
+      "why": "A user can fork a popular repository and merge a trivial change to hit the 1,000 star requirement.",
+      "tierId": "t50"
+    },
+    {
+      "spiritCheck": "young_account",
+      "title": "The Quick Contributor",
+      "why": "A user can create a new account and immediately contribute to a large project to get the 50% discount.",
+      "tierId": "t50"
+    }
+  ],
+  "findings": [
+    {
+      "strategy": {
+        "spiritCheck": "own_repo",
+        "title": "Self-Merging",
+        "why": "A user can create a repository and merge a pull request into it to instantly qualify for the 20% discount.",
+        "tierId": "t20"
+      },
+      "examples": [
+        {
+          "label": "account A",
+          "facts": {
+            "accountAgeAtMergeDays": 125,
+            "linesChanged": 30,
+            "repoStars": 0,
+            "ownerIsAuthor": true,
+            "isFork": false
+          },
+          "snapshot": {
+            "version": 1,
+            "kind": "github",
+            "source": "sample",
+            "fetchedAt": "2026-11-10T23:11:36.493Z",
+            "recordedAt": "2026-11-15T00:00:00.000Z",
+            "label": "account A",
+            "user": {
+              "createdAt": "2026-06-15T00:00:00.000Z",
+              "followers": 0,
+              "publicRepos": 6,
+              "commitContributionsLastYear": 3000
+            },
+            "mergedPrs": [
+              {
+                "mergedAt": "2026-11-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-11-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-11-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-11-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-11-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-11-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-11-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-11-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-11-15T00:00:00.000Z",
+                "additions": 3000,
+                "deletions": 0,
+                "changedFiles": 30,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-11-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-11-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 2,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 2,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 30,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 30,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 30,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 3000,
+                "deletions": 0,
+                "changedFiles": 30,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 30,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 30,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 6,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 12500,
+                "deletions": 0,
+                "changedFiles": 125,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 3000,
+                "deletions": 0,
+                "changedFiles": 30,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 3000,
+                "deletions": 0,
+                "changedFiles": 30,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 3000,
+                "deletions": 0,
+                "changedFiles": 30,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 30,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 12500,
+                "deletions": 0,
+                "changedFiles": 125,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 6,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 2,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 6,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 3000,
+                "deletions": 0,
+                "changedFiles": 30,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 30,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 30,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 3000,
+                "deletions": 0,
+                "changedFiles": 30,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 3000,
+                "deletions": 0,
+                "changedFiles": 125,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 12500,
+                "deletions": 0,
+                "changedFiles": 125,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 3000,
+                "deletions": 0,
+                "changedFiles": 30,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 12500,
+                "deletions": 0,
+                "changedFiles": 125,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 3000,
+                "deletions": 0,
+                "changedFiles": 30,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 30,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 3000,
+                "deletions": 0,
+                "changedFiles": 125,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-10-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 2,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 6,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 2,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 6,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 6,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 6,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 6,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 6,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 2,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 6,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 30,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 3000,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 6,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-09-15T00:00:00.000Z",
+                "additions": 3000,
+                "deletions": 0,
+                "changedFiles": 30,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 6,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 6,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 6,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 6,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 6,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 6,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 6,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 6,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 6,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 6,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 6,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-08-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-07-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-07-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-07-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-07-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 30,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-07-15T00:00:00.000Z",
+                "additions": 2,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-07-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-07-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-07-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-07-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-07-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-07-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-07-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-07-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-07-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-07-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-07-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-07-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-07-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-07-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-07-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-07-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-07-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-07-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-07-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-07-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-07-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-07-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-07-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-07-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-07-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-07-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-07-15T00:00:00.000Z",
+                "additions": 6,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-07-15T00:00:00.000Z",
+                "additions": 600,
+                "deletions": 0,
+                "changedFiles": 6,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-07-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-07-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-07-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-07-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-07-15T00:00:00.000Z",
+                "additions": 125,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-07-15T00:00:00.000Z",
+                "additions": 30,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              },
+              {
+                "mergedAt": "2026-07-15T00:00:00.000Z",
+                "additions": 6,
+                "deletions": 0,
+                "changedFiles": 2,
+                "repo": {
+                  "stars": 0,
+                  "ownerIsAuthor": true,
+                  "ownerType": "User",
+                  "isFork": false
+                }
+              }
+            ],
+            "truncated": true
+          }
+        }
+      ],
+      "tightening": {
+        "version": 1,
+        "tiers": [
+          {
+            "id": "t50",
+            "label": "OSS contributor",
+            "discountPercent": 50,
+            "conditions": [
+              {
+                "field": "max_repo_stars_merged_pr",
+                "op": "gte",
+                "value": 1000,
+                "pr": {
+                  "mergedSince": "year_start"
+                }
+              }
+            ]
+          },
+          {
+            "id": "t20",
+            "label": "Any merged PR",
+            "discountPercent": 20,
+            "conditions": [
+              {
+                "field": "merged_prs",
+                "op": "gte",
+                "value": 1,
+                "pr": {
+                  "excludeOwnRepos": true
+                }
+              }
+            ]
+          },
+          {
+            "id": "t10",
+            "label": "Veteran account",
+            "discountPercent": 10,
+            "conditions": [
+              {
+                "field": "account_age_days",
+                "op": "gte",
+                "value": 1095
+              }
+            ]
+          }
+        ]
+      },
+      "accepted": true,
+      "reasons": []
+    }
+  ],
+  "model": "gemma4:12b-mlx"
+}

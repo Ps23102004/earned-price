@@ -22,7 +22,7 @@ export function POST(req: Request) {
     const sample = (body as { sample?: unknown }).sample;
     if ("sample" in body && !isSampleName(sample)) return { status: 400, body: { error: "unknown sample" } };
 
-    const r = await createQuote({ sid: session.sid, ip, github: session.github, sample: isSampleName(sample) ? sample : undefined });
+    const r = await createQuote({ sid: session.sid, ip, github: session.github, activeRuleId: session.activeRuleId, sample: isSampleName(sample) ? sample : undefined });
     if (r.status === 200) {
       session.hasOrders = true;
       if (isSampleName(sample)) session.sample = sample;
