@@ -1,0 +1,15 @@
+# env
+.env
+.env.*
+!.env.example
+
+# deps/build
+node_modules/
+.next/
+out/
+coverage/
+
+# misc
+.DS_Store
+*.log
+.codex-tests/
