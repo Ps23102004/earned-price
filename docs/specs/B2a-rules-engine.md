@@ -116,3 +116,7 @@ GitHub fetching, database, PayPal HTTP, AI calls, UI, rule storage, the loophole
 ## Changes after review
 - `price` throws if `listCents > 100_000_000` (keeps `listCents * pct` in the safe-integer range).
 - `canonicalJson` throws on non-plain objects (Date, Map, class instances serialize as `{}` and would collide).
+- Labels must match `/^[\p{L}\p{N} _%+&'-]{1,80}$/u` (they are echoed into the code-generated read-back; punctuation, newlines, control and bidi characters could rewrite it).
+- Validation iterates arrays by index, so sparse arrays cannot yield zero-condition tiers; `evaluate` never passes a tier with zero conditions.
+- Snapshot numbers that are not finite non-negative numbers count as 0; timestamps without an explicit `Z`/offset never pass date filters or age checks; a PR merged after the evaluation clock fails `mergedSince`; duplicate PRs (same `url`, else `nameWithOwner#number`) count once; `canonicalJson` turns array holes into `null`.
+- Deliberately NOT in `price`: an earned price below one cent is possible for list prices ≤ 5 cents at 90%. The order-creation code (B3) must refuse `earnedCents < 1` before calling PayPal (the demo list price is fixed at 4900, so this is a guard, not a reachable case).

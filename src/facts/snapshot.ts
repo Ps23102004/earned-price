@@ -15,7 +15,7 @@ export function canonicalJson(value: unknown): string {
     case "object": {
       if (Array.isArray(value)) {
         // undefined array items serialize as null, like JSON.stringify
-        return `[${value.map((v) => (v === undefined ? "null" : canonicalJson(v))).join(",")}]`;
+        return `[${Array.from(value, (v) => (v === undefined ? "null" : canonicalJson(v))).join(",")}]`;
       }
       const proto = Object.getPrototypeOf(value);
       if (proto !== Object.prototype && proto !== null) {

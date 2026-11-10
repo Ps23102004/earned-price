@@ -93,18 +93,19 @@ function checkTier(v: unknown, where: string, errors: string[]): Tier | undefine
   if (typeof v.id !== "string" || !/^[a-z0-9_-]{1,32}$/.test(v.id)) {
     errors.push(`${where}: id must be 1-32 characters of lowercase letters, digits, "_" or "-"`);
   }
-  if (typeof v.label !== "string" || v.label.length < 1 || v.label.length > 80) {
-    errors.push(`${where}: label must be a string of 1 to 80 characters`);
+  // Labels are echoed into the code-generated read-back, so they must not carry punctuation or control characters.
+  if (typeof v.label !== "string" || !/^[\p{L}\p{N} _%+&'-]{1,80}$/u.test(v.label)) {
+    errors.push(`${where}: label must be 1 to 80 letters, digits, spaces or _ % + & ' -`);
   }
   if (!isIntIn(v.discountPercent, 1, 90)) errors.push(`${where}: discountPercent must be an integer from 1 to 90`);
   const conditions: Condition[] = [];
   if (!Array.isArray(v.conditions) || v.conditions.length < 1 || v.conditions.length > 3) {
     errors.push(`${where}: conditions must be a list of 1 to 3 conditions`);
   } else {
-    v.conditions.forEach((c, i) => {
-      const cond = checkCondition(c, `${where}.conditions[${i}]`, errors);
+    for (let i = 0; i < v.conditions.length; i++) {
+      const cond = checkCondition(v.conditions[i], `${where}.conditions[${i}]`, errors);
       if (cond) conditions.push(cond);
-    });
+    }
   }
   return {
     id: v.id as string,
@@ -124,13 +125,13 @@ export function validateRule(input: unknown): ValidationResult {
     errors.push("rule: tiers must be a list of 1 to 3 tiers");
   } else {
     const seen = new Set<string>();
-    input.tiers.forEach((t, i) => {
-      const tier = checkTier(t, `tiers[${i}]`, errors);
-      if (!tier) return;
+    for (let i = 0; i < input.tiers.length; i++) {
+      const tier = checkTier(input.tiers[i], `tiers[${i}]`, errors);
+      if (!tier) continue;
       if (seen.has(tier.id)) errors.push(`tiers[${i}]: duplicate tier id "${tier.id}"`);
       seen.add(tier.id);
       tiers.push(tier);
-    });
+    }
   }
   if (errors.length > 0) return { ok: false, errors };
   return { ok: true, rule: { version: 1, tiers } };

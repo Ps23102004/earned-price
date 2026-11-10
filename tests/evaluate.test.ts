@@ -309,8 +309,8 @@ describe("evaluate: clock selection", () => {
       recordedAt: "2025-07-01T00:00:00.000Z",
       mergedPrs: [mkPr({ number: 1, mergedAt: "2025-03-01T00:00:00.000Z" }), mkPr({ number: 2, mergedAt: "2026-02-01T00:00:00.000Z" })],
     });
-    // both are >= Jan 1 2025, so both count (no upper bound)
-    expect(actualOf(cond("merged_prs", 1, { mergedSince: "year_start" }), snap)).toBe(2);
+    // PR 2 was "merged" after the recording clock, which is impossible data: it never counts (upper bound = now)
+    expect(actualOf(cond("merged_prs", 1, { mergedSince: "year_start" }), snap)).toBe(1);
     const earlier = mkSnap({
       fetchedAt: "2026-06-15T12:00:00.000Z",
       recordedAt: "2025-07-01T00:00:00.000Z",

@@ -5,11 +5,32 @@ import type { Condition, ConditionResult, EvaluationResult, Field, PrFilters, Ru
 
 const DAY_MS = 86_400_000;
 
+/** Snapshot numbers are untrusted: anything that is not a finite non-negative number counts as 0. */
+const num = (x: unknown): number => (typeof x === "number" && Number.isFinite(x) && x >= 0 ? x : 0);
+
+/** Timestamps must carry an explicit offset; otherwise parsing depends on the server's time zone. */
+const ts = (s: unknown): number =>
+  typeof s === "string" && /(Z|[+-]\d{2}:\d{2})$/.test(s) ? Date.parse(s) : NaN;
+
+const prKey = (p: MergedPr): string | undefined =>
+  p.url ?? (p.repo.nameWithOwner && p.number !== undefined ? `${p.repo.nameWithOwner}#${p.number}` : undefined);
+
+function dedupe(prs: MergedPr[]): MergedPr[] {
+  const seen = new Set<string>();
+  return prs.filter((p) => {
+    const k = prKey(p);
+    if (k === undefined) return true;
+    if (seen.has(k)) return false;
+    seen.add(k);
+    return true;
+  });
+}
+
 function passesFilters(pr: MergedPr, f: PrFilters | undefined, user: GithubSnapshot["user"], now: Date): boolean {
   if (!f) return true;
-  const mergedAt = Date.parse(pr.mergedAt);
-  if (f.minRepoStars !== undefined && !(pr.repo.stars >= f.minRepoStars)) return false;
-  if (f.minLinesChanged !== undefined && !(pr.additions + pr.deletions >= f.minLinesChanged)) return false;
+  const mergedAt = ts(pr.mergedAt);
+  if (f.minRepoStars !== undefined && !(num(pr.repo.stars) >= f.minRepoStars)) return false;
+  if (f.minLinesChanged !== undefined && !(num(pr.additions) + num(pr.deletions) >= f.minLinesChanged)) return false;
   if (f.excludeOwnRepos && pr.repo.ownerIsAuthor !== false) return false;
   if (f.excludeForks && pr.repo.isFork !== false) return false;
   if (f.mergedSince !== undefined) {
@@ -17,11 +38,11 @@ function passesFilters(pr: MergedPr, f: PrFilters | undefined, user: GithubSnaps
       f.mergedSince === "year_start"
         ? Date.UTC(now.getUTCFullYear(), 0, 1)
         : Date.parse(`${f.mergedSince}T00:00:00.000Z`);
-    if (!(mergedAt >= since)) return false;
+    if (!(mergedAt >= since && mergedAt <= now.getTime())) return false;
   }
   if (
     f.minAccountAgeDaysAtMerge !== undefined &&
-    !(Math.floor((mergedAt - Date.parse(user.createdAt)) / DAY_MS) >= f.minAccountAgeDaysAtMerge)
+    !(Math.floor((mergedAt - ts(user.createdAt)) / DAY_MS) >= f.minAccountAgeDaysAtMerge)
   ) {
     return false;
   }
@@ -36,21 +57,21 @@ function conditionResult(c: Condition, snapshot: FactSnapshot, now: Date): Condi
     const userEvidence = u.url !== undefined ? [u.url] : [];
     const field: Field = c.field;
     if (field === "merged_prs" || field === "max_repo_stars_merged_pr") {
-      const passing = snapshot.mergedPrs.filter((p) => passesFilters(p, c.pr, u, now));
+      const passing = dedupe(snapshot.mergedPrs).filter((p) => passesFilters(p, c.pr, u, now));
       if (field === "merged_prs") {
         actual = passing.length;
         evidence = passing.flatMap((p) => (p.url !== undefined ? [p.url] : [])).slice(0, 5);
       } else {
-        actual = passing.reduce((m, p) => Math.max(m, p.repo.stars), 0);
-        const top = passing.find((p) => p.repo.stars === actual);
+        actual = passing.reduce((m, p) => Math.max(m, num(p.repo.stars)), 0);
+        const top = passing.find((p) => num(p.repo.stars) === actual);
         evidence = top?.url !== undefined ? [top.url] : [];
       }
     } else {
       evidence = userEvidence;
-      if (field === "account_age_days") actual = Math.floor((now.getTime() - Date.parse(u.createdAt)) / DAY_MS);
-      else if (field === "followers") actual = u.followers;
-      else if (field === "public_repos") actual = u.publicRepos;
-      else actual = u.commitContributionsLastYear;
+      if (field === "account_age_days") actual = num(Math.floor((now.getTime() - ts(u.createdAt)) / DAY_MS));
+      else if (field === "followers") actual = num(u.followers);
+      else if (field === "public_repos") actual = num(u.publicRepos);
+      else actual = num(u.commitContributionsLastYear);
     }
   }
   return {
@@ -74,7 +95,7 @@ export function evaluate(rule: Rule, snapshot: FactSnapshot, now?: Date): Evalua
       tierId: t.id,
       label: t.label,
       discountPercent: t.discountPercent,
-      passed: conditions.every((c) => c.passed),
+      passed: conditions.length > 0 && conditions.every((c) => c.passed),
       conditions,
     };
   });
