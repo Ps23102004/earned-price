@@ -30,7 +30,7 @@ export function anonymiseSnapshot(
     // A repository name is public, but only a very large one is not a pointer to one person.
     const keep =
       opts.keepRepoNames && name !== undefined && p.repo.stars >= 20_000 && !p.repo.ownerIsAuthor &&
-      !(login && name.toLowerCase().startsWith(`${login}/`));
+      !(login && name.toLowerCase().includes(login));
     return {
       mergedAt: coarsenMonth(p.mergedAt),
       additions: bucket(p.additions),

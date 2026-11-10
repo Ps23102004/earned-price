@@ -113,3 +113,16 @@ describe("hardening: readback line count", () => {
     expect(readback(oneTier(cond("followers", 10))).split("\n")).toHaveLength(2);
   });
 });
+
+describe("anonymise: login anywhere in a repo name", () => {
+  it("drops a kept repo name that merely contains the login", async () => {
+    const { anonymiseSnapshot } = await import("../src/facts/anonymise");
+    const s = mkSnap({
+      user: { login: "react" },
+      mergedPrs: [mkPr({ repo: { nameWithOwner: "facebook/react", stars: 200_000, ownerIsAuthor: false } })],
+    });
+    const out = anonymiseSnapshot(s, { label: "x", recordedAt: "2026-11-10T00:00:00.000Z", keepRepoNames: true });
+    expect(out.mergedPrs[0]!.repo.nameWithOwner).toBeUndefined();
+    expect(JSON.stringify(out)).not.toContain("react");
+  });
+});
