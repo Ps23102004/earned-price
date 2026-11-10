@@ -23,7 +23,7 @@ async function postJson(url: string, body?: unknown) {
 
 const errText = (e: unknown) => (e instanceof Error ? e.message : String((e as { message?: unknown })?.message ?? e));
 
-export function ShopClient({ clientId, showOrders }: { clientId: string; showOrders: boolean }) {
+export function ShopClient({ clientId }: { clientId: string }) {
   const router = useRouter();
   const [phase, setPhase] = useState<Phase>("idle");
   const [quote, setQuote] = useState<Quote | null>(null);
@@ -157,7 +157,6 @@ export function ShopClient({ clientId, showOrders }: { clientId: string; showOrd
         </div>
       </section>
 
-      {showOrders ? <Orders /> : null}
     </div>
   );
 }
@@ -192,7 +191,7 @@ const stateTone: Record<string, Tone> = {
   expired: "warn",
 };
 
-function Orders() {
+export function Orders() {
   const [rows, setRows] = useState<MineRow[] | null>(null);
   const [failed, setFailed] = useState(false);
 

@@ -1,20 +1,30 @@
-import { getSession } from "@/session";
+import { Suspense } from "react";
+import { cookies } from "next/headers";
+import { getIronSession } from "iron-session";
+import type { SessionData } from "@/session";
 import { CopyButton } from "./_components/copy-button";
 import { card } from "./_components/ui";
-import { ShopClient } from "./shop-client";
+import { Orders, ShopClient } from "./shop-client";
 
-// Reads the session cookie, so this page is always rendered per request.
+// Reads the session cookie only (never creates one) and shows the orders list when this browser has orders.
+async function YourOrders() {
+  const s = await getIronSession<SessionData>(await cookies(), {
+    cookieName: "ep_session",
+    password: process.env.SESSION_SECRET as string,
+  }).catch(() => undefined);
+  return s?.hasOrders ? <Orders /> : null;
+}
+
+// Static shell; only the orders list reads the session cookie (inside Suspense).
 export default async function Home() {
   const judge = process.env.JUDGE_MODE === "1";
 
-  // A server component cannot set cookies; if the session helper tries to, treat it as "no orders yet".
-  const hasOrders = await getSession()
-    .then((s) => Boolean(s.hasOrders))
-    .catch(() => false);
-
   return (
     <div className="flex flex-col gap-6">
-      <ShopClient clientId={process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID ?? ""} showOrders={hasOrders} />
+      <ShopClient clientId={process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID ?? ""} />
+      <Suspense fallback={null}>
+        <YourOrders />
+      </Suspense>
 
       {judge ? (
         <>

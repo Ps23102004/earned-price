@@ -2,6 +2,7 @@
 
 import { randomUUID } from "node:crypto";
 import { cookies } from "next/headers";
+import { connection } from "next/server";
 import { getIronSession } from "iron-session";
 import type { IronSession } from "iron-session";
 
@@ -16,6 +17,7 @@ export async function getSession(): Promise<Session> {
     cookieOptions: { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "lax" },
   });
   if (!session.sid) {
+    await connection(); // request-time only: a random id must never be computed during prerender
     session.sid = randomUUID();
     // Server components cannot set cookies; there the sid just lasts for the render.
     await session.save().catch(() => {});
