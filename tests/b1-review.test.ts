@@ -196,14 +196,23 @@ describe("token fetch is de-duplicated (finding 10)", () => {
 });
 
 describe("rate limiter hard cap", () => {
-  it("never holds more than 10,000 keys even when every key is live", async () => {
+  it("never evicts live counters; new keys share an overflow bucket when full", async () => {
     const { _resetForTests } = await import("../src/ratelimit");
     _resetForTests();
     const now = 1_000_000;
-    for (let i = 0; i < 12_000; i++) allow(`k${i}`, 5, 60_000, now);
-    // the newest key is tracked, the oldest was evicted
-    expect(allow("k11999", 1, 60_000, now)).toBe(false);
-    expect(allow("k0", 1, 60_000, now)).toBe(true);
+    expect(allow("attacker", 1, 60_000, now)).toBe(true);
+    expect(allow("attacker", 1, 60_000, now)).toBe(false);
+    for (let i = 0; i < 10_010; i++) allow(`flood${i}`, 5, 60_000, now);
+    // the attacker's live counter survived the flood
+    expect(allow("attacker", 1, 60_000, now)).toBe(false);
+    // brand-new keys now share one bucket, which the flood has used up
+    expect(allow("fresh-a", 5, 60_000, now)).toBe(false);
     _resetForTests();
+  });
+  it("counts trusted proxy hops from the right", () => {
+    const h = new Headers({ "x-forwarded-for": "6.6.6.6, 1.2.3.4, 10.0.0.1" });
+    expect(clientIp(h, 1)).toBe("10.0.0.1");
+    expect(clientIp(h, 2)).toBe("1.2.3.4");
+    expect(clientIp(h, 9)).toBe("local");
   });
 });
