@@ -206,4 +206,45 @@ describe.skipIf(!HAVE_DB)("one redemption per buyer (real database, mocked PayPa
     expect(r.status).toBe(409);
     expect((await redemption(key2))?.state).toBe("pending");
   });
+
+  it("a declined-then-approved order whose buyer redeemed elsewhere ends cancelled (state matches the reply)", async () => {
+    const key = `github:${randomUUID()}`;
+    const sid = randomUUID();
+    const a = await insertOrder({ buyerKey: key, sid, state: "created" });
+    const b = await insertOrder({ buyerKey: key, sid, state: "created" });
+    mocks.paypal.mockResolvedValueOnce({ status: 422, ok: false, json: { details: [{ issue: "INSTRUMENT_DECLINED" }] } });
+    await m.orders.capture(a.paypalOrderId, sid); // a: approved, nothing claimed
+    mocks.paypal.mockResolvedValueOnce(captureBody(b.id, b.hash));
+    await m.orders.capture(b.paypalOrderId, sid); // b: captured, redeemed
+    mocks.paypal.mockClear();
+    const r = await m.orders.capture(a.paypalOrderId, sid);
+    expect(r.status).toBe(409);
+    expect((r.body as { state: string }).state).toBe("cancelled");
+    expect(await stateOf(a.id)).toBe("cancelled");
+    expect(mocks.paypal).not.toHaveBeenCalled();
+  });
+
+  it("a reset fired while a capture is waiting on PayPal is refused and keeps the claim", async () => {
+    const key = `github:${randomUUID()}`;
+    const sid = randomUUID();
+    const a = await insertOrder({ buyerKey: key, sid, state: "created" });
+    let release!: () => void;
+    const gate = new Promise<void>((r) => (release = r));
+    mocks.paypal.mockImplementation(async (_m: string, path: string) => {
+      if (path.endsWith("/capture")) {
+        await gate; // PayPal is slow: the capture is in flight
+        return captureBody(a.id, a.hash);
+      }
+      return { status: 200, ok: true, json: { status: "APPROVED" } };
+    });
+    const capturing = m.orders.capture(a.paypalOrderId, sid);
+    for (let i = 0; i < 50 && (await stateOf(a.id)) !== "capturing"; i++) await new Promise((r) => setTimeout(r, 20));
+    const r = await m.judge.resetRedemptions([key]);
+    expect(r.status).toBe(409);
+    expect((await redemption(key))?.state).toBe("pending");
+    release();
+    await capturing;
+    expect(await stateOf(a.id)).toBe("captured");
+    expect(await redemption(key)).toMatchObject({ order_id: a.id, state: "redeemed" });
+  });
 });

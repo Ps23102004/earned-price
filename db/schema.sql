@@ -82,3 +82,13 @@ create unique index if not exists orders_capture_uq on orders(paypal_capture_id)
 
 -- Named rules (presets) are get-or-created by sentence; the unique index makes that race-free.
 create unique index if not exists rules_sentence_uq on rules(sentence);
+
+-- Non-negative discount and a closed set of redemption states (added after review; idempotent).
+do $$ begin
+  if not exists (select 1 from pg_constraint where conname = 'orders_discount_nonneg_ck') then
+    alter table orders add constraint orders_discount_nonneg_ck check (discount_cents >= 0 and discount_cents <= list_cents);
+  end if;
+  if not exists (select 1 from pg_constraint where conname = 'redemptions_state_ck') then
+    alter table redemptions add constraint redemptions_state_ck check (state in ('pending', 'redeemed'));
+  end if;
+end $$;

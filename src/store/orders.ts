@@ -233,8 +233,10 @@ export async function capture(paypalOrderId: string, sid: string): Promise<Resul
 
   if (claimed === "redeemed") {
     const o = await byPayPalId(paypalOrderId);
-    if (o) await setState(o.id, ["created"], "cancelled");
-    return { status: 409, body: { state: "cancelled", orderId: o?.id, error: "already redeemed", message: ALREADY_REDEEMED } };
+    // The rolled-back claim left the order where it was: `created`, or `approved` after a declined card.
+    if (o) await setState(o.id, ["created", "approved"], "cancelled");
+    const now = o ? await getOrder(o.id) : undefined;
+    return { status: 409, body: { state: now?.state ?? "cancelled", orderId: o?.id, error: "already redeemed", message: ALREADY_REDEEMED } };
   }
 
   if (!claimed) {
@@ -270,13 +272,19 @@ export async function capture(paypalOrderId: string, sid: string): Promise<Resul
 }
 
 export async function cancel(orderId: string, sid: string): Promise<Result> {
-  const u = UUID.test(orderId)
-    ? await query(`update orders set state = 'cancelled', updated_at = now() where id = $1 and session_id = $2 and state in ('quoted', 'created', 'approved')`, [orderId, sid])
-    : undefined;
-  if (u?.rowCount === 1) {
-    await settleRedemption({ query }, orderId, "release");
-    return { status: 200, body: { state: "cancelled" } };
-  }
+  // State change and redemption release in one transaction, bound to this session.
+  const done =
+    UUID.test(orderId) &&
+    (await tx(async (c) => {
+      const u = await c.query(
+        `update orders set state = 'cancelled', updated_at = now() where id = $1 and session_id = $2 and state in ('quoted', 'created', 'approved')`,
+        [orderId, sid],
+      );
+      if (u.rowCount !== 1) return false;
+      await settleRedemption(c, orderId, "release");
+      return true;
+    }));
+  if (done) return { status: 200, body: { state: "cancelled" } };
   const o = await getOrder(orderId);
   if (!o || o.session_id !== sid) return { status: 404, body: { error: "order not found" } };
   if (o.state === "cancelled") return { status: 200, body: { state: "cancelled" } };
