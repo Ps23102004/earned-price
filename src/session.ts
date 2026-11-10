@@ -5,8 +5,14 @@ import { cookies } from "next/headers";
 import { connection } from "next/server";
 import { getIronSession } from "iron-session";
 import type { IronSession } from "iron-session";
+import type { SampleName } from "./facts/samples";
 
-export type SessionData = { sid: string; hasOrders?: boolean };
+export type SessionData = {
+  sid: string;
+  hasOrders?: boolean;
+  github?: { id: number; login: string; avatarUrl: string };
+  sample?: SampleName;
+};
 export type Session = IronSession<SessionData> & { sid: string };
 export type ApiResult = { status: number; body: unknown };
 

@@ -102,7 +102,7 @@ async function applyDecision(id: string, from: string[], d: Decision, attempt?: 
 export async function createGuestQuote(sid: string): Promise<Result> {
   // Reuse this session's latest open quote (with enough time left to pay) instead of growing the table per click.
   const open = await query<{ id: string }>(
-    `select id from orders where session_id = $1 and state = 'quoted' and expires_at > now() + interval '5 minutes' order by created_at desc limit 1`,
+    `select id from orders where session_id = $1 and state = 'quoted' and rule_id is null and expires_at > now() + interval '5 minutes' order by created_at desc limit 1`,
     [sid],
   );
   const reused = open.rows[0]?.id;

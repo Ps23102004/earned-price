@@ -1,27 +1,57 @@
 import { Suspense } from "react";
 import { cookies } from "next/headers";
+import { connection } from "next/server";
 import { getIronSession } from "iron-session";
 import type { SessionData } from "@/session";
+import { SAMPLE_NAMES, loadSample } from "@/facts/samples";
+import { readback } from "@/rules/readback";
+import { DEFAULT_RULE } from "@/rules/presets";
 import { CopyButton } from "./_components/copy-button";
+import { TheRule } from "./_components/the-rule";
+import type { SampleName } from "./_components/types";
 import { card } from "./_components/ui";
 import { Orders, ShopClient } from "./shop-client";
 
-// Reads the session cookie only (never creates one) and shows the orders list when this browser has orders.
-async function YourOrders() {
-  const s = await getIronSession<SessionData>(await cookies(), {
+const clientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID ?? "";
+
+// Reads the session cookie only (never creates one). Request-time only: unsealing the cookie reads the clock.
+async function readSession() {
+  await connection();
+  return getIronSession<SessionData>(await cookies(), {
     cookieName: "ep_session",
     password: process.env.SESSION_SECRET as string,
   }).catch(() => undefined);
+}
+
+// Shows the orders list when this browser has orders.
+async function YourOrders() {
+  const s = await readSession();
   return s?.hasOrders ? <Orders /> : null;
 }
 
-// Static shell; only the orders list reads the session cookie (inside Suspense).
-export default async function Home() {
+// Recorded dates of the committed sample snapshots (static data, so part of the prerendered shell).
+const sampleDates = Object.fromEntries(SAMPLE_NAMES.map((n) => [n, loadSample(n).recordedAt])) as Partial<
+  Record<SampleName, string>
+>;
+
+// The shop with the signed-in identity; only this part reads the cookie.
+async function Shop() {
+  const s = await readSession();
+  const g = s?.github; // sealed by the sign-in callback; only login and avatar reach the client
+  const identity = g?.login ? { login: g.login, avatarUrl: g.avatarUrl } : null;
+  return <ShopClient clientId={clientId} identity={identity} sampleDates={sampleDates} />;
+}
+
+// Static shell; the identity and the orders list read the session cookie (inside Suspense).
+export default function Home() {
   const judge = process.env.JUDGE_MODE === "1";
 
   return (
     <div className="flex flex-col gap-6">
-      <ShopClient clientId={process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID ?? ""} />
+      <Suspense fallback={<ShopClient clientId={clientId} identity={null} sampleDates={sampleDates} />}>
+        <Shop />
+      </Suspense>
+      <TheRule readback={readback(DEFAULT_RULE)} json={JSON.stringify(DEFAULT_RULE, null, 2)} />
       <Suspense fallback={null}>
         <YourOrders />
       </Suspense>

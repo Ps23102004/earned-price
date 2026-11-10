@@ -20,17 +20,17 @@ function suffix(f: PrFilters | undefined): string {
   return parts.length > 0 ? ` (${parts.join(", ")})` : "";
 }
 
-function phrase(c: Condition): string {
+export function phrase(c: Condition): string {
   const v = n(c.value);
   switch (c.field) {
     case "account_age_days":
-      return `the GitHub account is at least ${v} days old`;
+      return `the GitHub account is at least ${v} ${c.value === 1 ? "day" : "days"} old`;
     case "followers":
-      return `the account has at least ${v} followers`;
+      return `the account has at least ${v} ${c.value === 1 ? "follower" : "followers"}`;
     case "public_repos":
-      return `the account owns at least ${v} public repositories`;
+      return `the account owns at least ${v} public ${c.value === 1 ? "repository" : "repositories"}`;
     case "commit_contributions_last_year":
-      return `the account made at least ${v} commits in the last year`;
+      return `the account made at least ${v} ${c.value === 1 ? "commit" : "commits"} in the last year`;
     case "merged_prs":
       return `the account has at least ${v} merged pull request${c.value === 1 ? "" : "s"}${suffix(c.pr)}`;
     case "max_repo_stars_merged_pr":

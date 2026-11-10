@@ -3,11 +3,15 @@
 import { PayPalButtons, PayPalScriptProvider, usePayPalScriptReducer } from "@paypal/react-paypal-js";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useMemo, useState } from "react";
+import { PriceBuildUp } from "./_components/price-buildup";
+import type { Identity, Quote, SampleName } from "./_components/types";
 import { Chip, Notice, buttonClass, card, usd, type Tone } from "./_components/ui";
+import { safeAvatarUrl, sampleProvenance } from "./_components/view-model";
 import { captureLanding } from "./capture-landing";
 
-type Quote = { orderId: string; earnedCents: number };
+type Profile = "github" | "guest" | SampleName;
 type Phase = "idle" | "quoting" | "quoted" | "cancelled" | "failed";
 type MineRow = { orderId: string; state: string; earnedCents: number; createdAt: string };
 
@@ -24,26 +28,94 @@ async function postJson(url: string, body?: unknown) {
 
 const errText = (e: unknown) => (e instanceof Error ? e.message : String((e as { message?: unknown })?.message ?? e));
 
-export function ShopClient({ clientId }: { clientId: string }) {
+const SAMPLES: { name: SampleName; title: string; body: string }[] = [
+  { name: "qualifies", title: "Qualifies", body: "A contributor to a large open-source project. Meets the top tier." },
+  {
+    name: "nearly",
+    title: "Nearly qualifies",
+    body: "Close to the top tier, with one fact short. Shows exactly what is missing.",
+  },
+  {
+    name: "loophole",
+    title: "Loophole account (top tier now blocked)",
+    body: "Would have won 50% under the first version of the merchant's rule. The hardened rule blocks that tier and shows why.",
+  },
+];
+
+const secondaryButton =
+  "inline-flex min-h-11 items-center justify-center rounded-lg border border-stone-300 px-4 text-sm font-medium hover:bg-stone-100 disabled:cursor-not-allowed disabled:opacity-60 dark:border-stone-700 dark:hover:bg-stone-800";
+
+const linkButton =
+  "inline-flex min-h-11 items-center rounded text-sm text-stone-600 underline underline-offset-2 hover:text-stone-900 disabled:cursor-not-allowed disabled:opacity-60 dark:text-stone-400 dark:hover:text-stone-100";
+
+function SigninMessage() {
+  const v = useSearchParams().get("signin");
+  if (v === "failed")
+    return <Notice tone="bad">GitHub sign-in did not complete. Try again, or use a recorded sample profile.</Notice>;
+  if (v === "cancelled")
+    return <Notice tone="warn">Sign-in cancelled. You can try again, use a sample profile, or continue as guest.</Notice>;
+  return null;
+}
+
+function StepHeading({ n, id, children }: { n: number; id: string; children: string }) {
+  return (
+    <h2 id={id} className="flex items-baseline gap-2 text-sm font-semibold">
+      <span className="font-mono text-xs text-stone-500 dark:text-stone-400">{n}</span>
+      {children}
+    </h2>
+  );
+}
+
+export function ShopClient({
+  clientId,
+  identity,
+  sampleDates,
+}: {
+  clientId: string;
+  identity: Identity | null;
+  sampleDates: Partial<Record<SampleName, string>>;
+}) {
   const router = useRouter();
   const [phase, setPhase] = useState<Phase>("idle");
   const [quote, setQuote] = useState<Quote | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
   const [problem, setProblem] = useState<string | null>(null);
   const [confirming, setConfirming] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
 
   const sdkOptions = useMemo(() => ({ clientId, currency: "USD", intent: "capture" }), [clientId]);
+  const quoting = phase === "quoting";
+  const avatar = safeAvatarUrl(identity?.avatarUrl);
 
-  async function getPrice() {
+  async function getPrice(p: Profile) {
     setPhase("quoting");
+    setProfile(p);
+    setQuote(null);
     setProblem(null);
     try {
-      const r = await postJson("/api/quote");
+      const r = await postJson("/api/quote", p === "github" || p === "guest" ? undefined : { sample: p });
       if (!r.ok) throw new Error(r.json.error ?? `HTTP ${r.status}`);
-      setQuote({ orderId: r.json.orderId, earnedCents: r.json.earnedCents });
+      setQuote({ ...r.json, truncated: r.json.truncated === true });
       setPhase("quoted");
     } catch (e) {
       setProblem(`Could not get a price quote: ${errText(e)}`);
       setPhase("idle");
+    }
+  }
+
+  async function signOut() {
+    setSigningOut(true);
+    try {
+      const r = await postJson("/api/auth/logout");
+      if (!r.ok) throw new Error(r.json.error ?? `HTTP ${r.status}`);
+      setQuote(null);
+      setProfile(null);
+      setPhase("idle");
+      router.refresh();
+    } catch (e) {
+      setProblem(`Could not sign out: ${errText(e)}`);
+    } finally {
+      setSigningOut(false);
     }
   }
 
@@ -89,6 +161,8 @@ export function ShopClient({ clientId }: { clientId: string }) {
     setPhase("failed");
   }
 
+  const showQuote = quote !== null && phase !== "quoting" && phase !== "idle";
+
   return (
     <div className="flex flex-col gap-6">
       <section aria-labelledby="product-heading" className={card}>
@@ -98,64 +172,160 @@ export function ShopClient({ clientId }: { clientId: string }) {
         <p className="mt-1 text-sm text-stone-600 dark:text-stone-400">
           A checkout where the price is earned from verified public facts — no coupon codes.
         </p>
-
-        <div className="mt-5 flex items-baseline gap-2">
-          {phase === "quoted" && quote ? (
-            <>
-              <span className="font-mono text-3xl font-semibold">{usd(quote.earnedCents)}</span>
-              <span className="text-xs text-stone-500 dark:text-stone-400">price quote</span>
-            </>
-          ) : (
-            <>
-              <span className="font-mono text-3xl font-semibold">$49.00</span>
-              <span className="text-xs text-stone-500 dark:text-stone-400">list price</span>
-            </>
-          )}
-        </div>
-
-        <div className="mt-5 flex flex-col gap-3">
-          {problem && phase === "idle" ? <Notice tone="bad">{problem}</Notice> : null}
-
-          {phase === "idle" || phase === "quoting" ? (
-            <button type="button" onClick={getPrice} disabled={phase === "quoting"} className={buttonClass}>
-              {phase === "quoting" ? "Getting price…" : "Get price"}
-            </button>
-          ) : null}
-
-          {phase === "quoted" && quote ? (
-            clientId ? (
-              <PayPalScriptProvider options={sdkOptions}>
-                <Checkout
-                  key={quote.orderId}
-                  createOrder={createOrder}
-                  onApprove={onApprove}
-                  onCancel={onCancel}
-                  onError={onError}
-                />
-                {confirming ? <Notice tone="info">Confirming your payment with PayPal…</Notice> : null}
-              </PayPalScriptProvider>
-            ) : (
-              <Notice tone="bad">PayPal is not configured (NEXT_PUBLIC_PAYPAL_CLIENT_ID is missing).</Notice>
-            )
-          ) : null}
-
-          {phase === "cancelled" ? (
-            <Notice tone="warn">Payment cancelled — you were not charged and no licence was issued.</Notice>
-          ) : null}
-          {phase === "failed" ? (
-            <Notice tone="bad">
-              <p>Payment failed — you were not charged and no licence was issued.</p>
-              {problem ? <p className="mt-1 font-mono text-xs">{problem}</p> : null}
-            </Notice>
-          ) : null}
-          {phase === "cancelled" || phase === "failed" ? (
-            <button type="button" onClick={getPrice} className={buttonClass}>
-              Start over
-            </button>
-          ) : null}
+        <div className="mt-4 flex items-baseline gap-2">
+          <span className="font-mono text-3xl font-semibold">$49.00</span>
+          <span className="text-xs text-stone-500 dark:text-stone-400">list price</span>
         </div>
       </section>
 
+      <section aria-labelledby="prove-heading" className={card}>
+        <StepHeading n={1} id="prove-heading">
+          Prove
+        </StepHeading>
+        <p className="mt-1 text-sm text-stone-600 dark:text-stone-400">
+          Show public GitHub facts. Signing in asks for no permissions, so we can only see what anyone can already see.
+        </p>
+
+        <div className="mt-3 flex flex-col gap-3">
+          <Suspense fallback={null}>
+            <SigninMessage />
+          </Suspense>
+          {problem && phase === "idle" ? <Notice tone="bad">{problem}</Notice> : null}
+
+          {identity ? (
+            <div className="flex flex-wrap items-center gap-3 rounded-lg border border-stone-200 p-3 dark:border-stone-800">
+              {avatar ? (
+                // eslint-disable-next-line @next/next/no-img-element -- fixed GitHub avatar host, no image optimiser needed
+                <img src={avatar} alt="" width={40} height={40} className="h-10 w-10 rounded-full" />
+              ) : null}
+              <div className="min-w-0 flex-1">
+                <p className="text-xs text-stone-500 dark:text-stone-400">Signed in with GitHub</p>
+                <p className="break-all font-mono text-sm">@{identity.login}</p>
+              </div>
+              <button type="button" onClick={signOut} disabled={signingOut || quoting} className={linkButton}>
+                {signingOut ? "Signing out…" : "Not you? Sign out"}
+              </button>
+              <button
+                type="button"
+                onClick={() => getPrice("github")}
+                disabled={quoting}
+                className={`${buttonClass} w-full sm:w-auto`}
+              >
+                {quoting && profile === "github" ? "Checking GitHub…" : "Get my price"}
+              </button>
+            </div>
+          ) : (
+            <a href="/api/auth/github?returnTo=/" className={`${buttonClass} w-full sm:w-auto sm:self-start`}>
+              Sign in with GitHub
+            </a>
+          )}
+
+          <div>
+            <p className="text-xs font-medium text-stone-500 dark:text-stone-400">Or try a sample profile</p>
+            <ul className="mt-2 flex flex-col gap-3">
+              {SAMPLES.map((s) => (
+                <li
+                  key={s.name}
+                  className="rounded-lg border border-stone-200 p-3 dark:border-stone-800"
+                >
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <h3 id={`sample-${s.name}-title`} className="text-sm font-semibold">
+                      {s.title}
+                    </h3>
+                    {showQuote && profile === s.name ? <Chip tone="info">Showing this sample</Chip> : null}
+                  </div>
+                  <p className="mt-1 text-sm text-stone-600 dark:text-stone-400">{s.body}</p>
+                  <p className="mt-1 text-xs text-stone-500 dark:text-stone-400">
+                    {sampleProvenance(sampleDates[s.name])}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => getPrice(s.name)}
+                    disabled={quoting}
+                    aria-describedby={`sample-${s.name}-title`}
+                    className={`${secondaryButton} mt-3 w-full sm:w-auto`}
+                  >
+                    {quoting && profile === s.name ? "Pricing…" : "Price this sample"}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {identity ? null : (
+            <div>
+              <button type="button" onClick={() => getPrice("guest")} disabled={quoting} className={linkButton}>
+                Continue as guest ($49)
+              </button>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {quoting || showQuote ? (
+        <section aria-labelledby="price-heading" className={card}>
+          <StepHeading n={2} id="price-heading">
+            Price
+          </StepHeading>
+          {quoting ? (
+            <div className="mt-3">
+              <Notice tone="info">
+                {profile === "github" ? "Checking your public GitHub facts…" : "Pricing from the recorded facts…"}
+              </Notice>
+            </div>
+          ) : quote ? (
+            <div className="mt-2">
+              <PriceBuildUp key={quote.orderId} quote={quote} />
+            </div>
+          ) : null}
+        </section>
+      ) : null}
+
+      {showQuote && quote ? (
+        <section aria-labelledby="pay-heading" className={card}>
+          <StepHeading n={3} id="pay-heading">
+            Pay
+          </StepHeading>
+          <div className="mt-3 flex flex-col gap-3">
+            {phase === "quoted" ? (
+              clientId ? (
+                <PayPalScriptProvider options={sdkOptions}>
+                  <Checkout
+                    key={quote.orderId}
+                    createOrder={createOrder}
+                    onApprove={onApprove}
+                    onCancel={onCancel}
+                    onError={onError}
+                  />
+                  {confirming ? <Notice tone="info">Confirming your payment with PayPal…</Notice> : null}
+                </PayPalScriptProvider>
+              ) : (
+                <Notice tone="bad">PayPal is not configured (NEXT_PUBLIC_PAYPAL_CLIENT_ID is missing).</Notice>
+              )
+            ) : null}
+
+            {phase === "cancelled" ? (
+              <Notice tone="warn">Payment cancelled — you were not charged and no licence was issued.</Notice>
+            ) : null}
+            {phase === "failed" ? (
+              <Notice tone="bad">
+                <p>Payment failed — you were not charged and no licence was issued.</p>
+                {problem ? <p className="mt-1 font-mono text-xs">{problem}</p> : null}
+              </Notice>
+            ) : null}
+            {phase === "cancelled" || phase === "failed" ? (
+              <button type="button" onClick={() => getPrice(profile ?? "guest")} className={buttonClass}>
+                Start over
+              </button>
+            ) : null}
+            {phase === "quoted" ? (
+              <p className="text-xs text-stone-500 dark:text-stone-400">
+                Want a different price? Pick another profile above to get a new quote.
+              </p>
+            ) : null}
+          </div>
+        </section>
+      ) : null}
     </div>
   );
 }

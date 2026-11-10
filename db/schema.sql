@@ -79,3 +79,6 @@ begin
 end $$;
 
 create unique index if not exists orders_capture_uq on orders(paypal_capture_id) where paypal_capture_id is not null;
+
+-- Named rules (presets) are get-or-created by sentence; the unique index makes that race-free.
+create unique index if not exists rules_sentence_uq on rules(sentence);

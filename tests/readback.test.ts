@@ -66,7 +66,7 @@ describe("readback: structure", () => {
 
   it("joins three conditions with ' and ' between each", () => {
     expect(tierLine([cond("followers", 1), cond("public_repos", 2), cond("account_age_days", 3)])).toBe(
-      "10% off (L) if the account has at least 1 followers and the account owns at least 2 public repositories and the GitHub account is at least 3 days old.",
+      "10% off (L) if the account has at least 1 follower and the account owns at least 2 public repositories and the GitHub account is at least 3 days old.",
     );
   });
 });
