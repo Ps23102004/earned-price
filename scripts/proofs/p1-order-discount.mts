@@ -1,5 +1,5 @@
 // Proof P1: discount order -> buyer approves -> capture -> GET read-back -> idempotent capture replay.
-// Run: pnpm tsx --env-file=.env scripts/proofs/p1-order-discount.ts
+// Run: pnpm tsx --env-file=.env scripts/proofs/p1-order-discount.mts [existing-paypal-order-id]
 // Every figure below is read back from PayPal. Appends one row to docs/EVIDENCE.md.
 
 import { appendFileSync } from "node:fs";
@@ -19,8 +19,11 @@ const fail = (msg: string, r?: { status: number; json: unknown; debugId?: string
   process.exit(1);
 };
 
-// 1. create the order with a discount line
-const created = await paypal("POST", "/v2/checkout/orders", {
+// 1. create the order with a discount line (or resume an existing one passed as argv[2])
+const resumeId = process.argv[2];
+const created = resumeId
+  ? await paypal("GET", `/v2/checkout/orders/${resumeId}`)
+  : await paypal("POST", "/v2/checkout/orders", {
   requestId: `o-${hex}`,
   representation: true,
   body: {
@@ -42,8 +45,9 @@ const created = await paypal("POST", "/v2/checkout/orders", {
     ],
   },
 });
-if (!created.ok) fail("create order", created);
+if (!created.ok) fail(resumeId ? "get existing order" : "create order", created);
 const paypalOrderId: string = created.json.id;
+const expectedCustomId: string = resumeId ? created.json.purchase_units?.[0]?.custom_id : customId;
 const approve = (created.json.links as { rel: string; href: string }[]).find((l) => l.rel === "payer-action" || l.rel === "approve");
 out.createStatus = created.status;
 console.log(`CREATED order ${paypalOrderId} (status ${created.json.status}, HTTP ${created.status})`);
@@ -52,8 +56,9 @@ console.log(`\nAPPROVE HERE as the sandbox buyer (you type the password yourself
 // 2. wait for the buyer to approve
 const deadline = Date.now() + 15 * 60_000;
 for (;;) {
-  const g = await paypal("GET", `/v2/checkout/orders/${paypalOrderId}`);
-  if (g.json?.status === "APPROVED") break;
+  const g = await paypal("GET", `/v2/checkout/orders/${paypalOrderId}`).catch(() => undefined); // transient timeouts: keep polling
+  if (g?.json?.status === "APPROVED") break;
+  if (g?.json?.status === "COMPLETED") fail("order already captured; run a fresh P1", g);
   if (Date.now() > deadline) fail("buyer did not approve within 15 minutes", g);
   await sleep(4000);
 }
@@ -92,7 +97,7 @@ const read = {
 const checks = {
   "GET returns breakdown.discount": read.discount === toPayPalValue(LIST - EARNED),
   "GET returns breakdown.item_total": read.itemTotal === toPayPalValue(LIST),
-  "GET returns custom_id on the order": read.orderCustomId === customId,
+  "GET returns custom_id on the order": read.orderCustomId === expectedCustomId,
   "capture COMPLETED": read.captureStatus === "COMPLETED",
   "captured amount == earned price": read.captureAmount === toPayPalValue(EARNED) && read.captureCurrency === "USD",
   "capture replay returned the same capture (idempotent)": out.replaySameCaptureId === true,
