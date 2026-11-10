@@ -117,3 +117,23 @@ Live check (read-only `gh api graphql`, Nov 10 ~02:00 UTC): `user(login:"torvald
 | H25 | cron-job.org free, up to 60 runs/hour, signup needed | cron-job.org | documented | tertiary |
 | H26 | UptimeRobot Free: 50 monitors, 5-min interval, no card | uptimerobot.com/pricing | documented | **primary pinger** |
 
+
+## Verified by real calls (Nov 10 2026) — see docs/EVIDENCE.md rows P1, P2, P3
+
+| Fact | Was | Now | Call that proved it |
+|---|---|---|---|
+| P5–P7 discount in `amount.breakdown` with one item; value = item_total − discount | documented | **verified-by-call** | P1: item_total 49.00, discount 24.50, value 24.50 accepted and captured |
+| P9 `custom_id` (101 chars) returned on order and capture | documented | **verified-by-call** | P1 GET order + capture |
+| P11/P12 Orders `PayPal-Request-Id` replay returns the original — **even with a different body** | documented | **verified-by-call** | P1: create replayed with same key and a $999 body → original $24.50 order, HTTP 200 |
+| P14 `Prefer: return=representation` returns full resource | documented | **verified-by-call** | P1, P2 |
+| P18 capture `seller_receivable_breakdown` (fee, net) | documented | **verified-by-call** | P1: fee 1.12, net 23.38 |
+| P19 GET order after capture returns `breakdown.discount`, `custom_id`, `payments.captures[]` | documented | **verified-by-call** | P1 → **no "charge net" fallback needed** |
+| P13/P26 refund `PayPal-Request-Id` replay returns the same refund — even with a different amount; 201 then 200 | documented | **verified-by-call** | P2: three POSTs, one refund |
+| P25 refund `custom_id` round-trips; refund `amount` object | documented | **verified-by-call** | P2 GET refund |
+| P27 partial refund leaves capture `PARTIALLY_REFUNDED` | documented | **verified-by-call** | P2 GET capture |
+| P29 `GET /v2/payments/refunds/{id}` with `links[rel=up]` → capture | documented | **verified-by-call** | P2 (note: link host is `api.sandbox.paypal.com`) |
+| GET order `payments.refunds[]` carries refund `custom_id` (reconcile read-first match) | inferred | **verified-by-call** | P2 |
+| `payment_source.card` (sandbox test Visa) on create with intent CAPTURE approves **and captures in one step** (order `COMPLETED` on create) | not in docs read | **verified-by-call** | P1 card mode; the app's buyer flow still uses JS SDK approval (proved at B1 / L4) |
+| G18 `merged:>=` + `sort:created-desc` in GraphQL search | documented | **verified-by-call** | P3: 67 PRs, all merged ≥ Jan 1, cost 1 |
+| G30 fine-grained PAT works on GraphQL for public data | documented | **verified-by-call** | P3, remaining 4997/5000 |
+| H14/H18 Neon pooled + direct connection strings (Postgres 18.6) | documented | **verified-by-call** | `select version()` on both: 858 ms pooled (cold), 198 ms direct |
