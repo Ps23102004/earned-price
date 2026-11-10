@@ -31,7 +31,8 @@ pnpm dev               # http://127.0.0.1:3000
 |---|---|
 | Claude Opus 5.5 (Claude Code) | planning, architecture drafting, merging reviews, task specs, integration |
 | Claude Sonnet 5.5 | research readers (PayPal docs, GitHub docs, hosting free tiers); main implementer |
-| Claude Haiku 5.5 | test/lint/typecheck runner; runtime rule compiler and loophole proposer (structured output only, validated by code) |
+| Claude Haiku 5.5 | test/lint/typecheck runner |
+| Gemma 4 12B (local, Ollama) | development-time rule compiler and loophole proposer (structured output only, validated by code); the deployed demo serves its precomputed, labelled-cached output |
 | Claude Fable | independent architecture reviews (two rounds), diff reviews, red-team lead |
 | Gemini 3.8 Flash | independent architecture critic (different vendor) |
 

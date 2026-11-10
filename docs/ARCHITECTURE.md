@@ -169,3 +169,4 @@ Residual risks Fable accepted (kept in §3.9/§2): money facts documented-only u
 
 | Date | Section | Change | One-line reason |
 |---|---|---|---|
+| 2026-11-10 | 3.1, 3.7 | AI runtime = local OpenAI-compatible model (Ollama, `AI_BASE_URL`/`AI_MODEL`), no Anthropic key; production sets `AI_LIVE=0` and serves precomputed compiled rules and loophole results labelled cached; the merchant box says live compile is unavailable there | owner will not pay for a model API and the deployed app cannot reach a local model in December |
