@@ -205,8 +205,9 @@ describe("rate limiter hard cap", () => {
     for (let i = 0; i < 10_010; i++) allow(`flood${i}`, 5, 60_000, now);
     // the attacker's live counter survived the flood
     expect(allow("attacker", 1, 60_000, now)).toBe(false);
-    // brand-new keys now share one bucket, which the flood has used up
-    expect(allow("fresh-a", 5, 60_000, now)).toBe(false);
+    // brand-new keys land in one of 64 overflow buckets; the 10 overflowed flood keys cannot exhaust them all
+    const fresh = Array.from({ length: 200 }, (_, i) => allow(`fresh${i}`, 5, 60_000, now));
+    expect(fresh.filter(Boolean).length).toBeGreaterThan(100);
     _resetForTests();
   });
   it("counts trusted proxy hops from the right", () => {
@@ -214,5 +215,7 @@ describe("rate limiter hard cap", () => {
     expect(clientIp(h, 1)).toBe("10.0.0.1");
     expect(clientIp(h, 2)).toBe("1.2.3.4");
     expect(clientIp(h, 9)).toBe("local");
+    expect(clientIp(new Headers({ "x-forwarded-for": "2001:db8:1:2:aaaa::1" }), 1)).toBe("2001:db8:1:2::/64");
+    expect(clientIp(new Headers({ "x-forwarded-for": "2001:db8:1:2:bbbb::9" }), 1)).toBe("2001:db8:1:2::/64");
   });
 });
