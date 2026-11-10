@@ -9,7 +9,7 @@
     "lint": "eslint",
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
-    "db:migrate": "tsx scripts/db-migrate.ts"
+    "db:migrate": "tsx --env-file=.env scripts/db-migrate.mts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.7.0",
