@@ -34,7 +34,7 @@ pnpm dev               # http://127.0.0.1:3000
 | Claude Haiku 5.5 | test/lint/typecheck runner |
 | Gemma 4 12B (local, Ollama) | development-time rule compiler and loophole proposer (structured output only, validated by code); the deployed demo serves its precomputed, labelled-cached output |
 | Claude Fable | independent architecture reviews (two rounds), diff reviews, red-team lead |
-| Gemini 3.8 Flash | independent architecture critic (different vendor) |
+| Gemini 3.8 Flash | independent architecture critic and code reviewer (different vendor) |
 
 _This table is updated as tools are actually used; models that were planned but never ran are not listed._
 
