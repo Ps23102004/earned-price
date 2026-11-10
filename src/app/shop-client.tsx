@@ -121,7 +121,7 @@ export function ShopClient({
 
   async function createOrder() {
     const r = await postJson("/api/paypal/create", { orderId: quote!.orderId });
-    if (!r.ok) throw new Error(r.json.error ?? `HTTP ${r.status}`);
+    if (!r.ok) throw new Error(r.json.message ?? r.json.error ?? `HTTP ${r.status}`);
     return r.json.paypalOrderId as string;
   }
 

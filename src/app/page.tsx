@@ -7,6 +7,7 @@ import { SAMPLE_NAMES, loadSample } from "@/facts/samples";
 import { readback } from "@/rules/readback";
 import { DEFAULT_RULE } from "@/rules/presets";
 import { CopyButton } from "./_components/copy-button";
+import { ResetDemo } from "./_components/reset-demo";
 import { TheRule } from "./_components/the-rule";
 import type { SampleName } from "./_components/types";
 import { card } from "./_components/ui";
@@ -70,6 +71,7 @@ export default function Home() {
               PayPal sandbox — no real money. You can also pay with the test card 4111 1111 1111 1111, any future
               expiry, CVV 123.
             </p>
+            <ResetDemo />
           </section>
 
           <section aria-labelledby="how-heading">

@@ -11,6 +11,7 @@ import { decideCaptureOutcome } from "./capture-outcome";
 import type { CaptureInput, Decision } from "./capture-outcome";
 import { customIdFor } from "./custom-id";
 import { query, tx } from "./db";
+import { claimRedemption, effectOf, redemptionFor, settleRedemption } from "./redemptions";
 import { RECAPTURE_LIMIT, captureRequestId, planReconcile } from "./reconcile-plan";
 
 type Result = { status: number; body: unknown };
@@ -19,6 +20,7 @@ export type Order = {
   id: string;
   state: string;
   session_id: string;
+  buyer_key: string | null;
   snapshot_json: string;
   snapshot_hash: string;
   list_cents: number;
@@ -41,7 +43,11 @@ export type Order = {
   quote_expired: boolean;
 };
 
-type CaptureRow = Pick<Order, "id" | "paypal_order_id" | "capture_attempt" | "earned_cents" | "snapshot_hash">;
+type CaptureRow = Pick<Order, "id" | "paypal_order_id" | "capture_attempt" | "earned_cents" | "snapshot_hash" | "buyer_key">;
+
+/** Thrown inside the claim transaction to roll it back when the buyer already redeemed with another order. */
+class RedeemedElsewhere extends Error {}
+const ALREADY_REDEEMED = "This account has already redeemed its discount. You were not charged.";
 
 const LIST_CENTS = 4900;
 const ITEM_NAME = "Earned Price demo licence";
@@ -78,25 +84,33 @@ async function byPayPalId(paypalOrderId: string): Promise<Order | undefined> {
  * requires capture_attempt to be what the caller read, so a stale PayPal read cannot undo a newer attempt.
  */
 async function setState(id: string, from: string[], to: string, attempt?: number): Promise<boolean> {
-  const r = await query(
-    `update orders set state = $3, updated_at = now() where id = $1 and state = any($2::text[]) and ($4::int is null or capture_attempt = $4)`,
-    [id, from, to, attempt ?? null],
-  );
-  return r.rowCount === 1;
+  return tx(async (c) => {
+    const r = await c.query(
+      `update orders set state = $3, updated_at = now() where id = $1 and state = any($2::text[]) and ($4::int is null or capture_attempt = $4)`,
+      [id, from, to, attempt ?? null],
+    );
+    if (r.rowCount !== 1) return false;
+    await settleRedemption(c, id, effectOf(to)); // same transaction as the state change
+    return true;
+  });
 }
 
 /** Compare-and-set the outcome of a capture decision, storing whatever PayPal told us about the capture. */
 async function applyDecision(id: string, from: string[], d: Decision, attempt?: number): Promise<boolean> {
   const c = d.capture;
-  const r = await query(
-    `update orders set state = $3,
-       paypal_capture_id = coalesce($4, paypal_capture_id), capture_status = coalesce($5, capture_status),
-       capture_reason = coalesce($6, capture_reason), captured_cents = coalesce($7, captured_cents),
-       paypal_fee_cents = coalesce($8, paypal_fee_cents), licence_key = coalesce($9, licence_key), updated_at = now()
-     where id = $1 and state = any($2::text[]) and ($10::int is null or capture_attempt = $10)`,
-    [id, from, d.nextState, c?.id ?? null, c?.status ?? null, c?.reason ?? null, c?.amountCents ?? null, c?.feeCents ?? null, d.issueLicence && c ? licenceKey(c.id) : null, attempt ?? null],
-  );
-  return r.rowCount === 1;
+  return tx(async (t) => {
+    const r = await t.query(
+      `update orders set state = $3,
+         paypal_capture_id = coalesce($4, paypal_capture_id), capture_status = coalesce($5, capture_status),
+         capture_reason = coalesce($6, capture_reason), captured_cents = coalesce($7, captured_cents),
+         paypal_fee_cents = coalesce($8, paypal_fee_cents), licence_key = coalesce($9, licence_key), updated_at = now()
+       where id = $1 and state = any($2::text[]) and ($10::int is null or capture_attempt = $10)`,
+      [id, from, d.nextState, c?.id ?? null, c?.status ?? null, c?.reason ?? null, c?.amountCents ?? null, c?.feeCents ?? null, d.issueLicence && c ? licenceKey(c.id) : null, attempt ?? null],
+    );
+    if (r.rowCount !== 1) return false;
+    await settleRedemption(t, id, effectOf(d.nextState, d.releaseRedemption)); // same transaction as the state change
+    return true;
+  });
 }
 
 export async function createGuestQuote(sid: string): Promise<Result> {
@@ -127,6 +141,19 @@ export async function createPayPalOrder(orderId: string, sid: string): Promise<R
     return { status: 409, body: { error: "quote expired", state: "expired" } };
   }
   if (o.earned_cents < 1) return { status: 422, body: { error: "nothing to charge" } };
+
+  // One redemption per buyer: refuse before touching PayPal. A stuck order of theirs may resolve first.
+  if (o.buyer_key) {
+    let held = await redemptionFor({ query }, o.buyer_key);
+    if (held && held.order_id !== o.id) {
+      await reconcileOrder(held.order_id, "act");
+      held = await redemptionFor({ query }, o.buyer_key);
+    }
+    if (held && held.order_id !== o.id) {
+      await setState(o.id, ["quoted"], "cancelled");
+      return { status: 409, body: { error: "already redeemed", state: "cancelled", message: ALREADY_REDEEMED } };
+    }
+  }
 
   const amount: Record<string, unknown> = {
     ...money(o.earned_cents),
@@ -192,11 +219,23 @@ export async function capture(paypalOrderId: string, sid: string): Promise<Resul
     const r = await c.query<CaptureRow>(
       `update orders set state = 'capturing', capture_started_at = now(), capture_attempt = capture_attempt + 1, updated_at = now()
        where paypal_order_id = $1 and session_id = $2 and state = 'approved' and created_at > now() - interval '60 minutes' and capture_attempt < $3
-       returning id, paypal_order_id, capture_attempt, earned_cents, snapshot_hash`,
+       returning id, paypal_order_id, capture_attempt, earned_cents, snapshot_hash, buyer_key`,
       [paypalOrderId, sid, RECAPTURE_LIMIT],
     );
-    return r.rows[0];
+    const row = r.rows[0];
+    // Claim the buyer's redemption in the same transaction: a conflict rolls back the whole claim (order stays `created`).
+    if (row?.buyer_key && !(await claimRedemption(c, row.buyer_key, row.id))) throw new RedeemedElsewhere();
+    return row;
+  }).catch((e) => {
+    if (e instanceof RedeemedElsewhere) return "redeemed" as const;
+    throw e;
   });
+
+  if (claimed === "redeemed") {
+    const o = await byPayPalId(paypalOrderId);
+    if (o) await setState(o.id, ["created"], "cancelled");
+    return { status: 409, body: { state: "cancelled", orderId: o?.id, error: "already redeemed", message: ALREADY_REDEEMED } };
+  }
 
   if (!claimed) {
     const o = await byPayPalId(paypalOrderId);
@@ -234,7 +273,10 @@ export async function cancel(orderId: string, sid: string): Promise<Result> {
   const u = UUID.test(orderId)
     ? await query(`update orders set state = 'cancelled', updated_at = now() where id = $1 and session_id = $2 and state in ('quoted', 'created', 'approved')`, [orderId, sid])
     : undefined;
-  if (u?.rowCount === 1) return { status: 200, body: { state: "cancelled" } };
+  if (u?.rowCount === 1) {
+    await settleRedemption({ query }, orderId, "release");
+    return { status: 200, body: { state: "cancelled" } };
+  }
   const o = await getOrder(orderId);
   if (!o || o.session_id !== sid) return { status: 404, body: { error: "order not found" } };
   if (o.state === "cancelled") return { status: 200, body: { state: "cancelled" } };
