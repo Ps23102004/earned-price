@@ -2,7 +2,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { captureLanding } from "../src/app/capture-landing";
 import { bootProblems } from "../src/instrumentation";
-import { allow, clientIp } from "../src/ratelimit";
+import { allow, clientIp, clientKey } from "../src/ratelimit";
 import { customIdFor, verifyCustomId } from "../src/store/custom-id";
 import { RECAPTURE_LIMIT, captureRequestId, planReconcile } from "../src/store/reconcile-plan";
 import type { PlanInput } from "../src/store/reconcile-plan";
@@ -217,5 +217,38 @@ describe("rate limiter hard cap", () => {
     expect(clientIp(h, 9)).toBe("local");
     expect(clientIp(new Headers({ "x-forwarded-for": "2001:db8:1:2:aaaa::1" }), 1)).toBe("2001:db8:1:2::/64");
     expect(clientIp(new Headers({ "x-forwarded-for": "2001:db8:1:2:bbbb::9" }), 1)).toBe("2001:db8:1:2::/64");
+  });
+});
+
+describe("rate-limit client key normalisation", () => {
+  it.each([
+    ["2001:db8:1:2:aaaa::1", "2001:db8:1:2::/64"],
+    ["2001:0db8:0001:0002:ffff:0:0:9", "2001:db8:1:2::/64"],
+    ["2001:db8::1", "2001:db8:0:0::/64"],
+    ["2001:db8:0:0:5::", "2001:db8:0:0::/64"],
+    ["::1", "0:0:0:0::/64"],
+    ["::ffff:1.2.3.4", "1.2.3.4"],
+    ["::ffff:0102:0304", "1.2.3.4"],
+    ["fe80::1%en0", "fe80:0:0:0::/64"],
+    ["1.2.3.4", "1.2.3.4"],
+    ["not-an-ip", "not-an-ip"],
+  ])("%s -> %s", (ip, key) => {
+    expect(clientKey(ip)).toBe(key);
+  });
+  it("two spellings of one /64 give one key", () => {
+    expect(clientKey("2001:db8::1")).toBe(clientKey("2001:0db8:0000:0000:ffff::2"));
+  });
+});
+
+describe("rate-limit overflow total cap", () => {
+  it("all overflow together is bounded", async () => {
+    const { _resetForTests } = await import("../src/ratelimit");
+    _resetForTests();
+    const now = 5_000_000;
+    for (let i = 0; i < 10_000; i++) allow(`fill${i}`, 2, 60_000, now);
+    let granted = 0;
+    for (let i = 0; i < 1_000; i++) if (allow(`new${i}`, 2, 60_000, now)) granted++;
+    expect(granted).toBeLessThanOrEqual(2 * 64);
+    _resetForTests();
   });
 });
