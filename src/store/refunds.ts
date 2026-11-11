@@ -131,7 +131,11 @@ async function postRefund(captureId: string, refundId: string, cents: number, cu
     const r = await paypal("POST", `/v2/payments/captures/${encodeURIComponent(captureId)}/refund`, {
       requestId: requestId(refundId),
       representation: true,
-      body: { amount: { currency_code: "USD", value: toPayPalValue(cents) }, custom_id: customId },
+      body: {
+        amount: { currency_code: "USD", value: toPayPalValue(cents) },
+        custom_id: customId,
+        note_to_payer: "Earned Price: you proved public facts after paying, so the difference to the price those facts earn is refunded.",
+      },
     });
     return { kind: "response", httpStatus: r.status, body: r.json };
   } catch (err) {

@@ -187,3 +187,13 @@ describe.skipIf(!HAVE_DB)("shared PayPal budget is charged only for a valid, own
     }
   });
 });
+
+describe("PayPal-facing text", () => {
+  it("describes the order in at most 127 characters, from the stored amounts only", async () => {
+    const { describeOrder } = await import("../src/store/orders");
+    expect(describeOrder(4900, 2450)).toContain("50% discount earned");
+    expect(describeOrder(4900, 0)).toContain("no discount");
+    expect(describeOrder(4900, 2450).length).toBeLessThanOrEqual(127);
+    expect(describeOrder(0, 0)).toContain("no discount");
+  });
+});

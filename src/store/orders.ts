@@ -53,6 +53,11 @@ const ALREADY_REDEEMED = "This account has already redeemed its discount. You we
 const LIST_CENTS = 4900;
 const ITEM_NAME = "Earned Price demo licence";
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+/** PayPal purchase-unit description (at most 127 characters): the item and the earned discount percent. */
+export function describeOrder(listCents: number, discountCents: number): string {
+  const pct = listCents > 0 ? Math.round((discountCents * 100) / listCents) : 0;
+  return pct > 0 ? `${ITEM_NAME}: ${pct}% discount earned from verified public facts` : `${ITEM_NAME}: list price, no discount`;
+}
 const hex = (id: string) => id.replaceAll("-", "");
 const money = (cents: number) => ({ currency_code: "USD", value: toPayPalValue(cents) });
 
@@ -187,6 +192,8 @@ export async function createPayPalOrder(orderId: string, sid: string, withinBudg
         purchase_units: [
           {
             invoice_id: o.id,
+            // Shown in PayPal's own order details: what was earned, written by code from the stored discount.
+            description: describeOrder(o.list_cents, o.discount_cents),
             custom_id: customIdFor(o.id, o.snapshot_hash),
             items: [{ name: ITEM_NAME, quantity: "1", unit_amount: money(o.list_cents) }],
             amount,
