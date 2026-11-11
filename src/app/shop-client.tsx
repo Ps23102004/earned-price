@@ -4,7 +4,7 @@ import { PayPalButtons, PayPalScriptProvider, usePayPalScriptReducer } from "@pa
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { PriceBuildUp } from "./_components/price-buildup";
 import type { Identity, Quote, SampleName } from "./_components/types";
 import { Chip, Notice, buttonClass, card, usd, type Tone } from "./_components/ui";
@@ -86,6 +86,14 @@ export function ShopClient({
   const sdkOptions = useMemo(() => ({ clientId, currency: "USD", intent: "capture" }), [clientId]);
   const quoting = phase === "quoting";
   const avatar = safeAvatarUrl(identity?.avatarUrl);
+  const priceRef = useRef<HTMLElement>(null);
+
+  // The price card sits below the profile list; bring it into view when pricing starts.
+  useEffect(() => {
+    if (phase !== "quoting") return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    priceRef.current?.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+  }, [phase]);
 
   async function getPrice(p: Profile) {
     setPhase("quoting");
@@ -263,7 +271,7 @@ export function ShopClient({
       </section>
 
       {quoting || showQuote ? (
-        <section aria-labelledby="price-heading" className={card}>
+        <section ref={priceRef} aria-labelledby="price-heading" className={`${card} scroll-mt-4`}>
           <StepHeading n={2} id="price-heading">
             Price
           </StepHeading>
