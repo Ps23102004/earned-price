@@ -104,7 +104,7 @@ function Details({ order, po, retry, claimHash, login }: { order: Order; po: Jso
         <div className="flex flex-col gap-1">
           <Notice tone="ok">Fact hash verified</Notice>
           <p className="text-xs text-stone-500 dark:text-stone-400">
-            The facts that set the price are the ones we stored, and PayPal's order carries their hash. This does not prove GitHub's data was true.
+            The facts that set the price are the ones we stored, and PayPal&apos;s order carries their hash. This does not prove GitHub&apos;s data was true.
           </p>
         </div>
       ) : (
