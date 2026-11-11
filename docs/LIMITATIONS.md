@@ -17,7 +17,7 @@ So "Fact hash verified" on the receipt means "the facts read from GitHub when th
 
 ## Who the default rule excludes
 
-The shop's default rule gives 50% for a merged PR into a 1,000-star repository this year, 20% for any merged PR, and 10% for an account at least three years old with a public repository. The 50% and 20% tiers exclude pull requests into the author's own repositories and PRs under 10 changed lines, and the 50% tier also excludes forks, because the loophole hunt showed self-merges and trivial PRs winning those tiers. Consequences:
+The shop's default rule gives 50% for a merged PR into a 1,000-star repository this year, 20% for any merged PR, and 10% for an account at least three years old with a public repository. The 50% and 20% tiers exclude pull requests into the author's own repositories and PRs under 10 changed lines, and the 50% tier also excludes forks, because the recorded loophole hunts found real accounts winning those tiers by merging into their own repositories; the small-PR and fork limits were added as precautions, not because the hunt found examples. Consequences:
 
 - The sole maintainer of a popular personal project earns nothing from the top two tiers, only the 10% tier if the account is old enough. That is a known flaw of the default rule, not of the mechanism; a merchant can write a different rule.
 - A repository controlled through an organisation the author also controls is invisible to the "not my own repo" check, so self-merges there still count.
