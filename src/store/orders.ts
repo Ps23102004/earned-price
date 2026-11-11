@@ -108,7 +108,17 @@ async function applyDecision(id: string, from: string[], d: Decision, attempt?: 
       [id, from, d.nextState, c?.id ?? null, c?.status ?? null, c?.reason ?? null, c?.amountCents ?? null, c?.feeCents ?? null, d.issueLicence && c ? licenceKey(c.id) : null, attempt ?? null],
     );
     if (r.rowCount !== 1) return false;
-    await settleRedemption(t, id, effectOf(d.nextState, d.releaseRedemption)); // same transaction as the state change
+    const effect = effectOf(d.nextState, d.releaseRedemption);
+    if (effect === "redeem") {
+      // Reconcile can find an order captured outside our capture route, so no claim exists yet. Take it now; if the
+      // buyer's redemption belongs to another order the money has moved, so show a mismatch and issue no licence.
+      const owner = (await t.query<{ buyer_key: string | null }>(`select buyer_key from orders where id = $1`, [id])).rows[0]?.buyer_key;
+      if (owner && !(await claimRedemption(t, owner, id))) {
+        await t.query(`update orders set state = 'mismatch', licence_key = null, updated_at = now() where id = $1`, [id]);
+        return true;
+      }
+    }
+    await settleRedemption(t, id, effect); // same transaction as the state change
     return true;
   });
 }
@@ -332,6 +342,7 @@ async function reconcileOpen(o: Order, mode: "read" | "act"): Promise<void> {
       captureAttempt: o.capture_attempt,
       captureStale: o.capture_stale,
       olderThan60s: o.older_60s,
+      olderThan60m: o.older_60m,
       olderThan6h: o.older_6h,
       mode,
     },

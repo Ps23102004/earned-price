@@ -1,8 +1,12 @@
+import { allow, clientIp } from "@/ratelimit";
 import { guarded } from "@/session";
 import { createPayPalOrder } from "@/store/orders";
 
 export function POST(req: Request) {
   return guarded(async (session) => {
+    if (!allow(`create:${clientIp(req.headers)}`, 60, 3_600_000)) {
+      return { status: 429, body: { error: "too many requests, try again later" } };
+    }
     const body = await req.json().catch(() => null);
     if (typeof body !== "object" || body === null || Array.isArray(body)) {
       return { status: 400, body: { error: "orderId is required" } };

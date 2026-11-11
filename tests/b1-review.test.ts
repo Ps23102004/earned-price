@@ -48,6 +48,7 @@ const base: PlanInput = {
   captureAttempt: 1,
   captureStale: true,
   olderThan60s: true,
+  olderThan60m: false,
   olderThan6h: false,
   mode: "act",
 };
@@ -63,7 +64,7 @@ describe("planReconcile, capturing without a capture id (findings 2, 8, 9)", () 
     expect(planReconcile(base, orderJson("APPROVED"))).toEqual({ do: "recapture" });
     expect(planReconcile({ ...base, mode: "read" }, orderJson("APPROVED"))).toEqual({ do: "none" });
     expect(planReconcile({ ...base, captureStale: false }, orderJson("APPROVED"))).toEqual({ do: "none" });
-    expect(planReconcile({ ...base, captureAttempt: RECAPTURE_LIMIT }, orderJson("APPROVED"))).toEqual({ do: "none" });
+    expect(planReconcile({ ...base, captureAttempt: RECAPTURE_LIMIT }, orderJson("APPROVED"))).toEqual({ do: "state", to: "failed" });
     expect(planReconcile({ ...base, captureAttempt: RECAPTURE_LIMIT - 1 }, orderJson("APPROVED"))).toEqual({ do: "recapture" });
   });
   it("CREATED / VOIDED / 404 act only when the capture attempt is stale", () => {

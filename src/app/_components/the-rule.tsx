@@ -2,9 +2,9 @@
 export function TheRule({ readback, json }: { readback: string; json: string }) {
   return (
     <details className="rounded-xl border border-stone-200 bg-white p-4 dark:border-stone-800 dark:bg-stone-900/60">
-      <summary className="cursor-pointer rounded text-sm font-semibold">The rule</summary>
+      <summary className="cursor-pointer rounded text-sm font-semibold">The default rule</summary>
       <p className="mt-3 text-xs text-stone-500 dark:text-stone-400">
-        This is the rule the price is computed from, in plain English and as data.
+        This is the default rule, in plain English and as data. If you published a rule on the merchant page, your price is computed from that one instead.
       </p>
       <p className="mt-2 whitespace-pre-line break-words text-sm">{readback}</p>
       <pre

@@ -73,7 +73,8 @@ function convert(m: unknown): { ok: true; rule: Rule } | { ok: false; reasons: s
   if (!isObj(m)) return fail("the model output is not an object");
   if (m.refuse === true) {
     const items = Array.isArray(m.unsupported) ? m.unsupported.filter((x): x is string => typeof x === "string") : [];
-    return fail("refused: " + items.map((x) => x.slice(0, 200)).join(", "));
+    const safe = items.slice(0, 5).map((x) => Array.from(x.replace(/\s+/gu, " ").replace(/[^\p{L}\p{N} .,;:'()%-]/gu, "").trim()).slice(0, 80).join("").trim()).filter(Boolean);
+    return fail("refused: " + safe.join(", "));
   }
   const errors: string[] = [];
   for (const k of Object.keys(m)) if (!TOP_KEYS.includes(k)) errors.push(`unknown key ${keyText(k)}`);
@@ -123,7 +124,7 @@ export function toRule(m: unknown): { ok: true; rule: Rule } | { ok: false; reas
 const INJECTION: RegExp[] = [
   /ignore\s+(?:(?:all|any|the|these|those|of)\s+)*(?:previous|prior|above)/i,
   /system\s+prompt/i,
-  /you\s+are\s+(?:now\s+)?/i,
+  /you\s+are\s+now\b/i,
   /disregard/i,
   /override/i,
   /jailbreak/i,

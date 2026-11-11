@@ -16,6 +16,7 @@ export type PlanInput = {
   /** capture_started_at is null or older than 30 s: the capture call is no longer in flight. */
   captureStale: boolean;
   olderThan60s: boolean;
+  olderThan60m: boolean;
   olderThan6h: boolean;
   /** "read" for GET paths: never starts a PayPal POST. "act" for POST routes. */
   mode: "read" | "act";
@@ -62,7 +63,11 @@ export function planReconcile(o: PlanInput, r: PayPalRead): Plan {
       if (o.state === "capturing") return settled ? { do: "state", to: "created" } : NONE;
       return o.olderThan6h ? { do: "state", to: "expired" } : NONE;
     case "APPROVED":
-      return o.state === "capturing" && o.mode === "act" && o.captureStale && o.captureAttempt < RECAPTURE_LIMIT ? { do: "recapture" } : NONE;
+      // Same 60-minute window the capture route enforces: an approval nobody finished must not stay open.
+      if (o.state !== "capturing") return o.olderThan60m ? { do: "state", to: "expired" } : NONE;
+      if (!o.captureStale) return NONE;
+      if (o.captureAttempt >= RECAPTURE_LIMIT || o.olderThan60m) return { do: "state", to: "failed" };
+      return o.mode === "act" ? { do: "recapture" } : NONE;
     default:
       return NONE;
   }

@@ -392,7 +392,9 @@ export function Orders() {
                 className="flex flex-wrap items-center justify-between gap-2 rounded-xl p-3 text-sm hover:bg-stone-100 dark:hover:bg-stone-900"
               >
                 <span className="font-mono text-xs">{o.orderId.slice(0, 8)}</span>
-                <span className="text-xs text-stone-500 dark:text-stone-400">price quote {usd(o.earnedCents)}</span>
+                {["created", "approved", "capturing"].includes(o.state) ? (
+                  <span className="text-xs text-stone-500 dark:text-stone-400">price quote {usd(o.earnedCents)}</span>
+                ) : null}
                 <Chip tone={stateTone[o.state] ?? "info"}>{o.state}</Chip>
               </Link>
             </li>

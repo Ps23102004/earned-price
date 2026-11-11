@@ -70,10 +70,6 @@ describe("decideCaptureOutcome", () => {
 
   it.each([
     ["422 ORDER_ALREADY_CAPTURED", issue("ORDER_ALREADY_CAPTURED")],
-    ["422 unknown issue", issue("SOMETHING_NEW")],
-    ["422 with no details", res(422, {})],
-    ["400", res(400, { name: "INVALID_REQUEST" })],
-    ["404", res(404, null)],
     ["429", res(429, { name: "RATE_LIMIT_REACHED" })],
     ["500", res(500, { name: "INTERNAL_SERVER_ERROR" })],
     ["503 with raw body", res(503, { raw: "<html>" })],
@@ -87,6 +83,15 @@ describe("decideCaptureOutcome", () => {
     expect(d).toMatchObject({ nextState: "capturing", releaseRedemption: false, issueLicence: false });
     expect(d.clientAction).toBeUndefined();
     expect(d.message).toBeTruthy();
+  });
+
+  it.each([
+    ["422 unknown issue", issue("SOMETHING_NEW")],
+    ["422 with no details", res(422, {})],
+    ["400", res(400, { name: "INVALID_REQUEST" })],
+    ["404", res(404, null)],
+  ])("%s -> definitive client error: failed, redemption released, no licence", (_name, input) => {
+    expect(decideCaptureOutcome(input, EARNED, CID)).toMatchObject({ nextState: "failed", releaseRedemption: true, issueLicence: false });
   });
 
   it("COMPLETED capture whose custom_id belongs to another order -> mismatch, no licence", () => {

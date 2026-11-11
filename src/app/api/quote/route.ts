@@ -24,9 +24,11 @@ export function POST(req: Request) {
 
     const r = await createQuote({ sid: session.sid, ip, github: session.github, activeRuleId: session.activeRuleId, sample: isSampleName(sample) ? sample : undefined });
     if (r.status === 200) {
+      // Save only what changed: a quote can take seconds, and re-sealing the whole cookie would undo a publish or sign-out made meanwhile.
+      const changed = !session.hasOrders || (isSampleName(sample) && session.sample !== sample);
       session.hasOrders = true;
       if (isSampleName(sample)) session.sample = sample;
-      await session.save();
+      if (changed) await session.save();
     }
     return r;
   }, req);

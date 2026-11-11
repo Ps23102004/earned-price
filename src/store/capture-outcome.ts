@@ -74,5 +74,12 @@ export function decideCaptureOutcome(input: CaptureInput, earnedCents: number, e
       return { nextState: "created", releaseRedemption: true, issueLicence: false, message: "Approve the payment first." };
     }
   }
+  // Any other client error says PayPal did not capture (ORDER_ALREADY_CAPTURED excepted: that one must be read back).
+  // 408/409/429 are transient. Keeping these "in flight" would strand the buyer's redemption for good.
+  const definitive = httpStatus >= 400 && httpStatus < 500 && ![408, 409, 429].includes(httpStatus);
+  const alreadyCaptured = Array.isArray(body?.details) && body.details.some((d: { issue?: unknown }) => d?.issue === "ORDER_ALREADY_CAPTURED");
+  if (definitive && !alreadyCaptured) {
+    return { nextState: "failed", releaseRedemption: true, issueLicence: false, message: "PayPal could not complete this payment. You were not charged. Start a new order." };
+  }
   return keep();
 }

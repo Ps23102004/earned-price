@@ -19,7 +19,15 @@ export async function resetRedemptions(buyerKeys: string[]): Promise<Result> {
       blocked++;
       continue;
     }
-    released += (await query(`delete from redemptions where buyer_key = $1`, [key])).rowCount ?? 0;
+    // Bound to the order checked above and re-checked in the same statement, so a newer claim is never deleted.
+    released +=
+      (
+        await query(
+          `delete from redemptions r using orders o
+           where r.buyer_key = $1 and r.order_id = $2 and o.id = r.order_id and o.state <> all($3::text[])`,
+          [key, held.order_id, IN_FLIGHT],
+        )
+      ).rowCount ?? 0;
   }
   if (blocked > 0 && released === 0) {
     return { status: 409, body: { error: "a payment is still in progress for this account", released, blocked } };
