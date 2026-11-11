@@ -29,6 +29,22 @@ type HuntResult = Hunt | Unavailable;
 
 type Current = { ruleId: string; rule: unknown; readback: string; source?: string; diff?: string[]; previousRuleId?: string };
 
+const day = (iso?: string) => {
+  const d = iso ? new Date(iso) : undefined;
+  return d && !Number.isNaN(d.getTime()) ? d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" }) : "";
+};
+
+// Plain-English names for the anonymised facts shown on a loophole example (unknown keys are spelled out from camelCase).
+const FACT_LABEL: Record<string, string> = {
+  accountAgeAtMergeDays: "Account age when merged (days)",
+  linesChanged: "Lines changed",
+  repoStars: "Repository stars (approx.)",
+  ownerIsAuthor: "Author owns the repository",
+  isFork: "Repository is a fork",
+};
+const factLabel = (k: string) => FACT_LABEL[k] ?? k.replace(/([A-Z])/g, " $1").replace(/^./, (c) => c.toUpperCase());
+const factValue = (v: string | number | boolean) => (typeof v === "boolean" ? (v ? "yes" : "no") : String(v));
+
 async function call(url: string, body: unknown) {
   const res = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -84,7 +100,7 @@ export function MerchantClient() {
       }
       setCompile(json as CompileResult);
       if (json.status === "compiled") {
-        setCurrent({ ruleId: json.ruleId, rule: json.rule, readback: json.readback, source: json.source === "cached" ? `cached ${json.cachedAt ?? ""}`.trim() : "live" });
+        setCurrent({ ruleId: json.ruleId, rule: json.rule, readback: json.readback, source: json.source === "cached" ? `Recorded result · ${day(json.cachedAt)}` : "Live model" });
         setHunt(null);
       } else {
         setCurrent(null);
@@ -241,9 +257,12 @@ export function MerchantClient() {
         ) : compile.status === "compiled" ? (
           <div className="mt-3 flex flex-col gap-3">
             <div className="flex flex-wrap gap-2">
-              <Chip tone="ok">AI proposed · code validated</Chip>
+              <Chip tone="ok">{current?.source === "built by hand" ? "Built by hand · code validated" : "AI proposed · code validated"}</Chip>
               <Chip tone="info">{current?.source ?? compile.source}</Chip>
             </div>
+            {current?.source?.startsWith("Recorded") ? (
+              <p className="text-xs text-stone-600 dark:text-stone-400">This is a recorded result for an example sentence. Type your own sentence for a live compile.</p>
+            ) : null}
             <div className="grid gap-4 md:grid-cols-2">
               <div className="min-w-0">
                 <h3 className="text-sm font-medium">Rule (JSON)</h3>
@@ -268,7 +287,7 @@ export function MerchantClient() {
               ) : (
                 <>
                   {compile.status === "refused" ? "Refused" : "Invalid"}: {(compile.reasons ?? []).join("; ")}. Nothing was published.
-                  {compile.cachedAt ? ` (recorded refusal, cached ${compile.cachedAt})` : ""}
+                  {compile.cachedAt ? ` (recorded refusal, ${day(compile.cachedAt)})` : ""}
                 </>
               )}
             </Notice>
@@ -304,7 +323,7 @@ export function MerchantClient() {
           <div className="mt-4 flex flex-col gap-4">
             <div className="flex flex-wrap gap-2">
               <Chip tone="info">
-                {huntOk.source === "live" ? "live" : "cached"} · {new Date(huntOk.computedAt).toISOString().slice(0, 10)}
+                {huntOk.source === "live" ? "Live hunt" : "Recorded hunt"} · {day(huntOk.computedAt)}
               </Chip>
               <Chip tone="info">{huntOk.strategies.length} strategies</Chip>
             </div>
@@ -330,8 +349,8 @@ export function MerchantClient() {
                         <dl className="mt-1 grid grid-cols-2 gap-x-2">
                           {Object.entries(ex.facts).map(([k, v]) => (
                             <div key={k} className="contents">
-                              <dt className="text-stone-600 dark:text-stone-400">{k}</dt>
-                              <dd>{String(v)}</dd>
+                              <dt className="text-stone-600 dark:text-stone-400">{factLabel(k)}</dt>
+                              <dd>{factValue(v)}</dd>
                             </div>
                           ))}
                         </dl>
@@ -374,11 +393,11 @@ export function MerchantClient() {
           4. Publish
         </h2>
         <p className="mt-2 text-sm text-stone-600 dark:text-stone-400">
-          Publishing changes this browser&apos;s shop only. Other visitors keep the default rule.
+          Publishing prices this browser&apos;s shop under the rule and gives you a checkout link. Anyone who opens the link is priced under it too; everyone else keeps the default rule.
         </p>
         <div className="mt-3 flex flex-wrap items-center gap-3">
           <button type="button" className={buttonClass} onClick={onPublish} disabled={!current || busy !== null}>
-            Publish to my shop (this browser only)
+            Publish and get a checkout link
           </button>
           <button
             type="button"

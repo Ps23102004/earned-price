@@ -166,9 +166,9 @@ export function ShopClient({
   return (
     <div className="flex flex-col gap-6">
       <section aria-labelledby="product-heading" className={card}>
-        <h1 id="product-heading" className="text-xl font-semibold tracking-tight">
+        <h2 id="product-heading" className="text-xl font-semibold tracking-tight">
           Earned Price demo licence
-        </h1>
+        </h2>
         <p className="mt-1 text-sm text-stone-600 dark:text-stone-400">
           A checkout where the price is earned from verified public facts — no coupon codes.
         </p>
@@ -178,7 +178,7 @@ export function ShopClient({
         </div>
       </section>
 
-      <section aria-labelledby="prove-heading" className={card}>
+      <section id="prove" aria-labelledby="prove-heading" className={card}>
         <StepHeading n={1} id="prove-heading">
           Prove
         </StepHeading>

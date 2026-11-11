@@ -2,9 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import "./globals.css";
 
+const description = "A checkout where the price is earned from verified public facts: AI helps write the rule, code enforces it, PayPal charges exactly what you earned. PayPal sandbox only.";
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.APP_URL ?? "http://127.0.0.1:3000"),
   title: "Earned Price",
-  description: "A checkout where the price is earned from verified public facts.",
+  description,
+  openGraph: { title: "Earned Price", description, type: "website", siteName: "Earned Price" },
+  twitter: { card: "summary", title: "Earned Price", description },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

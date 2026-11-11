@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Suspense } from "react";
 import { cookies } from "next/headers";
 import { connection } from "next/server";
@@ -50,6 +51,23 @@ export default function Home() {
 
   return (
     <div className="flex flex-col gap-6">
+      <section aria-label="What this is" className="flex flex-col gap-3">
+        <h1 className="text-2xl font-semibold tracking-tight">Prices earned from public facts, not coupon codes</h1>
+        <p className="text-sm text-stone-600 dark:text-stone-400">
+          AI helps a merchant write the rule, code enforces it, and PayPal charges exactly what you earned. Try it three ways:
+        </p>
+        <div className="flex flex-wrap gap-2 text-sm">
+          <a href="#prove" className="rounded-lg border border-stone-300 px-3 py-2 hover:bg-stone-100 dark:border-stone-700 dark:hover:bg-stone-800">
+            Buy at an earned price
+          </a>
+          <Link href="/merchant" className="rounded-lg border border-stone-300 px-3 py-2 hover:bg-stone-100 dark:border-stone-700 dark:hover:bg-stone-800">
+            Be the merchant
+          </Link>
+          <Link href="/agent" className="rounded-lg border border-stone-300 px-3 py-2 hover:bg-stone-100 dark:border-stone-700 dark:hover:bg-stone-800">
+            See what an agent can do
+          </Link>
+        </div>
+      </section>
       <ol aria-label="How it works" className="grid grid-cols-3 gap-2 text-sm sm:gap-3">
         <Step n={1} title="Prove" body="public GitHub facts" />
         <Step n={2} title="Price" body="code sets the discount" />
@@ -75,8 +93,7 @@ export default function Home() {
               <Credential label="Password" value={process.env.JUDGE_BUYER_PASSWORD ?? ""} />
             </dl>
             <p className="mt-3 text-xs text-stone-600 dark:text-stone-400">
-              PayPal sandbox — no real money. You can also pay with the test card 4111 1111 1111 1111, any future
-              expiry, CVV 123.
+              PayPal sandbox — no real money. Use the sandbox buyer above in the PayPal window.
             </p>
             <ResetDemo />
           </section>
