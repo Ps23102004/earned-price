@@ -14,6 +14,8 @@ export type Decision = {
   releaseRedemption: boolean;
   issueLicence: boolean;
   clientAction?: "restart";
+  /** An unrecognised client error: the caller must read the order back from PayPal before releasing anything. */
+  verifyFirst?: boolean;
   message: string;
 };
 
@@ -79,7 +81,7 @@ export function decideCaptureOutcome(input: CaptureInput, earnedCents: number, e
   const definitive = httpStatus >= 400 && httpStatus < 500 && ![408, 409, 429].includes(httpStatus);
   const alreadyCaptured = Array.isArray(body?.details) && body.details.some((d: { issue?: unknown }) => d?.issue === "ORDER_ALREADY_CAPTURED");
   if (definitive && !alreadyCaptured) {
-    return { nextState: "failed", releaseRedemption: true, issueLicence: false, message: "PayPal could not complete this payment. You were not charged. Start a new order." };
+    return { nextState: "failed", releaseRedemption: true, issueLicence: false, verifyFirst: true, message: "PayPal could not complete this payment. You were not charged. Start a new order." };
   }
   return keep();
 }

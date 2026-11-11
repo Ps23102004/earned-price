@@ -217,7 +217,16 @@ async function runCapture(o: CaptureRow): Promise<{ decision: Decision; applied:
     console.error("paypal capture call failed:", err instanceof Error ? err.message : err);
     input = { kind: "network_error" };
   }
-  const decision = decideCaptureOutcome(input, o.earned_cents, customIdFor(o.id, o.snapshot_hash));
+  const customId = customIdFor(o.id, o.snapshot_hash);
+  let decision = decideCaptureOutcome(input, o.earned_cents, customId);
+  if (decision.verifyFirst) {
+    // Unknown client error: release only if PayPal's own record shows no capture; otherwise decide from that record.
+    const read = await paypal("GET", `/v2/checkout/orders/${o.paypal_order_id}`).catch(() => null);
+    if (!read?.ok) decision = decideCaptureOutcome({ kind: "network_error" }, o.earned_cents, customId);
+    else if (read.json?.status === "COMPLETED") decision = decideCaptureOutcome({ kind: "response", httpStatus: 200, body: read.json }, o.earned_cents, customId);
+    else if (read.json?.status === "APPROVED") decision = { ...decision, verifyFirst: false };
+    else decision = decideCaptureOutcome({ kind: "network_error" }, o.earned_cents, customId);
+  }
   const applied = await applyDecision(o.id, ["capturing"], decision, o.capture_attempt);
   return { decision, applied };
 }

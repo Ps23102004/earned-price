@@ -124,3 +124,9 @@ describe.skipIf(!HAVE_DB)("reconcile takes the redemption (real database, mocked
     expect(r.rows).toEqual([{ order_id: a.id }]);
   });
 });
+
+describe("unknown client errors are verified against PayPal before release", () => {
+  it("flags verifyFirst, so the caller reads the order back", () => {
+    expect(decide(422, { details: [{ issue: "TRANSACTION_REFUSED" }] }).verifyFirst).toBe(true);
+  });
+});
