@@ -126,3 +126,17 @@ describe("anonymise: login anywhere in a repo name", () => {
     expect(JSON.stringify(out)).not.toContain("react");
   });
 });
+
+describe("client address behind Render (Cloudflare edge plus balancer)", () => {
+  it("uses the edge's own header when it holds a valid address, ignoring everything a client can add to x-forwarded-for", async () => {
+    const { clientIp } = await import("../src/ratelimit");
+    const h = new Headers({ "x-forwarded-for": "6.6.6.6, 7.7.7.7, 108.194.8.11, 104.22.160.12, 10.29.152.142", "cf-connecting-ip": "108.194.8.11" });
+    expect(clientIp(h, 3, "cf-connecting-ip")).toBe("108.194.8.11");
+    // Header absent or invalid: the hop count still lands on the real client (3 from the right), not the balancer.
+    h.delete("cf-connecting-ip");
+    expect(clientIp(h, 3, "cf-connecting-ip")).toBe("108.194.8.11");
+    expect(clientIp(new Headers({ "x-forwarded-for": "5.5.5.5,108.194.8.11,104.22.160.62,10.29.152.142", "cf-connecting-ip": "not an ip" }), 3, "cf-connecting-ip")).toBe("108.194.8.11");
+    // The old setting (1 hop) would have keyed everyone on the balancer: the regression this guards against.
+    expect(clientIp(new Headers({ "x-forwarded-for": "108.194.8.11,104.22.160.62,10.29.152.142" }), 1, undefined)).toBe("10.29.152.142");
+  });
+});

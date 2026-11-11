@@ -64,9 +64,18 @@ export function clientKey(ip: string): string {
 /**
  * Client as seen by our own edge. Each trusted proxy appends one hop to x-forwarded-for, so the client is
  * TRUSTED_PROXY_HOPS entries from the right (default 1). Hops further left are client-supplied and ignored.
- * Verify the chain on the deployed host and set TRUSTED_PROXY_HOPS to match.
+ * On Render the chain is "<client>, <Cloudflare edge>, <Render balancer>", so the client is 3 from the right
+ * (verified on the deployed host, 2026-11-11), and CLIENT_IP_HEADER=cf-connecting-ip names the edge's own header.
  */
-export function clientIp(headers: Headers, trustedHops = Number(process.env.TRUSTED_PROXY_HOPS ?? 1)): string {
+export function clientIp(
+  headers: Headers,
+  trustedHops = Number(process.env.TRUSTED_PROXY_HOPS ?? 1),
+  ipHeader = process.env.CLIENT_IP_HEADER,
+): string {
+  // A header the host's edge sets itself (Render: cf-connecting-ip). Verified on the deployed host: a client-supplied
+  // value is rejected or overwritten before it reaches the app. Used only when it holds a valid address; else XFF hops.
+  const direct = ipHeader ? headers.get(ipHeader)?.trim() : undefined;
+  if (direct && (isIPv4(direct) || isIPv6(direct))) return clientKey(direct);
   const hops = headers.get("x-forwarded-for")?.split(",").map((s) => s.trim()).filter(Boolean) ?? [];
   const n = Number.isInteger(trustedHops) && trustedHops >= 1 ? trustedHops : 1;
   const ip = hops[hops.length - n];

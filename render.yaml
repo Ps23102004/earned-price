@@ -19,8 +19,12 @@ services:
         value: "1"
       - key: JUDGE_MODE
         value: "1"
+      # Verified on the deployed host: x-forwarded-for is "<client>, <Cloudflare edge>, <Render balancer>", so the client is
+      # 3 from the right, and the edge's own cf-connecting-ip header cannot be forged by a visitor.
       - key: TRUSTED_PROXY_HOPS
-        value: "1"
+        value: "3"
+      - key: CLIENT_IP_HEADER
+        value: cf-connecting-ip
       # Live compile on a hosted OpenAI-compatible model (free or pay-per-token, set in the dashboard, never committed).
       - key: AI_BASE_URL
         sync: false

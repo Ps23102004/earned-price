@@ -16,7 +16,7 @@ Everything below that needs a key or a password is yours to enter. Nothing here 
    - `APP_URL` = the service URL, for example `https://earned-price.onrender.com` (no trailing slash). Set it before the first build finishes, then redeploy once if you change it.
    - `NEXT_PUBLIC_PAYPAL_CLIENT_ID` must be set **before the build**: Next.js bakes it into the browser bundle.
    - `PAYPAL_CLIENT_ID`, `PAYPAL_CLIENT_SECRET` (sandbox REST app), `JUDGE_BUYER_EMAIL`, `JUDGE_BUYER_PASSWORD` (sandbox Personal account; consider a second backup account), `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`, `GITHUB_SERVER_TOKEN` (fine-grained token, no permissions, expiry after Jan 2027), `DATABASE_URL` (pooled), `SESSION_SECRET` and `LICENSE_HMAC_SECRET` (`openssl rand -hex 32` each; never reuse your local ones).
-   - Already set by the blueprint: `PAYPAL_ENV=sandbox`, `AI_LIVE=1`, `JUDGE_MODE=1`, `TRUSTED_PROXY_HOPS=1`, `NODE_VERSION=22.23.1`.
+   - Already set by the blueprint: `PAYPAL_ENV=sandbox`, `AI_LIVE=1`, `JUDGE_MODE=1`, `TRUSTED_PROXY_HOPS=3` and `CLIENT_IP_HEADER=cf-connecting-ip` (see step 6), `NODE_VERSION=22.23.1`.
 4. **GitHub OAuth app**: add the callback `https://<render-host>/api/auth/github/callback` next to the local one (one app can hold both).
 5. **Keep-alive** (Render sleeps after 15 minutes without traffic and takes about a minute to wake):
    - UptimeRobot (free): HTTP monitor on `https://<render-host>/api/health`, interval 5 minutes. This is the primary.
@@ -25,7 +25,7 @@ Everything below that needs a key or a password is yours to enter. Nothing here 
 6. **First checks on the deployed URL** (I will run these with you, or you can):
    - `/api/health` is `{"ok":true}`; `/` renders a price; `/merchant` compiles the brief sentence as "cached".
    - Sign in with GitHub: the callback must come back signed in. The app asks for zero OAuth scopes (proof P4 in `docs/EVIDENCE.md`).
-   - `TRUSTED_PROXY_HOPS`: send two requests to `/api/quote` and confirm the app sees your address, not Render's. If every visitor shares one rate-limit bucket, change the number.
+   - Client address for rate limits (**checked on the live host, Nov 11**): Render's `x-forwarded-for` arrives as `<client>, <Cloudflare edge>, <Render balancer>`, so the client is the third entry from the right, and a visitor's own extra entries only appear to the left. `cf-connecting-ip` carries the real client and cannot be forged (a forged value is rejected by Cloudflare; a forged `True-Client-IP` is overwritten). The blueprint sets `TRUSTED_PROXY_HOPS=3` and `CLIENT_IP_HEADER=cf-connecting-ip`. The earlier default of 1 hop would have put every visitor in one shared bucket.
    - One sandbox purchase end to end on the deployed URL, then add its row to `docs/EVIDENCE.md`.
 
 ## Optional: live compile on the hosted demo (your decision; free tiers only)
