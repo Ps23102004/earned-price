@@ -101,7 +101,12 @@ function Details({ order, po, retry, claimHash, login }: { order: Order; po: Jso
       {order.state === "captured" && !order.buyerKey ? <ClaimPanel orderId={order.id} login={login} /> : null}
 
       {hashOk ? (
-        <Notice tone="ok">Fact hash verified</Notice>
+        <div className="flex flex-col gap-1">
+          <Notice tone="ok">Fact hash verified</Notice>
+          <p className="text-xs text-stone-500 dark:text-stone-400">
+            The facts that set the price are the ones we stored, and PayPal's order carries their hash. This does not prove GitHub's data was true.
+          </p>
+        </div>
       ) : (
         <Notice tone="bad">Fact hash MISMATCH — no licence</Notice>
       )}
@@ -147,7 +152,7 @@ function Details({ order, po, retry, claimHash, login }: { order: Order; po: Jso
               <Row label="Refund amount" value={money(r.amount)} paypalMoney />
               <Row label="custom_id" value={r.custom_id} mono />
               <div className="py-2">
-                {claimHash && r.custom_id === claimHash ? <Notice tone="ok">Claim hash and refund id verified</Notice> : <Notice tone="bad">Claim hash MISMATCH</Notice>}
+                {claimHash && r.custom_id === claimHash ? <Notice tone="ok">Claim hash and attempt id verified</Notice> : <Notice tone="bad">Claim hash MISMATCH</Notice>}
               </div>
             </dl>
           ))}

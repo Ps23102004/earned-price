@@ -43,7 +43,8 @@ export function CostPreview({ ruleId }: { ruleId: string }) {
       </div>
       {shown?.preview ? (
         <>
-          <p className="mt-2 text-sm">{shown.preview.summary}</p>
+          <p className="mt-2 text-xs font-medium text-amber-700 dark:text-amber-300">Not representative of your customers: this sample is people who recently had a pull request merged.</p>
+          <p className="mt-1 text-sm">{shown.preview.summary}</p>
           <ul className="mt-2 space-y-1 text-sm">
             {shown.preview.tiers.map((t) => (
               <li key={t.tierId} className="flex items-center justify-between gap-3">

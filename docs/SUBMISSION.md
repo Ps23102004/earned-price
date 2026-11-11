@@ -17,7 +17,7 @@ Record the deployed URL if it is up, otherwise localhost. Use a clean browser pr
 | 1:25 | PayPal sandbox approval, then the receipt: order total, discount line, "as recorded by PayPal", "Fact hash verified" | "PayPal charges exactly that. Every figure here is read back from PayPal, and the receipt checks a hash of the facts against the order PayPal holds." |
 | 1:50 | Second purchase refused ("already redeemed"); mention reset is demo-only | "One discount per buyer, enforced in the database." |
 | 2:00 | Guest buys at $49.00, receipt, "Prove your facts for a refund", claim with a sample | "Or buy first, prove later. Pay full price, prove facts afterwards, and the code refunds exactly the difference." |
-| 2:20 | Receipt with refund 24.50 COMPLETED, "Claim hash and refund id verified"; PARTIALLY_REFUNDED capture | "Refund sent through PayPal with an idempotent request, read back and verified." |
+| 2:20 | Receipt with refund 24.50 COMPLETED, "Claim hash and attempt id verified"; PARTIALLY_REFUNDED capture | "Refund sent through PayPal with an idempotent request, read back and verified." |
 | 2:30 | Repo: `docs/EVIDENCE.md` rows, tests, `docs/L6-redteam.md` | "Every money feature has real sandbox evidence. Independent reviewers and a red team found and fixed real bugs. AI proposes; deterministic code decides everything about money." |
 | 2:40 | End card: URL, repo, "PayPal sandbox only" | |
 

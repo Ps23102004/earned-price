@@ -1,6 +1,6 @@
 # L7 judge panel (2026-11-11)
 
-Four independent models judged the README, an evidence log and a description of what a visitor sees, from the position of a skeptical PayPal AI Hackathon judge: Claude Haiku 5.5, Claude Sonnet 5.5, Gemini 3.8 Flash, Claude Fable. GPT-6.1 Sol and GPT-6 Luna were asked too but their usage limit was still active (resets Nov 11 02:31 local), so they did not run and are not counted. They could not open the app, so this is a judgement of the packet, not of the running product.
+Six independent models judged the README, an evidence log and a description of what a visitor sees, from the position of a skeptical PayPal AI Hackathon judge: Claude Haiku 5.5, Claude Sonnet 5.5, Gemini 3.8 Flash and Claude Fable in the first round; Claude Opus 5.5 and Claude Opus 4.6 Thinking in a second round on a refreshed packet. GPT models were not used (usage limit; the owner chose to skip them). They could not open the app, so this is a judgement of the packet, not of the running product.
 
 | Judge | PayPal | Technical | Innovation | UX | Real-world | Clarity | Advance? |
 |---|---|---|---|---|---|---|---|
@@ -8,6 +8,8 @@ Four independent models judged the README, an evidence log and a description of 
 | Sonnet 5.5 | 8 | 8 | 8 | 6 | 5 | 5 | yes |
 | Gemini 3.8 Flash | 9 | 8 | 7 | 5 | 4 | 6 | yes |
 | Fable | 7 | 8 | 8 | 6 | 5 | 4 | not yet |
+| Opus 5.5 (round 2) | 8 | 8 | 7 | 6 | 5 | 8 | yes, narrowly |
+| Opus 4.6 Thinking (round 2) | 8 | 7 | 8 | 6 | 5 | 8 | yes |
 
 **Agreed strengths:** the PayPal money path (discount line, idempotent capture and refund, `custom_id` read-back, real sandbox ids); the AI/code boundary; buy-first-prove-later; candid limitations.
 
@@ -24,3 +26,14 @@ Four independent models judged the README, an evidence log and a description of 
 | Inconsistent numbers and dates (test count, "once complete") | Haiku, Fable | **Fixed** in the README |
 | "Fact hash verified" is circular | Haiku | Reworded in the README: it proves the stored facts match PayPal's record, not that GitHub's data was true |
 | Org-owned repos slip past the own-repo check; one shared GitHub token | Sonnet, Flash, Fable | Already listed in limitations; sample fallback exists below 500 remaining points |
+
+## Round 2 findings (Opus 5.5, Opus 4.6 Thinking)
+| Finding | Action |
+|---|---|
+| Hosted AI is canned; a judge cannot test arbitrary sentences | Known and stated; eight cached examples plus cached refusals; a hosted model with a spend cap is the upgrade if the owner wants one |
+| The refund `custom_id` "<claim hash>:<refund id>" reads as impossible (PayPal's refund id does not exist before the call) | **Clarified:** it is our own refund attempt id; README and receipt label now say "attempt id" |
+| "Fact hash verified" overclaims | **Fixed:** the receipt now states it does not prove GitHub's data was true |
+| Cost preview is unrepresentative and could mislead a merchant | **Fixed:** a plain warning sits directly above the percentage |
+| Self-merge tightening misses org-owned repos (react/react is Organization-owned) | Already a listed limitation; not changed |
+| Samples act like coupons; sample redemption is per browser session | By design for judge access; documented |
+| No evidence row for a live GitHub OAuth purchase | Open: needs the owner's GitHub sign-in on the deployed URL (also proof P4) |
