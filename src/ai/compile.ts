@@ -17,7 +17,7 @@ export type CompileResult =
   | { status: "unavailable"; reason: string };
 
 const UNAVAILABLE =
-  "Live compiling runs on the merchant's own model; this hosted demo serves pre-compiled examples";
+  "Live compiling is switched off here, so only the example sentences (recorded results) compile. You can still build any rule with the hand-built form.";
 
 export const normaliseSentence = (s: string): string => s.trim().replace(/\s+/g, " ").toLowerCase();
 export const sentenceKey = (s: string): string => createHash("sha256").update(normaliseSentence(s), "utf8").digest("hex");
@@ -90,7 +90,7 @@ export async function compileSentence(
       { role: "user", content: `<sentence>${text}</sentence>` },
     ]);
   } catch {
-    return { status: "unavailable", reason: "The model did not answer; try again in a moment" };
+    return { status: "unavailable", reason: "The live model is not answering right now. The example sentences (recorded results) and the hand-built rule form still work; try your sentence again in a moment." };
   }
   let parsed: unknown;
   try {

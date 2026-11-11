@@ -39,7 +39,7 @@ export async function compileAction(sentence: unknown, ip: string): Promise<ApiR
       return ok;
     },
   });
-  if (r.status === "unavailable") return { status: limited ? 429 : 200, body: { status: "unavailable", reason: limited ? "too many live compiles, try again later" : r.reason } };
+  if (r.status === "unavailable") return { status: limited ? 429 : 200, body: { status: "unavailable", reason: limited ? "Too many live compiles for now (a cap protects the model budget). The example sentences (recorded results) and the hand-built rule form still work; try again later." : r.reason } };
   if (r.status !== "compiled") return { status: 200, body: r };
   const row = await saveRule(sentence.trim(), r.rule);
   return {
@@ -62,7 +62,7 @@ export async function huntAction(ruleId: unknown, ip: string): Promise<ApiResult
   const row = await loadRuleRow(ruleId);
   if (!row) return notFound();
   const out = await huntLoopholes(row.rule, { ip });
-  if (out.status === "rate_limited") return { status: 429, body: { status: "unavailable", reason: "too many live hunts, try again later" } };
+  if (out.status === "rate_limited") return { status: 429, body: { status: "unavailable", reason: "Too many live hunts for now (a cap protects the model and GitHub budgets). The Brief example has a recorded hunt, and the cost preview and publishing still work; try again later." } };
   if (out.status === "unavailable") return { status: 200, body: out };
   return {
     status: 200,

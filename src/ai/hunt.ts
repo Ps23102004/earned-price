@@ -308,7 +308,7 @@ export async function huntLoopholes(rule: Rule, opts: { ip?: string; now?: Date 
     return { status: "ok", ...publicResult(cached, "cached") };
   }
   if (!aiLive()) {
-    return { status: "unavailable", reason: "Live hunting runs on the merchant's own model; this hosted demo serves pre-computed hunts" };
+    return { status: "unavailable", reason: "There is no recorded loophole hunt for this rule, and live hunting is switched off here. The Brief example has a recorded hunt; the cost preview and publishing still work for any rule." };
   }
   if (opts.ip !== undefined && !(allow(`hunt:${opts.ip}`, 3, 3_600_000) && allow("hunt:global", 50, 86_400_000))) {
     return { status: "rate_limited" };
@@ -319,6 +319,6 @@ export async function huntLoopholes(rule: Rule, opts: { ip?: string; now?: Date 
     return { status: "ok", ...publicResult(live, "live") };
   } catch (err) {
     console.error("hunt failed:", err instanceof Error ? err.message : "unknown");
-    return { status: "unavailable", reason: "The hunt could not finish (the model or GitHub did not answer); try again later" };
+    return { status: "unavailable", reason: "The live hunt could not finish (the model or GitHub did not answer). The cost preview and publishing still work, and the Brief example has a recorded hunt; try again later." };
   }
 }

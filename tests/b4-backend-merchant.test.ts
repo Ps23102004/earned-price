@@ -64,7 +64,10 @@ describe("compileSentence", () => {
     chatMock.mockResolvedValueOnce("sorry, no");
     expect((await compileSentence("20% off for 5 followers", { skipCache: true })).status).toBe("invalid");
     chatMock.mockRejectedValueOnce(new Error("timeout"));
-    expect((await compileSentence("20% off for 6 followers", { skipCache: true })).status).toBe("unavailable");
+    const down = await compileSentence("20% off for 6 followers", { skipCache: true });
+    expect(down.status).toBe("unavailable");
+    // A failing model says plainly what still works instead of leaving the visitor at a dead end.
+    expect(down.status === "unavailable" && down.reason).toMatch(/still work/);
   });
 
   it("is unavailable, without a model call, when not live and not cached", async () => {
