@@ -4,8 +4,9 @@ import { useEffect, useState } from "react";
 import { BRIEF_SENTENCE, INJECTION_SENTENCE, MORE_PICKS, UNCHECKABLE_SENTENCE } from "@/ai/quick-picks";
 import { Chip, Notice, buttonClass, card } from "../_components/ui";
 import { CostPreview } from "./cost-preview";
+import { RuleBuilder } from "./rule-builder";
 
-type Busy = null | "compile" | "hunt" | "tighten" | "publish" | "unpublish";
+type Busy = null | "build" | "compile" | "hunt" | "tighten" | "publish" | "unpublish";
 
 type Compiled = { status: "compiled"; ruleId: string; rule: unknown; readback: string; source: "live" | "cached"; cachedAt?: string };
 type Refused = { status: "refused" | "invalid"; reasons: string[]; cachedAt?: string };
@@ -88,6 +89,25 @@ export function MerchantClient() {
         setCurrent(null);
         setHunt(null);
       }
+    } catch {
+      setError("Could not reach the server. Try again.");
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  async function onBuild(spec: unknown) {
+    begin("build");
+    try {
+      const { ok, json } = await call("/api/merchant/build", spec);
+      if (!ok || typeof json.status !== "string") {
+        setError(String(json.error ?? "Could not build the rule. Check the values."));
+        return;
+      }
+      setCompile(json as CompileResult);
+      setHunt(null);
+      if (json.status === "compiled") setCurrent({ ruleId: json.ruleId, rule: json.rule, readback: json.readback, source: "built by hand" });
+      else setCurrent(null);
     } catch {
       setError("Could not reach the server. Try again.");
     } finally {
@@ -206,13 +226,14 @@ export function MerchantClient() {
             </span>
           ) : null}
         </div>
+        <RuleBuilder busy={busy !== null} onBuild={onBuild} />
       </section>
 
       {error ? <Notice tone="bad">{error}</Notice> : null}
 
       <section aria-labelledby="rule-heading" className={card}>
         <h2 id="rule-heading" className="text-base font-semibold">
-          2. Compiled rule
+          2. Your rule
         </h2>
         {compile === null ? (
           <p className="mt-2 text-sm text-stone-600 dark:text-stone-400">Nothing compiled yet.</p>

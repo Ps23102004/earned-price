@@ -16,7 +16,8 @@ export async function chat(messages: ChatMessage[], opts: { timeoutMs?: number }
   try {
     res = await fetch(`${base.replace(/\/+$/, "")}/chat/completions`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      // Optional: a hosted OpenAI-compatible service needs a key. It is sent only as this header and never logged or echoed.
+      headers: { "Content-Type": "application/json", ...(process.env.AI_API_KEY ? { Authorization: `Bearer ${process.env.AI_API_KEY}` } : {}) },
       body: JSON.stringify({ model, messages, temperature: 0, stream: false, ...(effort ? { reasoning_effort: effort } : {}) }),
       signal: AbortSignal.timeout(opts.timeoutMs ?? 180_000),
     });

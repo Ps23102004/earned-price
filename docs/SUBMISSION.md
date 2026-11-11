@@ -21,6 +21,8 @@ Record the deployed URL if it is up, otherwise localhost. Use a clean browser pr
 | 2:30 | Repo: `docs/EVIDENCE.md` rows, tests, `docs/L6-redteam.md` | "Every money feature has real sandbox evidence. Independent reviewers and a red team found and fixed real bugs. AI proposes; deterministic code decides everything about money." |
 | 2:40 | End card: URL, repo, "PayPal sandbox only" | |
 
+Optional 10-second beat after the cost preview: open "Or build a rule by hand (no AI needed)", say "Or skip the AI entirely: same validator, same read-back", build a two-tier rule, publish, and show the shop price change.
+
 Do not show: the sandbox buyer's password field being typed, `.env`, or any key. If PayPal's popup is awkward to capture, record the approval separately and cut it in.
 
 ## Devpost text

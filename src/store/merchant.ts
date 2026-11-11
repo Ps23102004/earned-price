@@ -2,6 +2,7 @@
 // reaches a row or a session is a validated Rule, and tightenings are recomputed here, never read from the client.
 
 import { compileSentence } from "../ai/compile";
+import { toRule } from "../ai/compile-map";
 import { readLimitedJson } from "../http";
 import { findHunt, huntLoopholes } from "../ai/hunt";
 import { SPIRIT_CHECKS, acceptTightening, tighteningFor } from "../ai/hunt-plan";
@@ -45,6 +46,16 @@ export async function compileAction(sentence: unknown, ip: string): Promise<ApiR
     status: 200,
     body: { status: "compiled", ruleId: row.id, rule: r.rule, readback: r.readback, source: r.source, ...(r.cachedAt ? { cachedAt: r.cachedAt } : {}) },
   };
+}
+
+/** A rule assembled by hand in the merchant form. Same whitelist, bounds and validator as a model's output; no model involved. */
+export async function buildAction(spec: unknown): Promise<ApiResult> {
+  const tiers = typeof spec === "object" && spec !== null ? (spec as { tiers?: unknown }).tiers : undefined;
+  if (!Array.isArray(tiers)) return bad();
+  const r = toRule({ refuse: false, unsupported: [], tiers });
+  if (!r.ok) return { status: 200, body: { status: "invalid", reasons: r.reasons.slice(0, 6) } };
+  const row = await saveRule("built by hand", r.rule);
+  return { status: 200, body: { status: "compiled", ruleId: row.id, rule: r.rule, readback: readback(r.rule), source: "built" } };
 }
 
 export async function huntAction(ruleId: unknown, ip: string): Promise<ApiResult> {

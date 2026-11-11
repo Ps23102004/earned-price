@@ -48,6 +48,11 @@ export function CostPreview({ ruleId, compareRuleId }: { ruleId: string; compare
         <>
           <p className="mt-2 text-xs font-medium text-amber-700 dark:text-amber-300">Not representative of your customers: this sample is people who recently had a pull request merged.</p>
           <p className="mt-1 text-sm">{shown.preview.summary}</p>
+          {shown.preview.sharePercent > 50 ? (
+            <p className="mt-2 text-sm text-amber-700 dark:text-amber-300">
+              Heads up: most of this sample ({shown.preview.sharePercent}%) would get a discount, so this works like a blanket price cut. Raise the thresholds if that is not what you want.
+            </p>
+          ) : null}
           <p className="mt-2 text-sm">
             If buyers looked like this sample, this rule gives away about{" "}
             <strong className="font-mono">${Math.round(shown.preview.giveawayPer1000Cents / 100).toLocaleString("en-US")}</strong> per 1,000 sales at the $49.00 list price.

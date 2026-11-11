@@ -37,3 +37,28 @@ Six independent models judged the README, an evidence log and a description of w
 | Self-merge tightening misses org-owned repos (react/react is Organization-owned) | Already a listed limitation; not changed |
 | Samples act like coupons; sample redemption is per browser session | By design for judge access; documented |
 | No evidence row for a live GitHub OAuth purchase | Open: needs the owner's GitHub sign-in on the deployed URL (also proof P4) |
+
+## Round 3 (after the UX, cost-preview and PayPal-text changes)
+Claude Sonnet 5.5, Claude Opus 5.5, Claude Fable, Claude Opus 4.6 Thinking, Gemini 3.8 Flash and Claude Haiku 5.5, on a refreshed packet.
+
+| Judge | PayPal | Technical | Innovation | UX | Real-world | Clarity | Advance? |
+|---|---|---|---|---|---|---|---|
+| Sonnet 5.5 | 8 | 8 | 7 | 6 | 5 | 7 | yes |
+| Opus 5.5 | 8 | 8 | 7 | 6 | 4 | 6 | yes, narrowly |
+| Fable | 8 | 8 | 7 | 7 | 5 | 7 | yes |
+| Opus 4.6 Thinking | 8 | 8 | 8 | 6 | 5 | 7 | yes |
+| Gemini 3.8 Flash | 9 | 8 | 8 | 7 | 5 | 8 | yes |
+| Haiku 5.5 | 8 | 8 | 8 | 6 | 4 | 6 | no |
+
+Movement against earlier rounds: UX 5-6 -> 6-7; Clarity 4-8 -> 6-8; PayPal and Technical steady at 8-9; Real-world still 4-5.
+
+| Finding (raised by) | Action |
+|---|---|
+| Judges cannot try their own rule on the hosted build; the AI is a recording (all six) | **Built:** "Or build a rule by hand (no AI needed)": same whitelist and validator, code-generated read-back, cost preview, publish and repricing of the shop; `AI_API_KEY` support so a free-tier hosted model can be switched on (docs/DEPLOY.md); hand-built path tested |
+| Showcase numbers look like a blanket price cut (Opus, Fable, Pro) | **Built:** a code-computed heads-up appears when more than half the sample qualifies; before/after table already shows tier-level effect |
+| No evidence row with a real GitHub sign-in purchase (Sonnet, Opus, Fable) | Open: needs the owner's GitHub login on the deployed URL |
+| Merchant page is per browser (Pro, Sonnet) | By design; a persistent merchant slug would need merchant identity, not added |
+| Doc drift (refund id vs attempt id; test counts) (Opus, Fable) | **Fixed:** wording aligned in README, evidence log and script |
+| Refund does not return PayPal's fee (Opus) | Stated in README limitations |
+| 39/40 compiler score tuned in-sample (Sonnet, Haiku) | Caveat stays in the README evidence list |
+| Receipt licence is bearer access (Flash) | Already a listed limitation |
