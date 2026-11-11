@@ -61,7 +61,7 @@ const need = Math.ceil(cases.length * 0.9);
 const ok = score >= need && leaked === 0;
 writeFileSync(
   new URL(`../${outFile}`, import.meta.url),
-  `# L5 compiler evaluation\n\nRun on ${new Date().toISOString()} with the local model (${process.env.AI_MODEL ?? "unset"}), plain-prompt mode, ${cases.length} cases.\n\n` +
+  `# L5 compiler evaluation\n\nRun on ${new Date().toISOString()} with the model named by AI_MODEL (${process.env.AI_MODEL ?? "unset"}), plain-prompt mode, ${cases.length} cases.\n\n` +
     `Score: **${score}/${cases.length}** (need ${need}). Uncheckable or adversarial sentences that compiled: **${leaked}** (need 0). Verdict: **${ok ? "pass" : "fail"}**.\n\n` +
     `| Category | Sentence | Expected | Got | Result |\n|---|---|---|---|---|\n${rows.join("\n")}\n`,
 );
