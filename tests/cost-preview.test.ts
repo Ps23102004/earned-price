@@ -60,3 +60,11 @@ describe("recorded sample population", () => {
     expect(loose.averageDiscountPercent).toBeGreaterThanOrEqual(strict.averageDiscountPercent);
   });
 });
+
+describe("giveaway estimate", () => {
+  it("is the mean discount times the list price times 1,000, in whole cents", () => {
+    const accounts = [snap("2015-01-01T00:00:00Z", [{ stars: 5000 }]), snap("2026-09-01T00:00:00Z")]; // 50% and nothing
+    expect(costPreview(DEFAULT_RULE, accounts, AT, 4900).giveawayPer1000Cents).toBe(Math.round((50 * 4900 * 1000) / (100 * 2)));
+    expect(costPreview(DEFAULT_RULE, [], AT).giveawayPer1000Cents).toBe(0);
+  });
+});

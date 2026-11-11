@@ -25,7 +25,7 @@ type Finding = {
 type Hunt = { status: "ok"; ruleId: string; source: "live" | "cached"; computedAt: string; strategies: Strategy[]; findings: Finding[] };
 type HuntResult = Hunt | Unavailable;
 
-type Current = { ruleId: string; rule: unknown; readback: string; source?: string; diff?: string[] };
+type Current = { ruleId: string; rule: unknown; readback: string; source?: string; diff?: string[]; previousRuleId?: string };
 
 async function call(url: string, body: unknown) {
   const res = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
@@ -121,7 +121,7 @@ export function MerchantClient() {
         setError(String(json.error ?? "Tightening refused.") + (json.reasons ? ` ${(json.reasons as string[]).join("; ")}` : ""));
         return;
       }
-      setCurrent({ ruleId: json.ruleId, rule: json.rule, readback: json.readback, source: "tightened", diff: json.diff });
+      setCurrent({ ruleId: json.ruleId, rule: json.rule, readback: json.readback, source: "tightened", diff: json.diff, previousRuleId: current.ruleId });
       setHunt(null);
     } catch {
       setError("Could not reach the server. Try again.");
@@ -236,7 +236,7 @@ export function MerchantClient() {
                 </pre>
               </div>
             </div>
-            <CostPreview ruleId={current?.ruleId ?? compile.ruleId} />
+            <CostPreview ruleId={current?.ruleId ?? compile.ruleId} compareRuleId={current?.previousRuleId} />
           </div>
         ) : (
           <div className="mt-3 flex flex-col gap-2">

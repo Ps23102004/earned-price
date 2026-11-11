@@ -106,9 +106,15 @@ export async function activeRuleView(session: Session): Promise<{ ruleId: string
 }
 
 /** Rough cost of a rule over the recorded sample of accounts. Deterministic; no model, no GitHub call, no database write. */
-export async function previewAction(ruleId: unknown): Promise<ApiResult> {
+export async function previewAction(ruleId: unknown, compareRuleId?: unknown): Promise<ApiResult> {
   const row = await loadRuleRow(ruleId);
   if (!row) return notFound();
   const { recordedAt, frame, accounts } = SAMPLE_ACCOUNTS;
-  return { status: 200, body: { ...costPreview(row.rule, accounts, recordedAt), recordedAt, frame } };
+  // Optional second rule (the one before a tightening) so the merchant sees the change side by side.
+  const other = compareRuleId === undefined ? undefined : await loadRuleRow(compareRuleId);
+  if (compareRuleId !== undefined && !other) return notFound();
+  return {
+    status: 200,
+    body: { ...costPreview(row.rule, accounts, recordedAt), recordedAt, frame, ...(other ? { before: costPreview(other.rule, accounts, recordedAt) } : {}) },
+  };
 }

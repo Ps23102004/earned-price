@@ -47,7 +47,7 @@ for (const q of frames) {
   for (const r of await pool(q, 20)) {
     for (const p of r.pullRequests.nodes) {
       const a = p.author;
-      if (a && a.__typename === "User" && !a.login.endsWith("[bot]") && a.login.toLowerCase() !== r.owner.login.toLowerCase()) logins.push(a.login);
+      if (a && a.__typename === "User" && !a.login.endsWith("[bot]")) logins.push(a.login); // repository owners are kept: the self-merge loophole must be represented in the sample
     }
   }
   lists.push(logins);
