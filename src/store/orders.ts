@@ -160,6 +160,10 @@ export async function createPayPalOrder(orderId: string, sid: string): Promise<R
       await reconcileOrder(held.order_id, "act");
       held = await redemptionFor({ query }, o.buyer_key);
     }
+    if (held && held.order_id !== o.id && held.state === "pending") {
+      // Another order of theirs is mid-payment and may still fail: do not cancel this one, just ask them to wait.
+      return { status: 409, body: { error: "payment in progress", state: o.state, message: "Another payment for this account is still in progress. Try again in a moment." } };
+    }
     if (held && held.order_id !== o.id) {
       await setState(o.id, ["quoted"], "cancelled");
       return { status: 409, body: { error: "already redeemed", state: "cancelled", message: ALREADY_REDEEMED } };

@@ -137,7 +137,9 @@ const INJECTION: RegExp[] = [
 
 /** True when the sentence reads as instructions to a model rather than a discount policy. */
 export function looksLikeInjection(sentence: string): boolean {
-  return INJECTION.some((re) => re.test(sentence));
+  // Look at what a reader sees: fold look-alike forms (NFKC) and drop zero-width and control characters first.
+  const plain = sentence.normalize("NFKC").replace(/[\u0000-\u001f\u007f\u200b-\u200f\u2060\ufeff]/g, "");
+  return INJECTION.some((re) => re.test(plain)) || /<\s*\/?\s*[a-z!?]/i.test(plain);
 }
 
 /** Code-side limits on the merchant's sentence: 1 to 500 characters after trimming, no instructions. */

@@ -47,7 +47,7 @@ export async function guarded(fn: (session: Session) => Promise<ApiResult>, req?
   const session = await getSession();
   try {
     const r = await fn(session);
-    return Response.json(r.body, { status: r.status });
+    return Response.json(r.body, { status: r.status, headers: { "Cache-Control": "no-store" } });
   } catch (err) {
     console.error("api error:", err instanceof Error ? err.message : err);
     return Response.json({ error: "internal error" }, { status: 500 });

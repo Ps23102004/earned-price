@@ -2,6 +2,7 @@
 // reaches a row or a session is a validated Rule, and tightenings are recomputed here, never read from the client.
 
 import { compileSentence } from "../ai/compile";
+import { readLimitedJson } from "../http";
 import { findHunt, huntLoopholes } from "../ai/hunt";
 import { SPIRIT_CHECKS, acceptTightening, tighteningFor } from "../ai/hunt-plan";
 import type { SpiritCheck } from "../ai/hunt-plan";
@@ -15,15 +16,8 @@ import { loadRuleRow, saveRule } from "./rules";
 
 const HOUR = 3_600_000;
 
-export async function readJson(req: Request): Promise<Record<string, unknown> | null> {
-  const text = await req.text();
-  if (text.length > 4_000) return null;
-  try {
-    const body: unknown = JSON.parse(text);
-    return typeof body === "object" && body !== null && !Array.isArray(body) ? (body as Record<string, unknown>) : null;
-  } catch {
-    return null;
-  }
+export function readJson(req: Request): Promise<Record<string, unknown> | null> {
+  return readLimitedJson(req, 4_000); // refused before it is parsed
 }
 
 const bad = (error = "invalid request"): ApiResult => ({ status: 400, body: { error } });

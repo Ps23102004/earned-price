@@ -1,4 +1,5 @@
 import { isSampleName } from "@/facts/samples";
+import { readLimitedJson } from "@/http";
 import { allow, clientIp } from "@/ratelimit";
 import { guarded } from "@/session";
 import { createQuote } from "@/store/quote";
@@ -9,16 +10,8 @@ export function POST(req: Request) {
     if (!allow(`quote:${ip}`, 200, 3_600_000)) {
       return { status: 429, body: { error: "too many requests, try again later" } };
     }
-    const text = await req.text();
-    let body: unknown = {};
-    if (text.trim() !== "") {
-      try {
-        body = JSON.parse(text);
-      } catch {
-        body = null;
-      }
-    }
-    if (typeof body !== "object" || body === null || Array.isArray(body)) return { status: 400, body: { error: "invalid request" } };
+    const body = await readLimitedJson(req, 1024);
+    if (!body) return { status: 400, body: { error: "invalid request" } };
     const sample = (body as { sample?: unknown }).sample;
     if ("sample" in body && !isSampleName(sample)) return { status: 400, body: { error: "unknown sample" } };
 

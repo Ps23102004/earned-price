@@ -62,6 +62,8 @@ _This table is updated as tools are actually used; models that were planned but 
 - **Cost preview** runs over authors of recently merged PRs, not a random sample of GitHub, so its percentages are for illustration.
 - **PENDING payments or refunds** resolve when a page loads or a button is pressed (no webhooks by design).
 - **Rate limits** are in memory, per process.
+- **Every visitor is their own merchant.** A rule published on `/merchant` changes only that browser's checkout (and the price of a refund that browser claims); sample profiles are keyed per browser session, so "one redemption per buyer" is per GitHub account but per session for samples. Sessions are stateless sealed cookies, so logout does not revoke a copied cookie (`docs/L6-redteam.md`).
+- **Rate limits** are keyed on the client address as the host's proxy reports it, with global caps behind them.
 - **Judge mode** shows the sandbox buyer's credentials and a reset button on purpose; sandbox only.
 - A receipt URL is bearer access to its order and licence for that browser session.
 
