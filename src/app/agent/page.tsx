@@ -33,7 +33,7 @@ export default function AgentPage() {
           It cannot create an order or pay. Paying needs the buyer&apos;s own GitHub sign-in (no permissions) and their PayPal approval. Live GitHub lookups are rate limited; samples are not.
         </p>
       </section>
-      <AgentCommands />
+      <AgentCommands fallbackOrigin={(process.env.APP_URL ?? "").replace(/\/+$/, "")} />
     </div>
   );
 }

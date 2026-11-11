@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import "./globals.css";
 
-const description = "A checkout where the price is earned from verified public facts: AI helps write the rule, code enforces it, PayPal charges exactly what you earned. PayPal sandbox only.";
+const description = "A checkout where the price is computed from the buyer's public GitHub facts: AI helps write the rule, code enforces it, PayPal charges exactly what you earned. PayPal sandbox only.";
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.APP_URL ?? "http://127.0.0.1:3000"),
   title: "Earned Price",

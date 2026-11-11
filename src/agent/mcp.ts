@@ -151,7 +151,7 @@ export async function handleMcp(d: McpDeps, msg: unknown): Promise<RpcResponse |
         capabilities: { tools: { listChanged: false } },
         serverInfo: { name: "earned-price", version: "1.0.0" },
         instructions:
-          "Earned Price prices a $49.00 licence by verified public GitHub facts. Read a merchant's rule, preview what a buyer would pay, and fetch the checkout link. This server is read-only: it cannot create orders or pay.",
+          "Earned Price prices a $49.00 licence by public GitHub facts, read live when a price is previewed. Read a merchant's rule, preview what a buyer would pay, and fetch the checkout link. This server is read-only: it cannot create orders or pay.",
       });
     }
     case "ping":

@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const SAMPLES = [
-  { name: "qualifies", label: "Strong contributor sample" },
+  { name: "qualifies", label: "Qualifies sample" },
   { name: "nearly", label: "Nearly qualifies sample" },
   { name: "loophole", label: "Loophole sample" },
 ] as const;

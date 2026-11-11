@@ -137,7 +137,7 @@ function Details({ order, po, retry, claimHash, login }: { order: Order; po: Jso
               <Chip tone="ok">1</Chip> Paid at PayPal
             </li>
             <li className="flex items-center gap-2">
-              <Chip tone={hashOk ? "ok" : "bad"}>2</Chip> {hashOk ? "Facts verified" : "Facts do not match"}
+              <Chip tone={hashOk ? "ok" : "bad"}>2</Chip> {hashOk ? "Fact hash matches" : "Facts do not match"}
             </li>
             <li className="flex items-center gap-2">
               <Chip tone={refundShown ? "ok" : "info"}>3</Chip> {refundShown ? "Refund recorded" : "No refund claimed"}

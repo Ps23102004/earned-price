@@ -239,7 +239,7 @@ export function MerchantClient() {
           </button>
           {busy === "compile" ? (
             <span role="status" className="text-sm text-stone-700 dark:text-stone-300">
-              Compiling with the local model… {elapsed}s. This can take up to two minutes.
+              Compiling… {elapsed}s. This can take up to two minutes.
             </span>
           ) : null}
         </div>

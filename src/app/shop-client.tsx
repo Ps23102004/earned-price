@@ -170,7 +170,7 @@ export function ShopClient({
           Earned Price demo licence
         </h2>
         <p className="mt-1 text-sm text-stone-600 dark:text-stone-400">
-          A checkout where the price is earned from verified public facts — no coupon codes.
+          A checkout where the price is computed from your public GitHub facts, read live when the price is quoted — no coupon codes. List price for everyone else; the merchant chooses the rule.
         </p>
         <div className="mt-4 flex items-baseline gap-2">
           <span className="font-mono text-3xl font-semibold">$49.00</span>
