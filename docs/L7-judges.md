@@ -20,7 +20,7 @@ Six independent models judged the README, an evidence log and a description of w
 | Hosted AI is cache-only; a new sentence says "unavailable" | all four | Added five more one-click examples, all precomputed; recorded refusals (uncheckable sentences) are now cached and labelled, so the refusal demo works on the hosted build; README states the cache-only limit up front |
 | A buyer could publish a generous rule and claim a refund under it (Fable's 60-second break) | Fable | **Fixed:** a refund is priced under the order's own rule or the shop default, never the claimer's published rule; regression test added |
 | Publishing is per browser, so no real multi-merchant product | all four | Kept by design (no merchant accounts); stated in the README and the video script |
-| 39/40 compiler score is tuned, not held out | Haiku, Sonnet | Caveat already in the README headline evidence list; held-out run not done |
+| 39/40 compiler score is tuned, not held out | Haiku, Sonnet | Caveat in the README; **held-out run now done** (26/29, see docs/L5b-heldout-first-run.md) |
 | Cost preview "98% qualify" looks like a giveaway | Sonnet, Fable | Sample frame is printed under the figure and in the README; wording kept honest, framing to be handled in the video |
 | Sample profiles stand in for sign-in, redemption per browser session for samples | Haiku, Flash | By design for judges; documented. GitHub sign-in is the real path |
 | Inconsistent numbers and dates (test count, "once complete") | Haiku, Fable | **Fixed** in the README |
@@ -60,5 +60,5 @@ Movement against earlier rounds: UX 5-6 -> 6-7; Clarity 4-8 -> 6-8; PayPal and T
 | Merchant page is per browser (Pro, Sonnet) | By design; a persistent merchant slug would need merchant identity, not added |
 | Doc drift (refund id vs attempt id; test counts) (Opus, Fable) | **Fixed:** wording aligned in README, evidence log and script |
 | Refund does not return PayPal's fee (Opus) | Stated in README limitations |
-| 39/40 compiler score tuned in-sample (Sonnet, Haiku) | Caveat stays in the README evidence list |
+| 39/40 compiler score tuned in-sample (Sonnet, Haiku) | **Done:** held-out evaluation on 29 fresh sentences, 26/29 before fixes; failures and fixes published |
 | Receipt licence is bearer access (Flash) | Already a listed limitation |

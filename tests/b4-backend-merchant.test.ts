@@ -51,11 +51,16 @@ describe("compileSentence", () => {
   });
 
   it("maps a model refusal and unreadable output", async () => {
-    chatMock.mockResolvedValueOnce('{"refuse": true, "unsupported": ["starred our repo"], "tiers": []}');
-    expect(await compileSentence("15% off for anyone who starred our repo", { skipCache: true })).toEqual({
+    // A sentence the code does not recognise as an unsupported topic reaches the model, whose refusal is mapped.
+    chatMock.mockResolvedValueOnce('{"refuse": true, "unsupported": ["owner vibes"], "tiers": []}');
+    expect(await compileSentence("15% off for anyone with good vibes", { skipCache: true })).toEqual({
       status: "refused",
-      reasons: ["starred our repo"],
+      reasons: ["owner vibes"],
     });
+    // A recognised unsupported topic is refused by code, with no model call.
+    chatMock.mockClear();
+    expect((await compileSentence("15% off for anyone who starred our repo", { skipCache: true })).status).toBe("refused");
+    expect(chatMock).not.toHaveBeenCalled();
     chatMock.mockResolvedValueOnce("sorry, no");
     expect((await compileSentence("20% off for 5 followers", { skipCache: true })).status).toBe("invalid");
     chatMock.mockRejectedValueOnce(new Error("timeout"));

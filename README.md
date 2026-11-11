@@ -24,7 +24,7 @@ Where the AI sits: it proposes (compiles a sentence, suggests loophole strategie
 ## Evidence, not claims
 - `docs/EVIDENCE.md`: every money feature has a row with the PayPal order, capture and refund ids and the amounts PayPal returned (sandbox): discounted capture, idempotent refunds, redemption limit and reset, and buy-then-refund.
 - Tests: `pnpm test` (about 900 tests, including the agent interface; the money path runs against a real Postgres with PayPal mocked, plus independently written tests from the specs in `docs/specs/`).
-- Rule compiler evaluation: 39 of 40 sentences behaved as expected and no uncheckable or injected sentence compiled (`docs/L5-compiler-eval.md`). **Caveat:** the prompt was tuned against about 25 of those 40 sentences, so 39/40 is not a held-out estimate.
+- Rule compiler evaluation: on a **held-out set** of 29 fresh sentences written by a different model without seeing the prompt, the local compiler scored **26/29** with one uncheckable sentence leaking (a language condition silently dropped); that was fixed in code and the later 29/29 and 40/40 are development-set numbers, not held-out (`docs/L5b-heldout-first-run.md`, `docs/L5-compiler-eval.md`). The original 40-case set was used to tune the prompt.
 - Independent reviews of the money path found real bugs that were fixed with regression tests (stuck captures, a reconcile path that skipped the redemption claim, a refund `custom_id` reuse); an independent red-team pass found no critical or high issue and its fixes are listed in `docs/L6-redteam.md`.
 
 ## Documents

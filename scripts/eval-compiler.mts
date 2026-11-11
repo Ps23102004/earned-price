@@ -12,7 +12,10 @@ type Expect =
   | { kind: "rule"; tiers: { discountPercent: number; conditions: { field: string; value: number; mergedSince?: string }[] }[] }
   | { kind: "refuse" };
 type Category = "clear" | "ambiguous" | "uncheckable" | "adversarial";
-const cases = JSON.parse(readFileSync(new URL("../data/eval/compiler-cases.json", import.meta.url), "utf8")) as {
+// EVAL_CASES / EVAL_OUT select another case file and report (the held-out set); defaults are the tuned set.
+const casesFile = process.env.EVAL_CASES ?? "data/eval/compiler-cases.json";
+const outFile = process.env.EVAL_OUT ?? "docs/L5-compiler-eval.md";
+const cases = JSON.parse(readFileSync(new URL(`../${casesFile}`, import.meta.url), "utf8")) as {
   sentence: string;
   expect: Expect;
   category: Category;
@@ -54,11 +57,12 @@ for (const c of cases) {
   rows.push(`| ${c.category} | ${cell} | ${c.expect.kind} | ${r.status} | ${pass ? "pass" : "FAIL"} |`);
 }
 
-const ok = score >= 36 && leaked === 0;
+const need = Math.ceil(cases.length * 0.9);
+const ok = score >= need && leaked === 0;
 writeFileSync(
-  new URL("../docs/L5-compiler-eval.md", import.meta.url),
+  new URL(`../${outFile}`, import.meta.url),
   `# L5 compiler evaluation\n\nRun on ${new Date().toISOString()} with the local model (${process.env.AI_MODEL ?? "unset"}), plain-prompt mode, ${cases.length} cases.\n\n` +
-    `Score: **${score}/${cases.length}** (need 36). Uncheckable or adversarial sentences that compiled: **${leaked}** (need 0). Verdict: **${ok ? "pass" : "fail"}**.\n\n` +
+    `Score: **${score}/${cases.length}** (need ${need}). Uncheckable or adversarial sentences that compiled: **${leaked}** (need 0). Verdict: **${ok ? "pass" : "fail"}**.\n\n` +
     `| Category | Sentence | Expected | Got | Result |\n|---|---|---|---|---|\n${rows.join("\n")}\n`,
 );
 console.log(`score ${score}/${cases.length}, leaked ${leaked}`);

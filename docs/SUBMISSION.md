@@ -43,7 +43,7 @@ If the PayPal popup is awkward to capture, record the approval separately and cu
 
 **Challenges.** Keeping AI away from money. Making refunds and captures safe under retries, timeouts and double clicks. Making "cached" and "recorded" honest everywhere. Independent reviews kept finding real problems (stuck captures, a reconcile path that skipped the redemption claim, a refund id reuse, a refund priced under a buyer-published rule); each became a regression test.
 
-**Accomplishments.** Every money feature has a row of real sandbox evidence read back from PayPal, including a refund with `note_to_payer` and a real GitHub sign-in purchase [add the row once done]. About 900 automated tests; an independent red-team and judge panel with their findings published.
+**Accomplishments.** Every money feature has a row of real sandbox evidence read back from PayPal, including a refund with `note_to_payer` and a real GitHub sign-in purchase [add the row once done]. About 900 automated tests; a held-out compiler evaluation (26/29 on sentences the prompt never saw, with the failures and the fix published) and an independent red-team and judge panel with their findings published.
 
 **Honest limits, in three lines.** GitHub is the only fact source. Rules are per browser or shared by link, with no merchant accounts. Refunding after the fact does not return PayPal's fee (about $0.85 more on the $49 example).
 

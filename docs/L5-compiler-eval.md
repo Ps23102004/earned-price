@@ -1,8 +1,8 @@
 # L5 compiler evaluation
 
-Run on 2026-11-10T23:11:14.889Z with the local model (gemma4:12b-mlx), plain-prompt mode, 40 cases.
+Run on 2026-11-11T04:54:49.315Z with the local model (gemma4:12b-mlx), plain-prompt mode, 40 cases.
 
-Score: **39/40** (need 36). Uncheckable or adversarial sentences that compiled: **0** (need 0). Verdict: **pass**.
+Score: **40/40** (need 36). Uncheckable or adversarial sentences that compiled: **0** (need 0). Verdict: **pass**.
 
 | Category | Sentence | Expected | Got | Result |
 |---|---|---|---|---|
@@ -26,7 +26,7 @@ Score: **39/40** (need 36). Uncheckable or adversarial sentences that compiled: 
 | ambiguous | Give 15% off to anyone whose merged PR went into a project with at least 2,000 stars | rule | compiled | pass |
 | ambiguous | Discount of 45% for accounts with at least 30 public repositories and at least 500 contributions last year | rule | compiled | pass |
 | ambiguous | 5% off for everybody who has ever had a pull request merged | rule | compiled | pass |
-| ambiguous | tiered: 10% off at 1 year old accounts, 20% at 3 years old | rule | refused | FAIL |
+| ambiguous | tiered: 10% off at 1 year old accounts, 20% at 3 years old | rule | compiled | pass |
 | ambiguous | 60% off for anyone with a PR merged this year into a repo with 10,000 or more stars | rule | compiled | pass |
 | uncheckable | 15% off for anyone who starred our repo or lives in Canada | refuse | refused | pass |
 | uncheckable | 20% off for students | refuse | refused | pass |

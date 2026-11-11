@@ -197,3 +197,28 @@ describe("PayPal-facing text", () => {
     expect(describeOrder(0, 0)).toContain("no discount");
   });
 });
+
+describe("topics the six facts cannot express are refused by code before any model call", () => {
+  it("flags language, location, employer, student, email, stars-given and organisation sentences", async () => {
+    const { sentenceProblem } = await import("../src/ai/compile-map");
+    for (const s of [
+      "Rust developers with at least 5 public crates or repos get 15% off.",
+      "Users located in Canada who have over 50 followers receive 20% off.",
+      "Offer 30% off to full-time software engineers working at Google or Microsoft.",
+      "20% off for students",
+      "Provide a 20% discount if your account primary email ends with .edu.",
+      "Give 25% off to anyone who has starred at least 50 repositories.",
+      "Grant 40% off to members of the Kubernetes organization.",
+    ]) {
+      expect(sentenceProblem(s), s).toMatch(/cannot be checked|instructions/);
+    }
+  });
+  it("never flags a sentence the compiler is expected to accept (tuned and held-out sets)", async () => {
+    const { readFileSync } = await import("node:fs");
+    const { sentenceProblem } = await import("../src/ai/compile-map");
+    for (const f of ["data/eval/compiler-cases.json", "data/eval/heldout-cases.json"]) {
+      const cases = JSON.parse(readFileSync(f, "utf8")) as { sentence: string; expect: { kind: string } }[];
+      for (const c of cases.filter((x) => x.expect.kind === "rule")) expect(sentenceProblem(c.sentence), c.sentence).toBeUndefined();
+    }
+  });
+});

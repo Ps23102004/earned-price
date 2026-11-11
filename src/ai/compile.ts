@@ -38,6 +38,8 @@ Only merged_prs and max_repo_stars_merged_pr may carry these optional filters on
 
 A pull-request requirement is ONE condition: "a PR merged into a repo with at least N stars" is {"field": "max_repo_stars_merged_pr", "value": N}; "at least N merged PRs" is {"field": "merged_prs", "value": N}. Only when the sentence itself says "this year" for that requirement, add "mergedSince": "year_start" to that same condition; otherwise leave mergedSince out. Never split one requirement into two conditions.
 
+Numbers: write every number in full digits, never decimals or suffixes (2.5k = 2500, 10k = 10000, 1.5 million = 1500000).
+
 Wording: "a merged PR", "any merged PR", "has had a PR merged" mean merged_prs with value 1. "contributions" or "commits" in the last year mean commit_contributions_last_year. "repos" means public_repos. Convert years to days (1 year = 365).
 
 Rules: 1 to 3 tiers; each tier has 1 to 3 conditions that must all hold; discountPercent is a whole number from 1 to 90 (half off = 50, a quarter off = 25); only a percentage can be given, never an amount of money; a tier with no condition is not allowed. The best matching tier wins.

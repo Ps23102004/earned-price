@@ -143,10 +143,30 @@ export function looksLikeInjection(sentence: string): boolean {
 }
 
 /** Code-side limits on the merchant's sentence: 1 to 500 characters after trimming, no instructions. */
+// Topics the six GitHub facts cannot express. A small model can silently drop such a condition and compile the rest,
+// so code refuses these before any model call. It errs on the side of refusing; the owner can rephrase.
+const UNSUPPORTED_TOPICS: [RegExp, string][] = [
+  [/\b(rust|python|javascript|typescript|golang|java|kotlin|swift|ruby|php|c\+\+|c#|haskell|scala|elixir|language|languages|crates?|npm|pypi)\b/i, "programming language"],
+  [/\b(located|location|country|city|canada|europe|region|timezone|time zone)\b|\blives? in\b|\bbased in\b/i, "location"],
+  [/\b(employer|company|companies|works? at|working at|employee|engineers? at|google|microsoft|amazon|meta|apple)\b/i, "employer"],
+  [/\b(student|students|teacher|educator|school|university|\.edu)\b/i, "student or education status"],
+  [/\b(e-?mail|domain)\b/i, "email"],
+  [/\b(starred|stargazers?|following|sponsors?|sponsored|sponsoring|twitter|linkedin|discord)\b/i, "something GitHub facts here do not cover"],
+  [/\b(organi[sz]ation|org members?|members? of)\b/i, "organisation membership"],
+];
+
+/** The unsupported topic a sentence mentions, if any. */
+export function unsupportedTopic(sentence: string): string | undefined {
+  const plain = sentence.normalize("NFKC").replace(/[\u0000-\u001f\u007f\u200b-\u200f\u2060\ufeff]/g, "");
+  return UNSUPPORTED_TOPICS.find(([re]) => re.test(plain))?.[1];
+}
+
 export function sentenceProblem(sentence: unknown): string | undefined {
   if (typeof sentence !== "string") return "the sentence must be text";
   const t = sentence.trim();
   if (t.length < 1 || t.length > 500) return "the sentence must be 1 to 500 characters";
   if (looksLikeInjection(t)) return "the sentence contains instructions, not a discount policy";
+  const topic = unsupportedTopic(t);
+  if (topic) return `the sentence mentions ${topic}, which cannot be checked from the facts a rule can use`;
   return undefined;
 }
