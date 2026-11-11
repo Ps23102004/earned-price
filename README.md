@@ -4,6 +4,8 @@
 
 **Live demo (PayPal sandbox, no real money): https://earned-price.onrender.com** · MIT licence · built for the PayPal AI Hackathon, Nov 2026
 
+**Demo video (2:53): https://youtu.be/34leFmtK-iM**
+
 <p align="center">
   <a href="docs/media/earned-price-20s.mp4"><img src="docs/media/earned-price-20s.gif" alt="20-second overview: discount codes leak; the price drops from $49.00 to $24.50 on the real price card; the loophole hunt, code deciding every cent, PayPal charging exactly that; end card with the live URL" width="100%"></a>
   <br><sub>20-second overview made from the app's real screens (recorded sample profile). Click for the MP4.</sub>

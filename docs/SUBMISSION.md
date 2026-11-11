@@ -16,7 +16,7 @@ Recorded on the live site; waits (compile, sign-in, PayPal login) are cut.
 | 2:10 | An agent client (Claude Code with the MCP server added, or one terminal call) runs `preview_price` with the **published rule id** and a public login: the response carries the price and the checkout link together; then PayPal's own MCP server (`get_order` only) reads the earlier $39.20 order back: item total 49.00, discount 9.80 | "An agent can't guess a coupon. It reads the rule, previews the price for a public login and gets the checkout link; through PayPal's own MCP server it reads an order back, discount line included. It can't pay, by design: the buyer approves." |
 | 2:35 | End card: live URL, repo, "GitHub is the first fact source. List price for everyone else. PayPal sandbox only." | "Discounts as proofs, not codes." |
 
-Upload to YouTube as **public** (not unlisted) two to three hours before the deadline; submit Devpost by 09:00 Pacific on Thursday.
+Uploaded Nov 11: https://youtu.be/34leFmtK-iM (2:53; the recorded talk runs over the app's real screens). Submit Devpost by 09:00 Pacific on Thursday.
 
 ## Devpost text
 
@@ -50,6 +50,8 @@ Upload to YouTube as **public** (not unlisted) two to three hours before the dea
 **What's next.** Merchants paid into their own PayPal accounts. Authorise at list price and capture the earned price, so no refund and no lost fee. Budget caps, expiry and redemption limits per rule. A "maintains a popular repository" fact and a rolling twelve-month window. More fact sources, starting with package maintainership. An agent that starts checkout while the buyer approves.
 
 **Built with:** Next.js, TypeScript, PayPal REST (Orders v2, Payments v2, JS SDK), GitHub GraphQL and OAuth, Model Context Protocol, PayPal MCP server (`@paypal/mcp`, read-only), Postgres (Neon), Render, Nebius Token Factory (DeepSeek V4.1 Flash), Ollama.
+
+**Demo video.** https://youtu.be/34leFmtK-iM (2:53)
 
 **Try it.** https://earned-price.onrender.com (PayPal sandbox only; no real money).
 - *Buyer:* open the shop, pick a sample or sign in with GitHub, and pay with the sandbox buyer shown on the page under "Sandbox buyer for judges" (email and password: [paste them here before submitting]). Inside the PayPal window the buyer pays from its sandbox balance. Each GitHub account redeems once in total and each sample profile once per browser; the page has a demo-only reset.
