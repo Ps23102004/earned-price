@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { connection } from "next/server";
+import { Suspense } from "react";
 import type { ReactNode } from "react";
 import { paypal } from "@/paypal/client";
 import { receiptSummary } from "@/receipt-summary";
@@ -21,8 +23,18 @@ type Json = any;
 const money = (m: Json): string | null =>
   m && m.value !== undefined ? `${String(m.value)} ${String(m.currency_code ?? "")}`.trim() : null;
 
-export default async function Receipt({ params }: PageProps<"/receipt/[id]">) {
+// Static shell; everything that reads the session cookie or PayPal sits inside Suspense (Next 16, cacheComponents).
+export default function Receipt({ params }: PageProps<"/receipt/[id]">) {
+  return (
+    <Suspense fallback={<p className="text-sm text-stone-600 dark:text-stone-400">Reading your payment from PayPal…</p>}>
+      <ReceiptBody params={params} />
+    </Suspense>
+  );
+}
+
+async function ReceiptBody({ params }: { params: PageProps<"/receipt/[id]">["params"] }) {
   const { id } = await params;
+  await connection(); // request-time only: the session cookie is unsealed against the clock
 
   const session = await getSession().catch((err) => {
     console.error("receipt: no session:", err instanceof Error ? err.message : err);
