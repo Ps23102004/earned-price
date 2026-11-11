@@ -3,12 +3,13 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import { paypal } from "@/paypal/client";
+import { receiptSummary } from "@/receipt-summary";
 import { getSession } from "@/session";
 import { verifyCustomId } from "@/store/custom-id";
 import { getOrderForSession, reconcileOrder } from "@/store/orders";
 import { expectedRefundCustomId } from "@/store/refunds";
 import { CopyButton } from "../../_components/copy-button";
-import { Chip, Notice, buttonClass, card } from "../../_components/ui";
+import { Chip, Notice, buttonClass, card, usd } from "../../_components/ui";
 import { ClaimPanel } from "./claim-panel";
 
 export const metadata: Metadata = { title: "Receipt — Earned Price" };
@@ -93,20 +94,53 @@ function Details({ order, po, retry, claimHash, login }: { order: Order; po: Jso
   const showLicence = ["captured", "refunding", "refund_pending", "refunded_partial"].includes(order.state) && hashOk && order.licenceKey;
   const refunds: Json[] = Array.isArray(unit?.payments?.refunds) ? unit.payments.refunds : [];
 
+  const sum = receiptSummary(po);
+  const refundShown = refunds.length > 0;
+
   return (
     <>
       <StateNotice state={order.state} />
+      {sum.paidCents !== undefined ? (
+        <section aria-labelledby="summary-heading" className={card}>
+          <h2 id="summary-heading" className="text-sm font-semibold">
+            What you paid
+          </h2>
+          <dl className="mt-3 grid grid-cols-3 gap-3 text-center">
+            <div>
+              <dt className="text-xs text-stone-600 dark:text-stone-400">Paid</dt>
+              <dd className="mt-1 font-mono text-lg">{usd(sum.paidCents)}</dd>
+            </div>
+            <div>
+              <dt className="text-xs text-stone-600 dark:text-stone-400">Refunded</dt>
+              <dd className="mt-1 font-mono text-lg">{sum.refundedCents > 0 ? `−${usd(sum.refundedCents)}` : usd(0)}</dd>
+            </div>
+            <div>
+              <dt className="text-xs text-stone-600 dark:text-stone-400">Net</dt>
+              <dd className="mt-1 font-mono text-2xl font-semibold">{usd(sum.netCents ?? 0)}</dd>
+            </div>
+          </dl>
+          <p className="mt-2 text-center text-[11px] text-stone-500 dark:text-stone-400">As recorded by PayPal{sum.pendingRefund ? " · a refund is still pending" : ""}</p>
+          <ol className="mt-4 flex flex-col gap-2 border-t border-stone-200 pt-3 text-sm dark:border-stone-800 sm:flex-row sm:gap-6">
+            <li className="flex items-center gap-2">
+              <Chip tone="ok">1</Chip> Paid at PayPal
+            </li>
+            <li className="flex items-center gap-2">
+              <Chip tone={hashOk ? "ok" : "bad"}>2</Chip> {hashOk ? "Facts verified" : "Facts do not match"}
+            </li>
+            <li className="flex items-center gap-2">
+              <Chip tone={refundShown ? "ok" : "info"}>3</Chip> {refundShown ? "Refund recorded" : "No refund claimed"}
+            </li>
+          </ol>
+        </section>
+      ) : null}
       {order.state === "capturing" || order.state === "refunding" || order.state === "refund_pending" ? retry : null}
       {order.state === "refunding" || order.state === "refund_pending" ? <ClaimPanel orderId={order.id} resume /> : null}
       {order.state === "captured" && !order.buyerKey ? <ClaimPanel orderId={order.id} login={login} /> : null}
 
       {hashOk ? (
-        <div className="flex flex-col gap-1">
-          <Notice tone="ok">Fact hash verified</Notice>
-          <p className="text-xs text-stone-500 dark:text-stone-400">
-            The facts that set the price are the ones we stored, and PayPal&apos;s order carries their hash. This does not prove GitHub&apos;s data was true.
-          </p>
-        </div>
+        <p className="text-xs text-stone-500 dark:text-stone-400">
+          <strong className="font-medium text-stone-700 dark:text-stone-300">Fact hash verified.</strong> The facts that set the price are the ones we stored, and PayPal&apos;s order carries their hash. This does not prove GitHub&apos;s data was true.
+        </p>
       ) : (
         <Notice tone="bad">Fact hash MISMATCH — no licence</Notice>
       )}
@@ -123,7 +157,9 @@ function Details({ order, po, retry, claimHash, login }: { order: Order; po: Jso
         </section>
       ) : null}
 
-      <section aria-labelledby="paypal-heading" className={card}>
+      <details className="group" open={!hashOk || order.state === "mismatch"}>
+        <summary className="cursor-pointer rounded text-sm font-medium underline-offset-4 hover:underline">PayPal&apos;s full record (order, capture, refund)</summary>
+      <section aria-labelledby="paypal-heading" className={`${card} mt-3`}>
         <h2 id="paypal-heading" className="text-sm font-semibold">
           As recorded by PayPal
         </h2>
@@ -141,7 +177,7 @@ function Details({ order, po, retry, claimHash, login }: { order: Order; po: Jso
       </section>
 
       {refunds.length > 0 ? (
-        <section aria-labelledby="refund-heading" className={card}>
+        <section aria-labelledby="refund-heading" className={`${card} mt-3`}>
           <h2 id="refund-heading" className="text-sm font-semibold">
             Refund, as recorded by PayPal
           </h2>
@@ -158,6 +194,7 @@ function Details({ order, po, retry, claimHash, login }: { order: Order; po: Jso
           ))}
         </section>
       ) : null}
+      </details>
     </>
   );
 }
