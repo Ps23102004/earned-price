@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { BRIEF_SENTENCE, INJECTION_SENTENCE, MORE_PICKS, UNCHECKABLE_SENTENCE } from "@/ai/quick-picks";
 import { Chip, Notice, buttonClass, card } from "../_components/ui";
 import { CostPreview } from "./cost-preview";
+import { CopyButton } from "../_components/copy-button";
 import { RuleBuilder } from "./rule-builder";
 
 type Busy = null | "build" | "compile" | "hunt" | "tighten" | "publish" | "unpublish";
@@ -393,6 +394,12 @@ export function MerchantClient() {
             <>
               <Chip tone="ok">Published in this browser</Chip>
               <pre className="mt-2 whitespace-pre-wrap rounded-lg bg-stone-100 p-3 text-sm dark:bg-stone-950">{published.readback}</pre>
+              <div className="mt-3 flex flex-wrap items-center gap-2 text-sm">
+                <span className="font-medium">Checkout link</span>
+                <code className="min-w-0 break-all rounded bg-stone-100 px-2 py-1 text-xs dark:bg-stone-950">{`${typeof window === "undefined" ? "" : window.location.origin}/shop/${published.ruleId}`}</code>
+                <CopyButton value={`${typeof window === "undefined" ? "" : window.location.origin}/shop/${published.ruleId}`} label="checkout link" />
+              </div>
+              <p className="mt-1 text-xs text-stone-600 dark:text-stone-400">Anyone who opens this link is priced under this rule. Send it to a second browser to see it.</p>
             </>
           ) : (
             <p className="text-sm text-stone-600 dark:text-stone-400">The shop uses the default rule.</p>

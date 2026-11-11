@@ -1,50 +1,58 @@
 # Submission pack: video script and Devpost text
 
-All numbers below are the ones in the repository today. Re-check against `docs/EVIDENCE.md` before recording. PayPal is sandbox; say so on screen.
+Numbers and claims below match the repository today. Re-check against `docs/EVIDENCE.md` before recording. PayPal is sandbox; say so on screen. Judges may only watch the first three minutes and may score from the video and text alone, so the video has to carry the whole story.
 
-## Video script (target 2:40, hard limit 3:00)
+## Video script (target 2:45, hard limit 3:00)
 
-Record the deployed URL if it is up, otherwise localhost. Use a clean browser profile, 1080p. Keep the sandbox banner visible. Put the dates of anything cached on screen.
+Record the **deployed URL**. Clean browser profile, 1080p, sandbox banner visible, dates of anything cached visible. Do not show the sandbox buyer's password field being typed, `.env`, any key, or the test count / review documents (process, not product).
 
 | Time | On screen | Say |
 |---|---|---|
-| 0:00 | Black card: "Coupon codes leak. Facts don't." | "Discount codes get shared. What if the price had to be earned, from facts nobody can fake?" |
-| 0:10 | `/merchant`, the brief sentence in the box | "A merchant types one sentence." |
-| 0:18 | Click Compile. Rule JSON beside the read-back; chips "AI proposed · code validated" and "cached <date>" | "AI turns it into a typed rule over six public GitHub facts. Code validates it and writes the plain-English read-back itself. The AI never sees or sets a dollar amount." |
-| 0:35 | Run the hunt: the loophole finding, anonymised example, "Apply tightening" with the changed line | "Before publishing, it hunts for loopholes. Here it found a real account that would win 50% off by merging into its own repository. Code recomputes the fix and checks it." |
-| 0:55 | Cost preview under the rule | "And what the rule would cost over a recorded sample: here, about $14,000 given away per 1,000 sales, and the before/after of the tightening. Rough, labelled, not all of GitHub." Then click Publish. |
-| 1:05 | Shop `/`: pick "Qualifies" sample, price build-up ticking down | "A buyer proves public facts, with zero OAuth permissions. Code evaluates the rule and the price ticks down line by line, each with a link to the fact." |
-| 1:25 | PayPal sandbox approval, then the receipt: the Paid / Refunded / Net strip, "as recorded by PayPal", "Fact hash verified"; open "PayPal's full record" once | "PayPal charges exactly that. Every figure here is read back from PayPal, and the receipt checks a hash of the facts against the order PayPal holds." |
-| 1:50 | Second purchase refused ("already redeemed"); mention reset is demo-only | "One discount per buyer, enforced in the database." |
-| 2:00 | Guest buys at $49.00, receipt, "Prove your facts for a refund", claim with a sample | "Or buy first, prove later. Pay full price, prove facts afterwards, and the code refunds exactly the difference." |
-| 2:20 | Receipt with refund 24.50 COMPLETED, "Claim hash and attempt id verified"; PARTIALLY_REFUNDED capture | "Refund sent through PayPal with an idempotent request, read back and verified." |
-| 2:30 | Repo: `docs/EVIDENCE.md` rows, tests, `docs/L6-redteam.md` | "Every money feature has real sandbox evidence. Independent reviewers and a red team found and fixed real bugs. AI proposes; deterministic code decides everything about money." |
-| 2:40 | End card: URL, repo, "PayPal sandbox only" | |
+| 0:00 | Card: "Open-source discounts run on application forms and coupon codes" with the 1Password open-source programme page behind it | "Open-source discounts today run on application forms reviewed by hand, or on coupon codes that leak. And a shopping agent can't fill in a form or guess a code." |
+| 0:15 | `/merchant`: type a **new** sentence, Compile, "live" chip, rule JSON beside the read-back | "A merchant writes one sentence. AI proposes a typed rule; code validates it and writes the plain-English read-back. The model never sees a price." |
+| 0:35 | Loophole hunt, the self-merge example, Apply tightening, then the Before/After cost table | "Before launch it hunts for accounts that win against the rule's spirit, and shows what the fix costs. Rough sample, labelled." |
+| 0:55 | Publish, "Checkout link", Copy | "Publish gives a checkout link." |
+| 1:00 | **Second browser** opens the link; sign in with GitHub (no permissions); price ticks down line by line; PayPal approve | "The buyer proves public facts with zero permissions. Code computes the price. PayPal charges exactly that." |
+| 1:30 | Receipt: Paid / Refunded / Net, "as recorded by PayPal", "Fact hash verified" | "Every figure is read back from PayPal, and the receipt checks a hash of the facts against the order PayPal holds." |
+| 1:45 | Guest pays $49.00, claims with a sample, receipt shows $24.50 refunded | "Or buy first and prove later. Code refunds the exact difference, through PayPal." |
+| 2:10 | `/agent` page, then a terminal or Claude Code calling `preview_price` and getting the price and checkout link | "An agent can't scrape a coupon here. It reads the rule, checks public facts, and hands back a checkout link. It cannot pay: the buyer signs in and approves." |
+| 2:35 | End card: URL, repo, "PayPal sandbox only" | "AI proposes. Code decides. PayPal records." |
 
-Optional 10-second beat after the cost preview: open "Or build a rule by hand (no AI needed)", say "Or skip the AI entirely: same validator, same read-back", build a two-tier rule, publish, and show the shop price change.
+Optional 8-second beat after the cost table: open "Or build a rule by hand (no AI needed)", build a two-tier rule, publish, show the shop price change.
 
-Do not show: the sandbox buyer's password field being typed, `.env`, or any key. If PayPal's popup is awkward to capture, record the approval separately and cut it in.
+If the PayPal popup is awkward to capture, record the approval separately and cut it in.
 
 ## Devpost text
 
-**Tagline:** A checkout where the price is earned from verified public facts, not a coupon code.
+**Tagline:** Discounts you earn from public facts, not codes you find. Built for buyers and their agents.
 
-**Inspiration.** Discount codes leak. Merchants who want to reward open-source contributors, long-time users or active developers have no code-free way to do it. Public GitHub facts can't be shared like a coupon, and anyone can check them.
+**Inspiration.** Programmes like 1Password's open-source programme give free accounts to maintainers, by application form, reviewed by hand. Coupon codes are the other option, and they leak. Public GitHub facts can't be shared like a coupon, anyone can check them, and a shopping agent can read a rule where it cannot guess a code.
 
-**What it does.** A merchant describes a discount policy in one sentence. AI compiles it into a typed rule over a fixed whitelist of GitHub facts, code validates it and writes a read-back, and a loophole hunt looks for real accounts that would win a tier against its spirit before the rule is published (with a code-recomputed fix and a cost preview). A buyer proves facts by signing in with GitHub (no OAuth scopes) or choosing a recorded sample profile; deterministic code evaluates the rule, the price ticks down line by line with a link to every fact, and PayPal charges exactly the earned price with the discount as its own line. The receipt is read back from PayPal and re-checks a hash of the facts against the order. A guest who paid full price can prove facts later and get the difference refunded through PayPal.
+**What it does.** Four verbs: **write, hunt, prove, pay** (or pay, then prove).
+- *Write:* a merchant types one sentence, or builds a rule by hand. AI proposes a typed rule over six GitHub facts; code validates it and writes the read-back.
+- *Hunt:* before publishing, it looks for real accounts that win a tier against the rule's spirit, proposes a tightening that code recomputes, and shows a cost preview with a before/after table.
+- *Prove:* the buyer signs in with GitHub (no OAuth scopes) or picks a recorded sample; code evaluates the rule and the price ticks down line by line with a link to every fact.
+- *Pay:* PayPal charges exactly the earned price, with the discount as its own line. The receipt is read back from PayPal and checks a hash of the facts. A guest who paid full price can prove later and get the exact difference refunded.
+- *For agents:* a read-only MCP interface lets an agent read a rule, preview what a buyer would pay and fetch the checkout link. It cannot create an order or pay.
 
-**How we built it.** Next.js 16 and TypeScript, Postgres on Neon, PayPal Orders v2 and Payments v2 (sandbox): discount line items, idempotent capture and refund with stored request ids, `custom_id` binding the fact hash, a reconcile path that reads PayPal before changing state. A small local model (Ollama) is the rule compiler and loophole proposer during development; the hosted demo serves recorded, dated outputs. The rule engine, pricing, redemption limit and money state machine are plain deterministic code with compare-and-set transitions.
+**What is new, stated carefully.** Verified-attribute discounts exist (student and OSS verification services; GitHub-login contributor coupons). We did not find a product with all three of: a merchant-written rule over graded facts that computes a price, an automatic exact refund after later proof, and adversarial loophole hunting before launch. We built those, and a machine-readable rule an agent can query.
 
-**AI tools used.** Claude Opus 5.5 (planning, integration), Claude Sonnet 5.5 (research, implementation, independent test authoring), Claude Haiku 5.5 (test and lint runs, judging), Claude Fable (architecture and code reviews, red-team), Gemini 3.8 Flash (architecture critic, judging), Gemma 4 12B on Ollama (rule compiler and loophole proposer). GPT-6.1 Sol/Terra/Luna were planned but unavailable (usage limit) and are not credited.
+**How we built it.** Next.js 16 and TypeScript, Postgres on Neon, PayPal Orders v2 and Payments v2 (sandbox): discount line item, a code-written order description, idempotent capture and refund with stored request ids, `custom_id` binding the fact hash, `note_to_payer` on refunds, and a reconcile path that reads PayPal before changing state. The rule engine, pricing, redemption limit and money state machine are deterministic code with compare-and-set transitions. The model only proposes.
 
-**Challenges.** Keeping AI away from money: it can only propose a percent inside a validated rule. Making refunds and captures safe under retries, timeouts and double clicks. Making "cached" and "recorded" honest everywhere. Independent reviews kept finding real problems (stuck captures, a reconcile path that skipped the redemption claim, a refund id reuse, a refund priced under a buyer-published rule); each became a regression test.
+**AI tools used.** Claude Opus 5.5 (planning, integration), Claude Sonnet 5.5 (research, implementation, independent test authoring), Claude Haiku 5.5 (test and lint runs, judging), Claude Fable (architecture reviews, red-team, strategy), Gemini 3.8 Flash (architecture critic, judging), Gemma 4 12B on Ollama (rule compiler and loophole proposer in development). At runtime the hosted demo uses [fill in the hosted model if one is switched on, otherwise: recorded compiles]. GPT models were planned but unavailable and are not credited.
 
-**Accomplishments.** Every money feature has a row of real sandbox evidence read back from PayPal. About 900 automated tests, a compiler evaluation (39/40, with the tuning caveat stated), an independent red-team and a judge panel with the findings published in the repo.
+**Challenges.** Keeping AI away from money. Making refunds and captures safe under retries, timeouts and double clicks. Making "cached" and "recorded" honest everywhere. Independent reviews kept finding real problems (stuck captures, a reconcile path that skipped the redemption claim, a refund id reuse, a refund priced under a buyer-published rule); each became a regression test.
 
-**What we learned.** The interesting design question is where to put the AI/code boundary. Here the AI proposes strategies and rules, and everything that touches money, redemption or a published rule is code that can be tested.
+**Accomplishments.** Every money feature has a row of real sandbox evidence read back from PayPal, including a refund with `note_to_payer` and a real GitHub sign-in purchase [add the row once done]. About 900 automated tests; an independent red-team and judge panel with their findings published.
 
-**What's next.** Real merchant accounts and a shared published rule, more fact sources than GitHub, a live compiler on a hosted model, webhooks for pending payments.
+**Honest limits, in three lines.** GitHub is the only fact source. Rules are per browser or shared by link, with no merchant accounts. Refunding after the fact does not return PayPal's fee (about $0.85 more on the $49 example).
 
-**Built with:** Next.js, TypeScript, PayPal REST (Orders v2, Payments v2, JS SDK), GitHub GraphQL and OAuth, Postgres (Neon), Render, Ollama.
+**Who pays first.** Developer-tool and course sellers that already run a manual open-source or contributor programme.
 
-**Try it.** Sandbox only. Judge mode on the site shows a sandbox buyer; or pay with the test card shown there. Each GitHub account or sample profile can redeem once; use the demo-only reset on the page to repeat.
+**Pricing model (a hypothesis, not a built feature).** A small fee per verified discount, or a flat monthly fee per merchant.
+
+**What's next.** Merchant accounts and a persistent published rule; more proof sources than GitHub; a live hosted compiler with caps; PayPal webhooks for pending payments; authorise at list price and capture the earned price.
+
+**Built with:** Next.js, TypeScript, PayPal REST (Orders v2, Payments v2, JS SDK), GitHub GraphQL and OAuth, Model Context Protocol, Postgres (Neon), Render, Ollama.
+
+**Try it.** Sandbox only. The site's judge mode shows a sandbox buyer; credentials: [paste the sandbox buyer email and password here, from the site]. Or pay with the test card shown there. Each GitHub account or sample profile redeems once; use the demo-only reset on the page to repeat. Free test access stays up through Dec 15.

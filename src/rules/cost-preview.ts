@@ -41,6 +41,6 @@ export function costPreview(rule: Rule, accounts: GithubSnapshot[], recordedAt: 
   const summary =
     n === 0
       ? "No sample accounts are available."
-      : `About ${sharePercent}% of the ${n} sampled accounts would earn a discount, and the average discount across them is ${averageDiscountPercent}%. Rough sample of recent contributors, recorded ${day}; not all of GitHub.`;
+      : `About ${sharePercent}% of the ${n} sampled accounts would earn a discount, and the average discount across them is ${averageDiscountPercent}%. Rough sample of GitHub developers with a public repository, recorded ${day}; not all of GitHub and not your customers.`;
   return { n, qualifying, sharePercent, averageDiscountPercent, giveawayPer1000Cents, tiers, summary };
 }

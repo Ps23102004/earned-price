@@ -10,6 +10,7 @@ import { CopyButton } from "./_components/copy-button";
 import { ResetDemo } from "./_components/reset-demo";
 import { TheRule } from "./_components/the-rule";
 import type { SampleName } from "./_components/types";
+import { ActiveRuleBanner } from "./_components/active-rule-banner";
 import { card } from "./_components/ui";
 import { Orders, ShopClient } from "./shop-client";
 
@@ -54,6 +55,7 @@ export default function Home() {
         <Step n={2} title="Price" body="code sets the discount" />
         <Step n={3} title="Pay" body="PayPal charges it, receipt read back" />
       </ol>
+      <ActiveRuleBanner />
       <Suspense fallback={<ShopClient clientId={clientId} identity={null} sampleDates={sampleDates} />}>
         <Shop />
       </Suspense>

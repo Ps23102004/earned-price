@@ -22,6 +22,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <Link href="/merchant" className="rounded-lg px-3 py-2 hover:bg-stone-200/60 dark:hover:bg-stone-800">
               Merchant
             </Link>
+            <Link href="/agent" className="rounded-lg px-3 py-2 hover:bg-stone-200/60 dark:hover:bg-stone-800">
+              Agents
+            </Link>
           </nav>
         </header>
         <main className="mx-auto w-full max-w-xl flex-1 px-4 py-8">{children}</main>
