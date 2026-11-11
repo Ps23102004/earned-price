@@ -12,7 +12,7 @@ import { parseModelJson, sentenceProblem, toRule } from "./compile-map";
 
 export type CompileResult =
   | { status: "compiled"; rule: Rule; readback: string; source: "live" | "cached"; cachedAt?: string }
-  | { status: "refused"; reasons: string[] }
+  | { status: "refused"; reasons: string[]; source?: "cached"; cachedAt?: string }
   | { status: "invalid"; reasons: string[] }
   | { status: "unavailable"; reason: string };
 
@@ -48,14 +48,19 @@ Shape:
 If any part of the sentence is not expressible, refuse everything:
 {"refuse": true, "unsupported": ["short reason"], "tiers": []}`;
 
-type Cached = { sentence: string; rule: unknown; model?: string; compiledAt: string };
+type Cached = { sentence: string; rule?: unknown; refused?: unknown; model?: string; compiledAt: string };
 
-async function readCached(sentence: string): Promise<Extract<CompileResult, { status: "compiled" }> | undefined> {
+async function readCached(sentence: string): Promise<Extract<CompileResult, { status: "compiled" | "refused" }> | undefined> {
   let file: Cached;
   try {
     file = JSON.parse(await readFile(path.join(compiledDir(), `${sentenceKey(sentence)}.json`), "utf8")) as Cached;
   } catch {
     return undefined;
+  }
+  if (Array.isArray(file.refused) && typeof file.compiledAt === "string") {
+    // A recorded refusal of an uncheckable sentence. Reasons are cleaned again on the way out: a cache file is data too.
+    const reasons = file.refused.filter((x): x is string => typeof x === "string").slice(0, 5).map((x) => x.replace(/[^\p{L}\p{N} .,;:'()%-]/gu, "").trim().slice(0, 120)).filter(Boolean);
+    return reasons.length > 0 ? { status: "refused", reasons, source: "cached", cachedAt: file.compiledAt } : undefined;
   }
   const v = validateRule(file.rule); // a cache file is data too: never trusted
   if (!v.ok || typeof file.compiledAt !== "string") return undefined;

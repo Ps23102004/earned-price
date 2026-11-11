@@ -1,14 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { BRIEF_SENTENCE, INJECTION_SENTENCE, UNCHECKABLE_SENTENCE } from "@/ai/quick-picks";
+import { BRIEF_SENTENCE, INJECTION_SENTENCE, MORE_PICKS, UNCHECKABLE_SENTENCE } from "@/ai/quick-picks";
 import { Chip, Notice, buttonClass, card } from "../_components/ui";
 import { CostPreview } from "./cost-preview";
 
 type Busy = null | "compile" | "hunt" | "tighten" | "publish" | "unpublish";
 
 type Compiled = { status: "compiled"; ruleId: string; rule: unknown; readback: string; source: "live" | "cached"; cachedAt?: string };
-type Refused = { status: "refused" | "invalid"; reasons: string[] };
+type Refused = { status: "refused" | "invalid"; reasons: string[]; cachedAt?: string };
 type Unavailable = { status: "unavailable"; reason: string };
 type CompileResult = Compiled | Refused | Unavailable;
 
@@ -184,6 +184,7 @@ export function MerchantClient() {
             { text: BRIEF_SENTENCE, name: "Brief example" },
             { text: UNCHECKABLE_SENTENCE, name: "Uncheckable" },
             { text: INJECTION_SENTENCE, name: "Injection attempt" },
+            ...MORE_PICKS,
           ].map((p) => (
             <button
               key={p.name}
@@ -245,6 +246,7 @@ export function MerchantClient() {
               ) : (
                 <>
                   {compile.status === "refused" ? "Refused" : "Invalid"}: {(compile.reasons ?? []).join("; ")}. Nothing was published.
+                  {compile.cachedAt ? ` (recorded refusal, cached ${compile.cachedAt})` : ""}
                 </>
               )}
             </Notice>

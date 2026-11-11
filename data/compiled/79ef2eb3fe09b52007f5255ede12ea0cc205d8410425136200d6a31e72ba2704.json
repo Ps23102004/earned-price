@@ -1,0 +1,8 @@
+{
+  "sentence": "20% off for students",
+  "refused": [
+    "student status is not a supported field"
+  ],
+  "model": "gemma4:12b-mlx",
+  "compiledAt": "2026-11-11T02:34:56.875Z"
+}

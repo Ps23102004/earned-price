@@ -1,0 +1,26 @@
+{
+  "sentence": "60% off for anyone with a PR merged this year into a repo with 10,000 or more stars",
+  "rule": {
+    "version": 1,
+    "tiers": [
+      {
+        "id": "t1",
+        "label": "High Star PR",
+        "discountPercent": 60,
+        "conditions": [
+          {
+            "field": "max_repo_stars_merged_pr",
+            "op": "gte",
+            "value": 10000,
+            "pr": {
+              "mergedSince": "year_start"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "readback": "60% off (High Star PR) if the account has a merged pull request into a repository with at least 10,000 stars (merged this calendar year).\nOnly the single best matching tier applies.",
+  "model": "gemma4:12b-mlx",
+  "compiledAt": "2026-11-11T02:34:05.456Z"
+}

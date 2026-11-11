@@ -1,0 +1,23 @@
+{
+  "sentence": "30% off for people who made at least 500 commits in the last year",
+  "rule": {
+    "version": 1,
+    "tiers": [
+      {
+        "id": "t1",
+        "label": "Active Contributor",
+        "discountPercent": 30,
+        "conditions": [
+          {
+            "field": "commit_contributions_last_year",
+            "op": "gte",
+            "value": 500
+          }
+        ]
+      }
+    ]
+  },
+  "readback": "30% off (Active Contributor) if the account made at least 500 commits in the last year.\nOnly the single best matching tier applies.",
+  "model": "gemma4:12b-mlx",
+  "compiledAt": "2026-11-11T02:33:03.010Z"
+}

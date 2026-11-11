@@ -1,0 +1,23 @@
+{
+  "sentence": "5% off for everybody who has ever had a pull request merged",
+  "rule": {
+    "version": 1,
+    "tiers": [
+      {
+        "id": "t1",
+        "label": "merged PR",
+        "discountPercent": 5,
+        "conditions": [
+          {
+            "field": "merged_prs",
+            "op": "gte",
+            "value": 1
+          }
+        ]
+      }
+    ]
+  },
+  "readback": "5% off (merged PR) if the account has at least 1 merged pull request.\nOnly the single best matching tier applies.",
+  "model": "gemma4:12b-mlx",
+  "compiledAt": "2026-11-11T02:33:58.105Z"
+}

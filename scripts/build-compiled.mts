@@ -6,6 +6,7 @@
 import { mkdirSync, existsSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { compileSentence, compiledDir, sentenceKey } from "../src/ai/compile";
+import { sentenceProblem } from "../src/ai/compile-map";
 import { QUICK_PICKS } from "../src/ai/quick-picks";
 
 process.env.AI_LIVE = "1";
@@ -27,6 +28,13 @@ for (const sentence of [...new Set(sentences)]) {
   const started = Date.now();
   const r = await compileSentence(sentence, { skipCache: true });
   const secs = Math.round((Date.now() - started) / 1000);
+  if (r.status === "refused" && !sentenceProblem(sentence)) {
+    // The model itself refused (not a code filter): record it so the hosted demo can show the refusal, labelled cached.
+    writeFileSync(file, JSON.stringify({ sentence, refused: r.reasons, model: process.env.AI_MODEL, compiledAt: new Date().toISOString() }, null, 2) + "\n");
+    written++;
+    console.log(`refused in ${secs}s (cached):`, sentence.slice(0, 60), r.reasons.join("; "));
+    continue;
+  }
   if (r.status !== "compiled") {
     console.log(`${r.status} in ${secs}s, not cached:`, sentence.slice(0, 60), "reasons" in r ? r.reasons.join("; ") : r.reason);
     continue;

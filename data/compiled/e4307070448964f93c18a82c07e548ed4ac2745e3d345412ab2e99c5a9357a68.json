@@ -1,0 +1,23 @@
+{
+  "sentence": "Give 15% off to anyone whose merged PR went into a project with at least 2,000 stars",
+  "rule": {
+    "version": 1,
+    "tiers": [
+      {
+        "id": "t1",
+        "label": "High Star PR",
+        "discountPercent": 15,
+        "conditions": [
+          {
+            "field": "max_repo_stars_merged_pr",
+            "op": "gte",
+            "value": 2000
+          }
+        ]
+      }
+    ]
+  },
+  "readback": "15% off (High Star PR) if the account has a merged pull request into a repository with at least 2,000 stars.\nOnly the single best matching tier applies.",
+  "model": "gemma4:12b-mlx",
+  "compiledAt": "2026-11-11T02:33:50.379Z"
+}

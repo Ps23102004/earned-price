@@ -1,0 +1,23 @@
+{
+  "sentence": "40% off for a merged PR into a repository with 5,000 stars",
+  "rule": {
+    "version": 1,
+    "tiers": [
+      {
+        "id": "t1",
+        "label": "Merged PR Star Milestone",
+        "discountPercent": 40,
+        "conditions": [
+          {
+            "field": "max_repo_stars_merged_pr",
+            "op": "gte",
+            "value": 5000
+          }
+        ]
+      }
+    ]
+  },
+  "readback": "40% off (Merged PR Star Milestone) if the account has a merged pull request into a repository with at least 5,000 stars.\nOnly the single best matching tier applies.",
+  "model": "gemma4:12b-mlx",
+  "compiledAt": "2026-11-11T02:33:09.150Z"
+}

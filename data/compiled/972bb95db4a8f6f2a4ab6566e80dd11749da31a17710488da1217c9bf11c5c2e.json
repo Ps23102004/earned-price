@@ -1,0 +1,28 @@
+{
+  "sentence": "a quarter off for accounts at least two years old that also have a merged pull request",
+  "rule": {
+    "version": 1,
+    "tiers": [
+      {
+        "id": "t1",
+        "label": "Old Account with PR",
+        "discountPercent": 25,
+        "conditions": [
+          {
+            "field": "account_age_days",
+            "op": "gte",
+            "value": 730
+          },
+          {
+            "field": "merged_prs",
+            "op": "gte",
+            "value": 1
+          }
+        ]
+      }
+    ]
+  },
+  "readback": "25% off (Old Account with PR) if the GitHub account is at least 730 days old and the account has at least 1 merged pull request.\nOnly the single best matching tier applies.",
+  "model": "gemma4:12b-mlx",
+  "compiledAt": "2026-11-11T02:33:36.955Z"
+}

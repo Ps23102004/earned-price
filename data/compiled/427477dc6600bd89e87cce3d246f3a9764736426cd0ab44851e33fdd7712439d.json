@@ -1,0 +1,28 @@
+{
+  "sentence": "Discount of 45% for accounts with at least 30 public repositories and at least 500 contributions last year",
+  "rule": {
+    "version": 1,
+    "tiers": [
+      {
+        "id": "t1",
+        "label": "Public Repos and Contributions",
+        "discountPercent": 45,
+        "conditions": [
+          {
+            "field": "public_repos",
+            "op": "gte",
+            "value": 30
+          },
+          {
+            "field": "commit_contributions_last_year",
+            "op": "gte",
+            "value": 500
+          }
+        ]
+      }
+    ]
+  },
+  "readback": "45% off (Public Repos and Contributions) if the account owns at least 30 public repositories and the account made at least 500 commits in the last year.\nOnly the single best matching tier applies.",
+  "model": "gemma4:12b-mlx",
+  "compiledAt": "2026-11-11T02:33:54.680Z"
+}

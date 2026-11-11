@@ -1,0 +1,23 @@
+{
+  "sentence": "15% off for accounts with 20 or more public repositories",
+  "rule": {
+    "version": 1,
+    "tiers": [
+      {
+        "id": "t1",
+        "label": "Public Repos",
+        "discountPercent": 15,
+        "conditions": [
+          {
+            "field": "public_repos",
+            "op": "gte",
+            "value": 20
+          }
+        ]
+      }
+    ]
+  },
+  "readback": "15% off (Public Repos) if the account owns at least 20 public repositories.\nOnly the single best matching tier applies.",
+  "model": "gemma4:12b-mlx",
+  "compiledAt": "2026-11-11T02:32:59.168Z"
+}

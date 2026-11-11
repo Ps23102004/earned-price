@@ -1,0 +1,26 @@
+{
+  "sentence": "35% off for 3 or more merged PRs this year",
+  "rule": {
+    "version": 1,
+    "tiers": [
+      {
+        "id": "t1",
+        "label": "3+ merged PRs this year",
+        "discountPercent": 35,
+        "conditions": [
+          {
+            "field": "merged_prs",
+            "op": "gte",
+            "value": 3,
+            "pr": {
+              "mergedSince": "year_start"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "readback": "35% off (3+ merged PRs this year) if the account has at least 3 merged pull requests (merged this calendar year).\nOnly the single best matching tier applies.",
+  "model": "gemma4:12b-mlx",
+  "compiledAt": "2026-11-11T02:33:20.945Z"
+}

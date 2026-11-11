@@ -1,0 +1,23 @@
+{
+  "sentence": "25% off for anyone with at least 100 followers",
+  "rule": {
+    "version": 1,
+    "tiers": [
+      {
+        "id": "t1",
+        "label": "Follower Discount",
+        "discountPercent": 25,
+        "conditions": [
+          {
+            "field": "followers",
+            "op": "gte",
+            "value": 100
+          }
+        ]
+      }
+    ]
+  },
+  "readback": "25% off (Follower Discount) if the account has at least 100 followers.\nOnly the single best matching tier applies.",
+  "model": "gemma4:12b-mlx",
+  "compiledAt": "2026-11-11T02:32:56.615Z"
+}

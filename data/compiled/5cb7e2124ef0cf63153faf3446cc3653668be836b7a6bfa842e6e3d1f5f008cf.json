@@ -1,0 +1,35 @@
+{
+  "sentence": "20% off for 10 followers; 40% off for 200 followers",
+  "rule": {
+    "version": 1,
+    "tiers": [
+      {
+        "id": "t1",
+        "label": "10 followers",
+        "discountPercent": 20,
+        "conditions": [
+          {
+            "field": "followers",
+            "op": "gte",
+            "value": 10
+          }
+        ]
+      },
+      {
+        "id": "t2",
+        "label": "200 followers",
+        "discountPercent": 40,
+        "conditions": [
+          {
+            "field": "followers",
+            "op": "gte",
+            "value": 200
+          }
+        ]
+      }
+    ]
+  },
+  "readback": "20% off (10 followers) if the account has at least 10 followers.\n40% off (200 followers) if the account has at least 200 followers.\nOnly the single best matching tier applies.",
+  "model": "gemma4:12b-mlx",
+  "compiledAt": "2026-11-11T02:33:26.493Z"
+}

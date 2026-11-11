@@ -1,0 +1,28 @@
+{
+  "sentence": "50% off for accounts with at least 50 followers and at least 10 public repositories",
+  "rule": {
+    "version": 1,
+    "tiers": [
+      {
+        "id": "t1",
+        "label": "Followers and Repos",
+        "discountPercent": 50,
+        "conditions": [
+          {
+            "field": "followers",
+            "op": "gte",
+            "value": 50
+          },
+          {
+            "field": "public_repos",
+            "op": "gte",
+            "value": 10
+          }
+        ]
+      }
+    ]
+  },
+  "readback": "50% off (Followers and Repos) if the account has at least 50 followers and the account owns at least 10 public repositories.\nOnly the single best matching tier applies.",
+  "model": "gemma4:12b-mlx",
+  "compiledAt": "2026-11-11T02:33:16.490Z"
+}

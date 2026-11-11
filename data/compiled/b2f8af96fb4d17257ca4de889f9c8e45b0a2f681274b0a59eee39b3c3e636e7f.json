@@ -1,0 +1,23 @@
+{
+  "sentence": "20% off for anyone who has contributed to open source, meaning at least one merged PR",
+  "rule": {
+    "version": 1,
+    "tiers": [
+      {
+        "id": "t1",
+        "label": "Open Source Contributor",
+        "discountPercent": 20,
+        "conditions": [
+          {
+            "field": "merged_prs",
+            "op": "gte",
+            "value": 1
+          }
+        ]
+      }
+    ]
+  },
+  "readback": "20% off (Open Source Contributor) if the account has at least 1 merged pull request.\nOnly the single best matching tier applies.",
+  "model": "gemma4:12b-mlx",
+  "compiledAt": "2026-11-11T02:33:42.821Z"
+}
