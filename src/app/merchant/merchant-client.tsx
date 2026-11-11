@@ -316,6 +316,11 @@ export function MerchantClient() {
                       </li>
                     ))}
                   </ul>
+                  {f.strategy?.spiritCheck === "own_repo" ? (
+                    <p className="mt-2 text-xs text-amber-700 dark:text-amber-300">
+                      Limit: this only catches repositories owned by the author&apos;s own account. A repository owned by an organisation the author controls cannot be seen from public data.
+                    </p>
+                  ) : null}
                   <h4 className="mt-3 text-xs font-medium">Proposed tightening (read-back diff)</h4>
                   <ul className="mt-1 list-disc pl-5 text-sm">
                     {f.diff.map((line, j) => (

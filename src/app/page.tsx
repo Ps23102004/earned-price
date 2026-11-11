@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import Link from "next/link";
 import { cookies } from "next/headers";
 import { connection } from "next/server";
 import { getIronSession } from "iron-session";
@@ -50,11 +49,11 @@ export default function Home() {
 
   return (
     <div className="flex flex-col gap-6">
-      <nav aria-label="Site" className="-mb-2 text-sm">
-        <Link href="/merchant" className="underline underline-offset-4">
-          Merchant view
-        </Link>
-      </nav>
+      <ol aria-label="How it works" className="grid grid-cols-3 gap-2 text-sm sm:gap-3">
+        <Step n={1} title="Prove" body="public GitHub facts" />
+        <Step n={2} title="Price" body="code sets the discount" />
+        <Step n={3} title="Pay" body="PayPal charges it, receipt read back" />
+      </ol>
       <Suspense fallback={<ShopClient clientId={clientId} identity={null} sampleDates={sampleDates} />}>
         <Shop />
       </Suspense>
@@ -79,17 +78,6 @@ export default function Home() {
             </p>
             <ResetDemo />
           </section>
-
-          <section aria-labelledby="how-heading">
-            <h2 id="how-heading" className="text-sm font-semibold">
-              How it works
-            </h2>
-            <ol className="mt-3 grid gap-3 text-sm sm:grid-cols-3">
-              <Step n={1} title="Prove" body="public GitHub facts" />
-              <Step n={2} title="Price" body="code computes the discount" />
-              <Step n={3} title="Pay" body="PayPal charges exactly that; the receipt is read back from PayPal" />
-            </ol>
-          </section>
         </>
       ) : null}
     </div>
@@ -110,7 +98,7 @@ function Credential({ label, value }: { label: string; value: string }) {
 
 function Step({ n, title, body }: { n: number; title: string; body: string }) {
   return (
-    <li className="rounded-lg border border-stone-200 p-3 dark:border-stone-800">
+    <li className="rounded-lg border border-stone-200 p-2.5 sm:p-3 dark:border-stone-800">
       <span className="font-mono text-xs text-stone-500 dark:text-stone-400">{n}</span>
       <p className="font-medium">{title}</p>
       <p className="text-xs text-stone-600 dark:text-stone-400">{body}</p>
