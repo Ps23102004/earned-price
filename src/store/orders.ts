@@ -153,6 +153,9 @@ export async function createPayPalOrder(orderId: string, sid: string, withinBudg
   }
   if (o.earned_cents < 1) return { status: 422, body: { error: "nothing to charge" } };
 
+  // Everything above checked this session's own quoted order; only now is the shared PayPal budget spent, before any PayPal call.
+  if (!withinBudget()) return { status: 429, body: { error: "too many requests, try again later" } };
+
   // One redemption per buyer: refuse before touching PayPal. A stuck order of theirs may resolve first.
   if (o.buyer_key) {
     let held = await redemptionFor({ query }, o.buyer_key);
@@ -169,9 +172,6 @@ export async function createPayPalOrder(orderId: string, sid: string, withinBudg
       return { status: 409, body: { error: "already redeemed", state: "cancelled", message: ALREADY_REDEEMED } };
     }
   }
-
-  // Everything above was checked for this session's own quoted order; only now is the shared PayPal budget spent.
-  if (!withinBudget()) return { status: 429, body: { error: "too many requests, try again later" } };
 
   const amount: Record<string, unknown> = {
     ...money(o.earned_cents),
@@ -239,7 +239,13 @@ async function runCapture(o: CaptureRow): Promise<{ decision: Decision; applied:
   return { decision, applied };
 }
 
-export async function capture(paypalOrderId: string, sid: string): Promise<Result> {
+export async function capture(paypalOrderId: string, sid: string, withinBudget: () => boolean = () => true): Promise<Result> {
+  // A fresh capture attempt on this session's own order spends the shared PayPal budget; polling an order already
+  // capturing or captured does not. Refused here, before the order is claimed, so the buyer can simply retry.
+  const pre = await byPayPalId(paypalOrderId);
+  if (pre && pre.session_id === sid && (pre.state === "created" || pre.state === "approved") && !withinBudget()) {
+    return { status: 429, body: { error: "too many requests, try again later", state: pre.state, orderId: pre.id } };
+  }
   // Tx A: created -> approved -> capturing, only for this session's order and only within 60 minutes.
   const claimed = await tx(async (c) => {
     await c.query(`update orders set state = 'approved', updated_at = now() where paypal_order_id = $1 and session_id = $2 and state = 'created'`, [paypalOrderId, sid]);

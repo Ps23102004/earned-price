@@ -151,3 +151,39 @@ describe("red-team fixes", () => {
     expect(await readLimitedJson(new Request("http://x/", { method: "POST", body: "{bad" }))).toBeNull();
   });
 });
+
+describe.skipIf(!HAVE_DB)("shared PayPal budget is charged only for a valid, owned order, before any PayPal call", () => {
+  it("create and capture refuse with 429 and touch neither PayPal nor the order when the budget is spent", async () => {
+    const orders = await import("../src/store/orders");
+    const db = await import("../src/store/db");
+    const sid = randomUUID();
+    const id = randomUUID();
+    await db.query(
+      `insert into orders (id, state, session_id, snapshot_json, snapshot_hash, list_cents, earned_cents, discount_cents, paypal_order_id, expires_at)
+       values ($1, 'created', $2, '{"v":1}', 'h', 4900, 4900, 0, $3, now() + interval '15 minutes')`,
+      [id, sid, `PP-${id.slice(0, 8)}`],
+    );
+    const q = randomUUID();
+    await db.query(
+      `insert into orders (id, state, session_id, snapshot_json, snapshot_hash, list_cents, earned_cents, discount_cents, expires_at)
+       values ($1, 'quoted', $2, '{"v":1}', 'h', 4900, 4900, 0, now() + interval '15 minutes')`,
+      [q, sid],
+    );
+    try {
+      mocks.paypal.mockReset();
+      const cap = await orders.capture(`PP-${id.slice(0, 8)}`, sid, () => false);
+      expect(cap.status).toBe(429);
+      const cre = await orders.createPayPalOrder(q, sid, () => false);
+      expect(cre.status).toBe(429);
+      expect(mocks.paypal).not.toHaveBeenCalled();
+      expect((await orders.getOrder(id))?.state).toBe("created");
+      expect((await orders.getOrder(q))?.state).toBe("quoted");
+      // Another session's order never reaches the budget check, so it cannot spend it.
+      let spent = false;
+      expect((await orders.capture(`PP-${id.slice(0, 8)}`, randomUUID(), () => ((spent = true), true))).status).toBe(404);
+      expect(spent).toBe(false);
+    } finally {
+      await db.query(`delete from orders where id = any($1::uuid[])`, [[id, q]]);
+    }
+  });
+});

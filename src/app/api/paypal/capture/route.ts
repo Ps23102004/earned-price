@@ -12,6 +12,7 @@ export function POST(req: Request) {
     if (typeof body?.paypalOrderId !== "string" || body.paypalOrderId.length > 64) {
       return { status: 400, body: { error: "paypalOrderId is required" } };
     }
-    return capture(body.paypalOrderId, session.sid);
+    // Total cap on fresh capture attempts, charged only for this session's own approved order (see capture()).
+    return capture(body.paypalOrderId, session.sid, () => allow("capture:global", 2000, 3_600_000));
   }, req);
 }
