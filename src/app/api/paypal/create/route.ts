@@ -8,8 +8,6 @@ export function POST(req: Request) {
     if (!allow(`create:${clientIp(req.headers)}`, 60, 3_600_000)) {
       return { status: 429, body: { error: "too many requests, try again later" } };
     }
-    // Total PayPal order creation is bounded whatever the client address looks like (a spoofed header changes the per-address key).
-    if (!allow("create:global", 400, 3_600_000)) return { status: 429, body: { error: "too many requests, try again later" } };
     const body = await readLimitedJson(req, 1024);
     if (!body) {
       return { status: 400, body: { error: "orderId is required" } };
@@ -18,6 +16,7 @@ export function POST(req: Request) {
       return { status: 400, body: { error: "prices are computed server-side" } };
     }
     if (typeof body.orderId !== "string") return { status: 400, body: { error: "orderId is required" } };
-    return createPayPalOrder(body.orderId, session.sid);
+    // The total cap is charged inside, only for a valid order this session owns, so unauthenticated callers cannot use it up.
+    return createPayPalOrder(body.orderId, session.sid, () => allow("create:global", 1000, 3_600_000));
   }, req);
 }

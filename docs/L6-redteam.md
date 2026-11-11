@@ -18,7 +18,7 @@ Attacker: an independent Claude Fable agent with Bash/curl against the local app
 ## Findings and what was done
 | # | Severity | Finding | Action |
 |---|---|---|---|
-| F1 | medium | Per-address rate limits are keyed on the rightmost `x-forwarded-for` hop; with no proxy in front (local) a client can pick it | Global caps added on PayPal order creation (400/h) and capture (800/h) so total damage is bounded whatever the key. On Render the proxy appends the real address; confirm with the `TRUSTED_PROXY_HOPS` check in `docs/DEPLOY.md` |
+| F1 | medium | Per-address rate limits are keyed on the rightmost `x-forwarded-for` hop; with no proxy in front (local) a client can pick it | A global cap of 1,000 PayPal order creations per hour is charged only after a request is validated as this session's own quoted order (so unauthenticated callers cannot use it up); there is deliberately no global cap on capture, because a refused capture after buyer approval is worse than extra calls. On Render the proxy appends the real address; confirm with the `TRUSTED_PROXY_HOPS` check in `docs/DEPLOY.md` |
 | F2 | low | A multi-megabyte body was read and parsed before the 400; some routes unlimited | Fixed: `src/http.ts` caps bodies (1 KB on money routes, 4 KB on merchant routes) while streaming; tests added |
 | F3 | low | Injection denylist bypassed by zero-width characters, look-alike forms and spaced tags (the validator still rejected every result) | Fixed: NFKC normalisation, control/zero-width stripping, wider tag check; tests added |
 | F4 | low | Logout does not revoke a copied sealed cookie (stateless session) | Accepted, documented: sandbox demo, cookie holds only a sample profile or GitHub identity, 14-day lifetime |

@@ -142,7 +142,7 @@ export async function createGuestQuote(sid: string): Promise<Result> {
   return { status: 200, body: { orderId, listCents: LIST_CENTS, earnedCents: LIST_CENTS, discountCents: 0, lines: [] } };
 }
 
-export async function createPayPalOrder(orderId: string, sid: string): Promise<Result> {
+export async function createPayPalOrder(orderId: string, sid: string, withinBudget: () => boolean = () => true): Promise<Result> {
   const o = await getOrder(orderId);
   if (!o || o.session_id !== sid) return { status: 404, body: { error: "order not found" } }; // same answer: no id probing
   if (o.state === "created" && o.paypal_order_id) return { status: 200, body: { paypalOrderId: o.paypal_order_id } }; // retry-safe
@@ -169,6 +169,9 @@ export async function createPayPalOrder(orderId: string, sid: string): Promise<R
       return { status: 409, body: { error: "already redeemed", state: "cancelled", message: ALREADY_REDEEMED } };
     }
   }
+
+  // Everything above was checked for this session's own quoted order; only now is the shared PayPal budget spent.
+  if (!withinBudget()) return { status: 429, body: { error: "too many requests, try again later" } };
 
   const amount: Record<string, unknown> = {
     ...money(o.earned_cents),
