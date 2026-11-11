@@ -2,7 +2,7 @@
 
 # PLAN — phases, loops, orchestration
 
-_Brief: PayPal AI Hackathon, deadline Thu Nov 12 2026 12:00 PT. Architecture in [ARCHITECTURE.md](ARCHITECTURE.md), facts in [FACTS.md](FACTS.md), sandbox proofs in [EVIDENCE.md](EVIDENCE.md)._
+_Brief: PayPal AI Hackathon, deadline Thu Nov 12 2026 12:00 PT. Architecture in [ARCHITECTURE.md](../ARCHITECTURE.md), facts in [FACTS.md](../FACTS.md), sandbox proofs in [EVIDENCE.md](../EVIDENCE.md)._
 
 ## 1. Phase 0 — setup check on this Mac (done Nov 9)
 

@@ -1,6 +1,6 @@
 # Limitations, plainly
 
-Everything here is true of the live site at https://earned-price.onrender.com as of Nov 11 2026. If a sentence in the README disagrees with this file, this file is the one that is wrong and should be fixed first.
+Everything here is true of the live site at https://earned-price.onrender.com as of Nov 11 2026. If a sentence in the README disagrees with this file, the README is wrong and should be fixed to match.
 
 ## What the receipt's hash binds, and what it does not
 
@@ -13,7 +13,7 @@ When an order is created, the app sends PayPal a `custom_id` of `<order id>:<sha
 | Every money figure on the receipt is PayPal's (order total, discount line, capture, fee, refund), fetched when the page loads | That the server was honest when it stored the snapshot: a compromised server could store anything and hash that |
 | A refund's `custom_id` (`<claim hash>:<our attempt id>`) ties PayPal's refund to the claim's facts and to one attempt, so a retry is never mistaken for an earlier refund | That GitHub's facts were fetched at any particular moment other than the stored `fetchedAt` |
 
-So "Fact hash verified" on the receipt means "checked at sign-in and bound to PayPal's record", not "verified true".
+So "Fact hash verified" on the receipt means "the facts read from GitHub when the price was quoted, for the account proven at sign-in, are bound to PayPal's record"; it does not mean "verified true".
 
 ## Who the default rule excludes
 
@@ -54,7 +54,7 @@ The preview runs the rule over 42 recorded accounts of GitHub developers with a 
 
 - **Pending payments or refunds resolve when a page loads or a button is pressed.** There are no webhooks; a pending state can sit until someone looks.
 - **Rate limits are in memory, per process,** keyed on the client address as Render's edge reports it, with per-session and shared caps behind them. They reset on every deploy.
-- **Hosting is free-tier:** Render sleeps the service after 15 minutes without traffic and takes about a minute to wake; two pingers (UptimeRobot every 5 minutes, GitHub Actions every 10) keep it awake, and both can fail. Neon's free compute budget is spent only by purchases and claims, never by the health check.
+- **Hosting is free-tier:** Render sleeps the service after 15 minutes without traffic and takes about a minute to wake; two pingers (UptimeRobot every 5 minutes, GitHub Actions every 10) keep it awake, and both can fail. Neon's free compute budget is spent by purchases, claims and rule actions (compiling, including the recorded examples, building, hunting, previewing, publishing, opening a checkout link, agent rule lookups), never by the health check or the landing page.
 - **Credentials that expire:** the GitHub server token on Render expires Dec 10 2026 and must be replaced before then (judging runs to Dec 15). The sandbox buyer's password can be changed by any visitor who reads it; a backup buyer exists.
 - **Scope the original design left out on purpose:** webhooks, Payouts, disputes, Transaction Search, platform fees, authorise-and-hold, merchant accounts, multiple products, subscriptions, other fact sources. Two items were added after a change-log entry: the shareable checkout link and the read-only agent interface.
 
