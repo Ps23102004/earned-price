@@ -16,11 +16,18 @@ services:
       - key: PAYPAL_ENV
         value: sandbox
       - key: AI_LIVE
-        value: "0"
+        value: "1"
       - key: JUDGE_MODE
         value: "1"
       - key: TRUSTED_PROXY_HOPS
         value: "1"
+      # Live compile on a hosted OpenAI-compatible model (free or pay-per-token, set in the dashboard, never committed).
+      - key: AI_BASE_URL
+        sync: false
+      - key: AI_MODEL
+        sync: false
+      - key: AI_API_KEY
+        sync: false
       - key: APP_URL
         sync: false
       - key: PAYPAL_CLIENT_ID
