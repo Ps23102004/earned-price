@@ -64,7 +64,7 @@ describe.skipIf(!HAVE_DB)("buy first, prove later (real database, mocked PayPal)
     const call = mocks.paypal.mock.calls[0];
     expect(call[1]).toBe(`/v2/payments/captures/${o.capture}/refund`);
     expect(call[2].requestId.length).toBeLessThanOrEqual(38);
-    expect(call[2].body.custom_id).toMatch(/^[0-9a-f]{64}$/);
+    expect(call[2].body.custom_id).toMatch(/^[0-9a-f]{64}:[0-9a-f-]{36}$/);
   });
 
   it("a second claim on the same order is refused", async () => {

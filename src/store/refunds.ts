@@ -52,6 +52,8 @@ class RaceLost extends Error {}
 const ORDER = `select id, state, session_id, buyer_key, rule_id, list_cents, captured_cents, paypal_order_id, paypal_capture_id from orders`;
 
 const requestId = (refundId: string) => refundId.replaceAll("-", ""); // 32 chars, within PayPal's 38
+/** Unique per refund attempt: a retry with the same facts must never match an earlier, failed refund on the same capture. */
+export const refundCustomId = (claimHash: string, refundId: string) => `${claimHash}:${refundId}`;
 
 export async function claimRefund(orderId: string, who: Who): Promise<Result> {
   if (!UUID.test(orderId)) return { status: 404, body: { error: "order not found" } };
@@ -115,19 +117,19 @@ export async function claimRefund(orderId: string, who: Who): Promise<Result> {
     throw e;
   }
 
-  const input = await postRefund(o.paypal_capture_id, refundId, due, claimHash);
+  const input = await postRefund(o.paypal_capture_id, refundId, due, refundCustomId(claimHash, refundId));
   const decision = decideRefundOutcome(input, due);
   await applyDecision(o.id, refundId, decision);
   const now = (await query<{ state: string }>(`select state from orders where id = $1`, [o.id])).rows[0];
   return { status: 200, body: { state: now?.state, orderId: o.id, message: messageFor(decision) } };
 }
 
-async function postRefund(captureId: string, refundId: string, cents: number, claimHash: string): Promise<RefundInput> {
+async function postRefund(captureId: string, refundId: string, cents: number, customId: string): Promise<RefundInput> {
   try {
     const r = await paypal("POST", `/v2/payments/captures/${encodeURIComponent(captureId)}/refund`, {
       requestId: requestId(refundId),
       representation: true,
-      body: { amount: { currency_code: "USD", value: toPayPalValue(cents) }, custom_id: claimHash },
+      body: { amount: { currency_code: "USD", value: toPayPalValue(cents) }, custom_id: customId },
     });
     return { kind: "response", httpStatus: r.status, body: r.json };
   } catch (err) {
@@ -201,18 +203,19 @@ export async function reconcileRefund(orderId: string, mode: "read" | "act"): Pr
       o.state === "refund_pending" && f.paypal_refund_id
         ? await paypal("GET", `/v2/payments/refunds/${encodeURIComponent(f.paypal_refund_id)}`)
         : await paypal("GET", `/v2/checkout/orders/${encodeURIComponent(o.paypal_order_id)}`);
-    const plan = planRefundReconcile({ state: o.state, paypalRefundId: f.paypal_refund_id, claimHash: f.claim_snapshot_hash, expectedCents: f.amount_cents, mode }, read);
+    const plan = planRefundReconcile({ state: o.state, paypalRefundId: f.paypal_refund_id, claimHash: refundCustomId(f.claim_snapshot_hash, f.id), expectedCents: f.amount_cents, mode }, read);
     if (plan.do === "decide") await applyDecision(orderId, f.id, plan.decision);
     else if (plan.do === "repost" && o.paypal_capture_id) {
       // Same request id: PayPal returns the stored result of the first call instead of refunding twice.
-      await applyDecision(orderId, f.id, decideRefundOutcome(await postRefund(o.paypal_capture_id, f.id, f.amount_cents, f.claim_snapshot_hash), f.amount_cents));
+      await applyDecision(orderId, f.id, decideRefundOutcome(await postRefund(o.paypal_capture_id, f.id, f.amount_cents, refundCustomId(f.claim_snapshot_hash, f.id)), f.amount_cents));
     }
   } catch (err) {
     console.error("refund reconcile failed:", err instanceof Error ? err.message : err);
   }
 }
 
-/** The claim snapshot hash a refund's PayPal custom_id must equal (receipt check). Undefined when there is no live refund. */
-export async function claimHashFor(orderId: string): Promise<string | undefined> {
-  return (await query<{ claim_snapshot_hash: string }>(`select claim_snapshot_hash from refunds where order_id = $1 and state <> 'failed'`, [orderId])).rows[0]?.claim_snapshot_hash;
+/** The custom_id ("<claim snapshot hash>:<refund id>") a refund's PayPal record must carry (receipt check). Undefined when there is no live refund. */
+export async function expectedRefundCustomId(orderId: string): Promise<string | undefined> {
+  const r = (await query<{ id: string; claim_snapshot_hash: string }>(`select id, claim_snapshot_hash from refunds where order_id = $1 and state <> 'failed'`, [orderId])).rows[0];
+  return r ? refundCustomId(r.claim_snapshot_hash, r.id) : undefined;
 }

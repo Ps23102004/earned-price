@@ -6,7 +6,7 @@ import { paypal } from "@/paypal/client";
 import { getSession } from "@/session";
 import { verifyCustomId } from "@/store/custom-id";
 import { getOrderForSession, reconcileOrder } from "@/store/orders";
-import { claimHashFor } from "@/store/refunds";
+import { expectedRefundCustomId } from "@/store/refunds";
 import { CopyButton } from "../../_components/copy-button";
 import { Chip, Notice, buttonClass, card } from "../../_components/ui";
 import { ClaimPanel } from "./claim-panel";
@@ -60,7 +60,7 @@ export default async function Receipt({ params }: PageProps<"/receipt/[id]">) {
         </div>
       );
     } else {
-      const claimHash = ["refunding", "refund_pending", "refunded_partial", "mismatch"].includes(order.state) ? await claimHashFor(order.id).catch(() => undefined) : undefined;
+      const claimHash = ["refunding", "refund_pending", "refunded_partial", "mismatch"].includes(order.state) ? await expectedRefundCustomId(order.id).catch(() => undefined) : undefined;
       body = <Details order={order} po={po.json} retry={retry} claimHash={claimHash} login={session.github?.login} />;
     }
   }
@@ -147,7 +147,7 @@ function Details({ order, po, retry, claimHash, login }: { order: Order; po: Jso
               <Row label="Refund amount" value={money(r.amount)} paypalMoney />
               <Row label="custom_id" value={r.custom_id} mono />
               <div className="py-2">
-                {claimHash && r.custom_id === claimHash ? <Notice tone="ok">Claim hash verified</Notice> : <Notice tone="bad">Claim hash MISMATCH</Notice>}
+                {claimHash && r.custom_id === claimHash ? <Notice tone="ok">Claim hash and refund id verified</Notice> : <Notice tone="bad">Claim hash MISMATCH</Notice>}
               </div>
             </dl>
           ))}
