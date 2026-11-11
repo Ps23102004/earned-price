@@ -17,6 +17,6 @@ export function POST(req: Request) {
     }
     if (typeof body.orderId !== "string") return { status: 400, body: { error: "orderId is required" } };
     // The total cap is charged inside, only for a valid order this session owns, so unauthenticated callers cannot use it up.
-    return createPayPalOrder(body.orderId, session.sid, () => allow("create:global", 1000, 3_600_000));
+    return createPayPalOrder(body.orderId, session.sid, () => allow(`create:sid:${session.sid}`, 30, 3_600_000) && allow("create:global", 1000, 3_600_000));
   }, req);
 }

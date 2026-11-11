@@ -12,6 +12,8 @@ export function POST(req: Request) {
     if (typeof body?.paypalOrderId !== "string" || body.paypalOrderId.length > 64) {
       return { status: 400, body: { error: "paypalOrderId is required" } };
     }
+    // One session cannot use up the shared pool: each browser session gets its own hourly allowance first.
+    if (!allow(`capture:sid:${session.sid}`, 60, 3_600_000)) return { status: 429, body: { error: "too many requests, try again later" } };
     // Total cap on fresh capture attempts, charged only for this session's own approved order (see capture()).
     return capture(body.paypalOrderId, session.sid, () => allow("capture:global", 2000, 3_600_000));
   }, req);

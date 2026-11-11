@@ -243,7 +243,9 @@ export async function capture(paypalOrderId: string, sid: string, withinBudget: 
   // A fresh capture attempt on this session's own order spends the shared PayPal budget; polling an order already
   // capturing or captured does not. Refused here, before the order is claimed, so the buyer can simply retry.
   const pre = await byPayPalId(paypalOrderId);
-  if (pre && pre.session_id === sid && (pre.state === "created" || pre.state === "approved") && !withinBudget()) {
+  // Same conditions the claim below uses, so the budget is spent only when a PayPal call would actually follow.
+  const claimable = pre && pre.session_id === sid && (pre.state === "created" || pre.state === "approved") && !pre.older_60m && pre.capture_attempt < RECAPTURE_LIMIT;
+  if (pre && claimable && !withinBudget()) {
     return { status: 429, body: { error: "too many requests, try again later", state: pre.state, orderId: pre.id } };
   }
   // Tx A: created -> approved -> capturing, only for this session's order and only within 60 minutes.
