@@ -5,6 +5,11 @@
 **Live demo (PayPal sandbox, no real money): https://earned-price.onrender.com** · MIT licence · built for the PayPal AI Hackathon, Nov 2026
 
 <p align="center">
+  <a href="docs/media/earned-price-20s.mp4"><img src="docs/media/earned-price-20s.gif" alt="20-second overview: discount codes leak; the price drops from $49.00 to $24.50 on the real price card; the loophole hunt, code deciding every cent, PayPal charging exactly that; end card with the live URL" width="100%"></a>
+  <br><sub>20-second overview made from the app's real screens (recorded sample profile). Click for the MP4.</sub>
+</p>
+
+<p align="center">
   <img src="docs/images/price-buildup.png" alt="The shop: the price ticks down line by line to $24.50, each tier marked applied or not met, with the PayPal button below" width="49%">
   <img src="docs/images/loophole-hunt.png" alt="The merchant page: the loophole hunt found three anonymised accounts that win the 20% tier by merging into their own repositories, and proposes a tightening" width="49%">
 </p>
@@ -33,7 +38,7 @@ A merchant types one sentence ("half off for anyone with a PR merged into a 1,00
   <img src="docs/images/cost-preview.png" alt="The cost preview: a warning that the sample is not representative, the share of 42 recorded accounts that qualify, the average discount, what the rule gives away per 1,000 sales, and a before/after table for the tightening" width="60%">
 </p>
 
-Where the AI sits: it proposes (compiles a sentence into a rule, proposes loophole strategies that code then searches for and checks). It never sees or sets an amount, and nothing it outputs is executed as a query, a URL or a publish. The agent interface is read-only by design; PayPal's Agent Toolkit is not used.
+Where the AI sits: it proposes (compiles a sentence into a rule, proposes loophole strategies that code then searches for and checks). It never sees or sets an amount, and nothing it outputs is executed as a query, a URL or a publish. The agent interface is read-only by design. For the read-back side, PayPal's own MCP server (`@paypal/mcp`, limited to its one read-only tool, `get_order`) lets the same agent read an order back from PayPal: `scripts/paypal-mcp.sh` starts it against the sandbox with a token made fresh from `.env` each session, never pasted or stored. Nothing in the agent path can create, pay or refund.
 
 ## Evidence, not claims
 - `docs/EVIDENCE.md`: every money feature has a row with the PayPal order, capture and refund ids and the amounts PayPal returned (sandbox): discounted capture, idempotent refunds, redemption limit and reset, buy-then-refund, and purchases on the deployed site signed in with a real GitHub account (at list price, and with a 20% discount earned from live facts).
