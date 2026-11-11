@@ -21,7 +21,7 @@ import type { RefundDecision, RefundInput } from "./refund-outcome";
 import { loadRuleRow } from "./rules";
 
 type Result = { status: number; body: unknown };
-export type Who = { sid: string; ip: string; github?: { id: number; login: string }; sample?: SampleName; activeRuleId?: string };
+export type Who = { sid: string; ip: string; github?: { id: number; login: string }; sample?: SampleName };
 
 type Row = {
   id: string;
@@ -70,7 +70,9 @@ export async function claimRefund(orderId: string, who: Who): Promise<Result> {
   }
 
   // Facts: a sample profile or the signed-in GitHub account.
-  const rule = (o.rule_id ? (await loadRuleRow(o.rule_id))?.rule : undefined) ?? (who.activeRuleId ? (await loadRuleRow(who.activeRuleId))?.rule : undefined) ?? DEFAULT_RULE;
+  // The rule the order was priced under, else the shop's default. Never the claimer's own published rule: a buyer must not be
+  // able to write the rule that decides their refund after paying.
+  const rule = (o.rule_id ? (await loadRuleRow(o.rule_id))?.rule : undefined) ?? DEFAULT_RULE;
   let snapshot: GithubSnapshot;
   let buyerKey: string;
   if (who.sample) {

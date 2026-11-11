@@ -18,6 +18,6 @@ export function POST(req: Request, ctx: { params: Promise<{ id: string }> }) {
       session.sample = sample;
       await session.save();
     }
-    return claimRefund(id, { sid: session.sid, ip, github: session.github, sample: isSampleName(sample) ? sample : session.sample, activeRuleId: session.activeRuleId });
+    return claimRefund(id, { sid: session.sid, ip, github: session.github, sample: isSampleName(sample) ? sample : session.sample });
   }, req);
 }

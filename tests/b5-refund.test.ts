@@ -181,3 +181,34 @@ describe.skipIf(!HAVE_DB)("buy first, prove later (real database, mocked PayPal)
     ).rejects.toThrow();
   });
 });
+
+describe.skipIf(!HAVE_DB)("a refund is priced under the order's rule, never the claimer's", () => {
+  it("a guest order is claimed under the shop default even if the claimer published a generous rule", async () => {
+    const m2 = { refunds: await import("../src/store/refunds"), db: await import("../src/store/db"), rules: await import("../src/store/rules"), presets: await import("../src/rules/presets") };
+    const loose = await m2.rules.ensureRule("loose");
+    mocks.paypal.mockReset();
+    mocks.paypal.mockImplementation(async (_m: string, _p: string, opts: { body: { amount: { value: string } } }) => refundResp("COMPLETED", opts.body.amount.value));
+    const sid = randomUUID();
+    const id = randomUUID();
+    await m2.db.query(
+      `insert into orders (id, state, session_id, snapshot_json, snapshot_hash, list_cents, earned_cents, discount_cents, paypal_order_id, paypal_capture_id, capture_status, captured_cents, licence_key, expires_at)
+       values ($1, 'captured', $2, '{"v":1}', 'guesthash', 4900, 4900, 0, $3, $4, 'COMPLETED', 4900, 'EP-TEST', now() + interval '15 minutes')`,
+      [id, sid, `PP-${id.slice(0, 8)}`, `CAP-${id.slice(0, 8)}`],
+    );
+    try {
+      // The session's published rule is not even an input any more; the amount must equal the default rule's refund.
+      await m2.refunds.claimRefund(id, { sid, ip: "t", sample: "loophole", ...({ activeRuleId: loose.id } as object) });
+      const [row] = (await m2.db.query<{ amount_cents: number }>(`select amount_cents from refunds where order_id = $1`, [id])).rows;
+      const { evaluate } = await import("../src/rules/evaluate");
+      const { price } = await import("../src/rules/price");
+      const { loadSample } = await import("../src/facts/samples");
+      const snap = loadSample("loophole");
+      const expected = 4900 - price(m2.presets.DEFAULT_RULE, evaluate(m2.presets.DEFAULT_RULE, snap, snap.recordedAt ? new Date(snap.recordedAt) : undefined), 4900).earnedCents;
+      expect(row?.amount_cents ?? 0).toBe(expected);
+    } finally {
+      await m2.db.query(`delete from refunds where order_id = $1`, [id]);
+      await m2.db.query(`delete from redemptions where order_id = $1`, [id]);
+      await m2.db.query(`delete from orders where id = $1`, [id]);
+    }
+  });
+});
