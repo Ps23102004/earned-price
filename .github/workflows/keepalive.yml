@@ -1,5 +1,6 @@
 # Secondary keep-alive (UptimeRobot is the primary). Render's free tier sleeps after 15 minutes without traffic.
 # GitHub may delay scheduled runs under load, so this alone is not enough. Needs the repository variable APP_URL.
+# Runs every 10 minutes on the default branch; it can also be started by hand from the Actions tab.
 name: keepalive
 on:
   schedule:
