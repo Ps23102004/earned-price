@@ -41,3 +41,6 @@ yarn-error.log*
 
 # local-only notes and prompts
 docs/private/
+
+# browser-automation scratch
+.playwright-mcp/

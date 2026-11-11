@@ -20,12 +20,12 @@ Six independent models judged the README, an evidence log and a description of w
 | Hosted AI is cache-only; a new sentence says "unavailable" | all four | Added five more one-click examples, all precomputed; recorded refusals (uncheckable sentences) are now cached and labelled, so the refusal demo works on the hosted build; README states the cache-only limit up front |
 | A buyer could publish a generous rule and claim a refund under it (Fable's 60-second break) | Fable | **Fixed:** a refund is priced under the order's own rule or the shop default, never the claimer's published rule; regression test added |
 | Publishing is per browser, so no real multi-merchant product | all four | Kept by design (no merchant accounts); stated in the README and the video script |
-| 39/40 compiler score is tuned, not held out | Haiku, Sonnet | Caveat in the README; **held-out run now done** (26/29, see docs/L5b-heldout-first-run.md) |
+| 39/40 compiler score is tuned, not held out | Haiku, Sonnet | Caveat in the README; **held-out run now done** (26/29, see docs/process/L5b-heldout-first-run.md) |
 | Cost preview "98% qualify" looks like a giveaway | Sonnet, Fable | Sample frame is printed under the figure and in the README; wording kept honest, framing to be handled in the video |
 | Sample profiles stand in for sign-in, redemption per browser session for samples | Haiku, Flash | By design for judges; documented. GitHub sign-in is the real path |
 | Inconsistent numbers and dates (test count, "once complete") | Haiku, Fable | **Fixed** in the README |
 | "Fact hash verified" is circular | Haiku | Reworded in the README: it proves the stored facts match PayPal's record, not that GitHub's data was true |
-| Org-owned repos slip past the own-repo check; one shared GitHub token | Sonnet, Flash, Fable | Already listed in limitations; sample fallback exists below 500 remaining points |
+| Org-owned repos slip past the own-repo check; one shared GitHub token | Sonnet, Flash, Fable | Already listed in limitations; a failed live lookup points the buyer to the sample profiles (no automatic fallback) |
 
 ## Round 2 findings (Opus 5.5, Opus 4.6 Thinking)
 | Finding | Action |

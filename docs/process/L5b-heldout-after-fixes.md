@@ -1,4 +1,4 @@
-> **Post-hoc run (not held-out).** Same 29 sentences after fixes made in response to the first run; see docs/L5b-heldout-first-run.md for the honest number (26/29).
+> **Post-hoc run (not held-out).** Same 29 sentences after fixes made in response to the first run; see docs/process/L5b-heldout-first-run.md for the honest number (26/29).
 
 # L5 compiler evaluation
 

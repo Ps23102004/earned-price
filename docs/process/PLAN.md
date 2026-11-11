@@ -1,3 +1,5 @@
+> Historical planning document (Phase 0 and 1, Nov 9 2026), moved to `docs/process/` on Nov 11. File paths inside refer to the repository layout at the time; the design itself lives in `docs/ARCHITECTURE.md`.
+
 # PLAN — phases, loops, orchestration
 
 _Brief: PayPal AI Hackathon, deadline Thu Nov 12 2026 12:00 PT. Architecture in [ARCHITECTURE.md](ARCHITECTURE.md), facts in [FACTS.md](FACTS.md), sandbox proofs in [EVIDENCE.md](EVIDENCE.md)._

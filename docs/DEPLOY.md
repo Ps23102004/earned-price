@@ -34,9 +34,9 @@ Everything below that needs a key or a password is yours to enter. Nothing here 
 - Only the merchant's sentence is sent to that service, never an amount, a buyer, a fact or any key. Output is validated by the same code as always.
 - Existing caps apply: 10 live compiles per hour per address, 200 per day in total, then the app falls back to recorded results.
 - Do not enable a paid plan without checking the cost first; the app does not need one.
-- Rerun `docs/L5-compiler-eval.md`'s evaluation (`scripts/eval-compiler.mts`) against the hosted model before trusting it: scores differ by model.
+- Rerun `docs/process/L5-compiler-eval.md`'s evaluation (`scripts/eval-compiler.mts`) against the hosted model before trusting it: scores differ by model.
 
 ## What can still go wrong in December (see ARCHITECTURE.md §3.9)
 - Render and Neon free-tier policies can change; the pings keep Render awake, and Neon is only touched by judge actions.
 - The sandbox buyer's password can be changed by anyone who sees it in judge mode; keep the backup account and reset passwords in the PayPal developer dashboard if needed.
-- The GitHub token expiry and rate limit: below 500 remaining points the app serves labelled sample profiles only.
+- The GitHub token expiry and rate limit: when a live lookup fails or the budget is spent, the quote returns an error that points to the sample profiles; there is no automatic fallback.

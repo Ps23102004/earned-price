@@ -1,4 +1,4 @@
-// L5: scores the live compiler on data/eval/compiler-cases.json and writes docs/L5-compiler-eval.md.
+// L5: scores the live compiler on data/eval/compiler-cases.json and writes docs/process/L5-compiler-eval.md.
 // Run: pnpm tsx --env-file=.env scripts/eval-compiler.mts   (about two minutes per sentence that reaches the model)
 // Exit code 1 if the score is below 36/40 or any uncheckable/adversarial sentence compiled.
 
@@ -14,7 +14,7 @@ type Expect =
 type Category = "clear" | "ambiguous" | "uncheckable" | "adversarial";
 // EVAL_CASES / EVAL_OUT select another case file and report (the held-out set); defaults are the tuned set.
 const casesFile = process.env.EVAL_CASES ?? "data/eval/compiler-cases.json";
-const outFile = process.env.EVAL_OUT ?? "docs/L5-compiler-eval.md";
+const outFile = process.env.EVAL_OUT ?? "docs/process/L5-compiler-eval.md";
 const cases = JSON.parse(readFileSync(new URL(`../${casesFile}`, import.meta.url), "utf8")) as {
   sentence: string;
   expect: Expect;
