@@ -6,6 +6,8 @@ A merchant types one sentence ("half off for anyone with a PR merged into a 1,00
 
 **Status:** feature-complete; built for the PayPal AI Hackathon (submission Nov 12 2026, judging Dec 1–15). PayPal **sandbox only**: the server refuses to start against the live API (`PAYPAL_ENV` must be exactly `sandbox`). Open-source discounts today usually run on application forms reviewed by hand (for example [1Password's open-source programme](https://github.com/1Password/for-open-source)) or on coupon codes that leak; this is the same idea with the proof built in.
 
+**Live demo (PayPal sandbox only): https://earned-price.onrender.com** · repository: https://github.com/Ps23102004/earned-price · licence: MIT
+
 ## Try it in two minutes
 1. **Buy at an earned price:** open the shop, pick the "Qualifies" sample (or sign in with GitHub), watch the price tick down, and pay with the sandbox buyer shown on the page.
 2. **Buy first, prove later:** continue as a guest, pay $49.00, then claim a refund on the receipt with a sample or your GitHub account; PayPal records the refund.
@@ -48,7 +50,7 @@ cp .env.example .env   # fill in the keys; docs/DEPLOY.md lists which account gi
 pnpm db:migrate
 pnpm dev               # http://127.0.0.1:3000
 ```
-The merchant compiler uses a local OpenAI-compatible model (Ollama, `AI_BASE_URL` / `AI_MODEL`) in development. The deployed demo runs with `AI_LIVE=0` and serves precomputed, labelled-cached compiles and loophole results.
+The merchant compiler uses a local OpenAI-compatible model (Ollama, `AI_BASE_URL` / `AI_MODEL`) in development. The deployed demo runs with `AI_LIVE=1` against a hosted OpenAI-compatible model (capped: 10 live compiles per hour per address and 200 per day in total) and falls back to precomputed, labelled-cached compiles, refusals and loophole results when the model or the cap is unavailable. Anyone can also build any rule by hand with no AI.
 
 ## AI tools used (and what each did)
 | Tool | Used for |
@@ -56,14 +58,15 @@ The merchant compiler uses a local OpenAI-compatible model (Ollama, `AI_BASE_URL
 | Claude Opus 5.5 (Claude Code) | planning, architecture drafting, merging reviews, task specs, integration |
 | Claude Sonnet 5.5 | research readers (PayPal docs, GitHub docs, hosting free tiers); main implementer |
 | Claude Haiku 5.5 | test/lint/typecheck runner |
-| Gemma 4 12B (local, Ollama) | development-time rule compiler and loophole proposer (structured output only, validated by code); the deployed demo serves its precomputed, labelled-cached output |
+| Gemma 4 12B (local, Ollama) | development-time rule compiler and loophole proposer, and the held-out compiler evaluation (structured output only, validated by code) |
+| DeepSeek V4.1 Flash (hosted on Nebius Token Factory) | the deployed demo's live rule compiler and loophole proposer (`AI_LIVE=1`): it receives only the merchant's sentence, never an amount, a buyer or a fact, and every answer is validated by the same code |
 | Claude Fable | independent architecture reviews (two rounds), diff reviews, red-team lead |
 | Gemini 3.8 Flash | independent architecture critic and code reviewer (different vendor) |
 
 _This table is updated as tools are actually used; models that were planned but never ran are not listed._
 
 ## Limits worth knowing
-GitHub is the only fact source (the wedge, not the ceiling). A rule is published per browser or shared by link; there are no merchant accounts. The hosted demo serves recorded AI output unless a hosted model is switched on, though any rule can be built by hand. Refunds do not return PayPal's fee (on the $49 example the merchant pays $2.20 instead of $1.35, about $0.85 more for proving later). Sample profiles are recorded stand-ins for GitHub sign-in. Everything else, with the reasoning, is in [docs/LIMITATIONS.md](docs/LIMITATIONS.md).
+GitHub is the only fact source (the wedge, not the ceiling). A rule is published per browser or shared by link; there are no merchant accounts. The live AI on the hosted demo is a capped hosted model with recorded results as the fallback, and any rule can be built by hand. Refunds do not return PayPal's fee (on the $49 example the merchant pays $2.20 instead of $1.35, about $0.85 more for proving later). Sample profiles are recorded stand-ins for GitHub sign-in. Everything else, with the reasoning, is in [docs/LIMITATIONS.md](docs/LIMITATIONS.md).
 
 ## License
 MIT — see [LICENSE](LICENSE).

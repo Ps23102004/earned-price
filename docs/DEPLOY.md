@@ -16,7 +16,7 @@ Everything below that needs a key or a password is yours to enter. Nothing here 
    - `APP_URL` = the service URL, for example `https://earned-price.onrender.com` (no trailing slash). Set it before the first build finishes, then redeploy once if you change it.
    - `NEXT_PUBLIC_PAYPAL_CLIENT_ID` must be set **before the build**: Next.js bakes it into the browser bundle.
    - `PAYPAL_CLIENT_ID`, `PAYPAL_CLIENT_SECRET` (sandbox REST app), `JUDGE_BUYER_EMAIL`, `JUDGE_BUYER_PASSWORD` (sandbox Personal account; consider a second backup account), `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`, `GITHUB_SERVER_TOKEN` (fine-grained token, no permissions, expiry after Jan 2027), `DATABASE_URL` (pooled), `SESSION_SECRET` and `LICENSE_HMAC_SECRET` (`openssl rand -hex 32` each; never reuse your local ones).
-   - Already set by the blueprint: `PAYPAL_ENV=sandbox`, `AI_LIVE=0`, `JUDGE_MODE=1`, `TRUSTED_PROXY_HOPS=1`, `NODE_VERSION=22.23.1`.
+   - Already set by the blueprint: `PAYPAL_ENV=sandbox`, `AI_LIVE=1`, `JUDGE_MODE=1`, `TRUSTED_PROXY_HOPS=1`, `NODE_VERSION=22.23.1`.
 4. **GitHub OAuth app**: add the callback `https://<render-host>/api/auth/github/callback` next to the local one (one app can hold both).
 5. **Keep-alive** (Render sleeps after 15 minutes without traffic and takes about a minute to wake):
    - UptimeRobot (free): HTTP monitor on `https://<render-host>/api/health`, interval 5 minutes. This is the primary.
@@ -29,7 +29,7 @@ Everything below that needs a key or a password is yours to enter. Nothing here 
    - One sandbox purchase end to end on the deployed URL, then add its row to `docs/EVIDENCE.md`.
 
 ## Optional: live compile on the hosted demo (your decision; free tiers only)
-The hosted demo defaults to recorded compiles (`AI_LIVE=0`). Judges can still build any rule with the hand-built form. If you want any sentence to compile live, point the app at a free-tier hosted OpenAI-compatible model:
+**Status (Nov 11):** deployed at https://earned-price.onrender.com with `AI_LIVE=1` against a hosted model (Nebius Token Factory, DeepSeek V4.1 Flash), real GitHub sign-in purchase verified, UptimeRobot and the GitHub Actions keep-alive running. Set `AI_LIVE=0` to fall back to recorded compiles only. To use a different hosted OpenAI-compatible model:
 - Set `AI_BASE_URL` (for example Google AI Studio's OpenAI-compatible endpoint, Groq or OpenRouter free models), `AI_MODEL`, `AI_API_KEY` and `AI_LIVE=1` in Render. Enter the key yourself.
 - Only the merchant's sentence is sent to that service, never an amount, a buyer, a fact or any key. Output is validated by the same code as always.
 - Existing caps apply: 10 live compiles per hour per address, 200 per day in total, then the app falls back to recorded results.
