@@ -43,7 +43,7 @@ Upload to YouTube as **public** (not unlisted) two to three hours before the dea
 
 **Honest limits.** GitHub is the only fact source. Rules are per browser or shared by link; there are no merchant accounts. Refunding after the fact does not return PayPal's fee (about $0.85 more on the $49 example). This is a merchant-chosen thank-you: everyone the rule does not cover pays list price, and the default rule excludes maintainers' own repositories, a known flaw of that rule. Public facts are read live from GitHub, not verified true; small pull requests and aged accounts can pass, and the hunt catches the patterns it knows.
 
-**Who pays first.** Developer-tool and course sellers that already run a manual open-source or contributor programme.
+**Who pays first, and how they would use it.** Developer-tool and course sellers that already run an open-source or contributor programme by application form. The workflow: the seller writes the rule in one sentence, lets the hunt close the obvious loopholes, and pastes the checkout link into its pricing page or README in place of the application form. Contributors get the discount at checkout with no form and no code; everyone else pays list price; the seller keeps a PayPal-recorded trail of every discount granted.
 
 **Pricing model (a hypothesis, not a built feature).** A small fee per discount granted, or a flat monthly fee per merchant.
 
