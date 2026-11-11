@@ -6,6 +6,8 @@ import { findHunt, huntLoopholes } from "../ai/hunt";
 import { SPIRIT_CHECKS, acceptTightening, tighteningFor } from "../ai/hunt-plan";
 import type { SpiritCheck } from "../ai/hunt-plan";
 import { allow } from "../ratelimit";
+import { SAMPLE_ACCOUNTS } from "../facts/sample-accounts";
+import { costPreview } from "../rules/cost-preview";
 import { readback } from "../rules/readback";
 import type { Rule } from "../rules/types";
 import type { ApiResult, Session } from "../session";
@@ -107,4 +109,12 @@ export async function unpublishAction(session: Session): Promise<ApiResult> {
 export async function activeRuleView(session: Session): Promise<{ ruleId: string; rule: Rule; readback: string } | null> {
   const row = session.activeRuleId ? await loadRuleRow(session.activeRuleId) : undefined;
   return row ? { ruleId: row.id, rule: row.rule, readback: readback(row.rule) } : null;
+}
+
+/** Rough cost of a rule over the recorded sample of accounts. Deterministic; no model, no GitHub call, no database write. */
+export async function previewAction(ruleId: unknown): Promise<ApiResult> {
+  const row = await loadRuleRow(ruleId);
+  if (!row) return notFound();
+  const { recordedAt, frame, accounts } = SAMPLE_ACCOUNTS;
+  return { status: 200, body: { ...costPreview(row.rule, accounts, recordedAt), recordedAt, frame } };
 }
