@@ -97,6 +97,7 @@ function Details({ order, po, retry, claimHash, login }: { order: Order; po: Jso
     <>
       <StateNotice state={order.state} />
       {order.state === "capturing" || order.state === "refunding" || order.state === "refund_pending" ? retry : null}
+      {order.state === "refunding" || order.state === "refund_pending" ? <ClaimPanel orderId={order.id} resume /> : null}
       {order.state === "captured" && !order.buyerKey ? <ClaimPanel orderId={order.id} login={login} /> : null}
 
       {hashOk ? (

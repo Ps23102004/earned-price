@@ -13,7 +13,7 @@ const btn =
   "inline-flex min-h-11 items-center rounded-lg border border-stone-300 px-3 text-sm font-medium hover:bg-stone-100 disabled:opacity-60 dark:border-stone-700 dark:hover:bg-stone-800";
 
 // Buy first, prove later: the amount is computed by the server from the proven facts; this sends no amount.
-export function ClaimPanel({ orderId, login }: { orderId: string; login?: string }) {
+export function ClaimPanel({ orderId, login, resume }: { orderId: string; login?: string; resume?: boolean }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
@@ -35,6 +35,21 @@ export function ClaimPanel({ orderId, login }: { orderId: string; login?: string
     } finally {
       setBusy(false);
     }
+  }
+
+  if (resume) {
+    return (
+      <div className="flex flex-wrap items-center gap-3">
+        <button type="button" className={btn} disabled={busy} onClick={() => claim()}>
+          {busy ? "Checking…" : "Check refund with PayPal"}
+        </button>
+        {msg ? (
+          <p role="status" className="text-sm">
+            {msg}
+          </p>
+        ) : null}
+      </div>
+    );
   }
 
   return (

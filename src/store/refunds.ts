@@ -57,6 +57,12 @@ export async function claimRefund(orderId: string, who: Who): Promise<Result> {
   if (!UUID.test(orderId)) return { status: 404, body: { error: "order not found" } };
   const o = (await query<Row>(`${ORDER} where id = $1`, [orderId])).rows[0];
   if (!o || o.session_id !== who.sid) return { status: 404, body: { error: "order not found" } };
+  if (o.state === "refunding" || o.state === "refund_pending") {
+    // Resume: re-sends a stuck refund with its stored request id and amount (PayPal answers with the first call's result).
+    await reconcileRefund(o.id, "act");
+    const now = (await query<{ state: string }>(`select state from orders where id = $1`, [o.id])).rows[0];
+    return { status: 200, body: { state: now?.state, orderId: o.id, message: "Checked with PayPal. The receipt shows the refund as PayPal recorded it." } };
+  }
   if (o.state !== "captured" || o.buyer_key || !o.paypal_capture_id || o.captured_cents === null) {
     return { status: 409, body: { error: `order is ${o.state}`, state: o.state, message: o.buyer_key ? "This order was already claimed." : "Only a paid order can be claimed." } };
   }

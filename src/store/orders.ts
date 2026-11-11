@@ -331,8 +331,7 @@ export async function reconcileOrder(orderId: string, mode: "read" | "act"): Pro
   const o = await getOrder(orderId);
   if (!o?.paypal_order_id || !OPEN.includes(o.state)) return o;
   if (o.state === "refunding" || o.state === "refund_pending") {
-    // A refund re-POST reuses the stored request id and amount, so PayPal answers with the first call's result (409 while it is in flight): safe from a GET path.
-    await reconcileRefund(o.id, "act");
+    await reconcileRefund(o.id, mode); // GET paths only read; a stuck refund is re-sent from the claim POST route
     return getOrder(orderId);
   }
   try {
