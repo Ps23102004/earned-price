@@ -126,7 +126,7 @@ describe.skipIf(!HAVE_DB)("buy first, prove later (real database, mocked PayPal)
     );
     await m.refunds.reconcileRefund(o.id, "read");
     expect((await orderRow(o.id)).state).toBe("refunding"); // read mode never POSTs
-    await m.refunds.reconcileRefund(o.id, "act");
+    await m.orders.reconcileOrder(o.id, "read"); // the order-level path re-sends the refund with the same request id
     expect((await orderRow(o.id)).state).toBe("refunded_partial");
     const post = mocks.paypal.mock.calls.filter((c) => c[0] === "POST").at(-1)!;
     expect(post[2].requestId).toBe(firstId);
