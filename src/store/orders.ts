@@ -12,6 +12,7 @@ import type { CaptureInput, Decision } from "./capture-outcome";
 import { customIdFor } from "./custom-id";
 import { query, tx } from "./db";
 import { claimRedemption, effectOf, redemptionFor, settleRedemption } from "./redemptions";
+import { reconcileRefund } from "./refunds";
 import { RECAPTURE_LIMIT, captureRequestId, planReconcile } from "./reconcile-plan";
 
 type Result = { status: number; body: unknown };
@@ -72,7 +73,7 @@ export async function getOrder(id: string): Promise<Order | undefined> {
 export async function getOrderForSession(id: string, sid: string) {
   const o = await getOrder(id);
   if (!o || o.session_id !== sid) return undefined;
-  return { id: o.id, state: o.state, paypalOrderId: o.paypal_order_id, snapshotJson: o.snapshot_json, licenceKey: o.licence_key };
+  return { id: o.id, state: o.state, paypalOrderId: o.paypal_order_id, snapshotJson: o.snapshot_json, licenceKey: o.licence_key, buyerKey: o.buyer_key };
 }
 
 async function byPayPalId(paypalOrderId: string): Promise<Order | undefined> {
@@ -310,7 +311,7 @@ export async function cancel(orderId: string, sid: string): Promise<Result> {
   return { status: 409, body: { error: `order is ${o.state}`, state: o.state } };
 }
 
-const OPEN = ["created", "approved", "capturing"];
+const OPEN = ["created", "approved", "capturing", "refunding", "refund_pending"];
 
 export async function listForSession(sid: string): Promise<Result> {
   // Quotes that never reached PayPal have no receipt, so they are not listed.
@@ -329,6 +330,10 @@ export async function listForSession(sid: string): Promise<Result> {
 export async function reconcileOrder(orderId: string, mode: "read" | "act"): Promise<Order | undefined> {
   const o = await getOrder(orderId);
   if (!o?.paypal_order_id || !OPEN.includes(o.state)) return o;
+  if (o.state === "refunding" || o.state === "refund_pending") {
+    await reconcileRefund(o.id, mode);
+    return getOrder(orderId);
+  }
   try {
     await reconcileOpen(o, mode);
   } catch (err) {

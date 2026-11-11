@@ -6,8 +6,10 @@ import { paypal } from "@/paypal/client";
 import { getSession } from "@/session";
 import { verifyCustomId } from "@/store/custom-id";
 import { getOrderForSession, reconcileOrder } from "@/store/orders";
+import { claimHashFor } from "@/store/refunds";
 import { CopyButton } from "../../_components/copy-button";
 import { Chip, Notice, buttonClass, card } from "../../_components/ui";
+import { ClaimPanel } from "./claim-panel";
 
 export const metadata: Metadata = { title: "Receipt — Earned Price" };
 
@@ -58,7 +60,8 @@ export default async function Receipt({ params }: PageProps<"/receipt/[id]">) {
         </div>
       );
     } else {
-      body = <Details order={order} po={po.json} retry={retry} />;
+      const claimHash = ["refunding", "refund_pending", "refunded_partial", "mismatch"].includes(order.state) ? await claimHashFor(order.id).catch(() => undefined) : undefined;
+      body = <Details order={order} po={po.json} retry={retry} claimHash={claimHash} login={session.github?.login} />;
     }
   }
 
@@ -78,7 +81,7 @@ export default async function Receipt({ params }: PageProps<"/receipt/[id]">) {
 
 type Order = NonNullable<Awaited<ReturnType<typeof getOrderForSession>>>;
 
-function Details({ order, po, retry }: { order: Order; po: Json; retry: ReactNode }) {
+function Details({ order, po, retry, claimHash, login }: { order: Order; po: Json; retry: ReactNode; claimHash?: string; login?: string }) {
   const unit = po.purchase_units?.[0];
   const breakdown = unit?.amount?.breakdown;
   const capture = unit?.payments?.captures?.[0];
@@ -87,12 +90,14 @@ function Details({ order, po, retry }: { order: Order; po: Json; retry: ReactNod
   // custom_id is "<orderId>:<snapshotHash>": it must name this order and carry the hash recomputed from the stored snapshot.
   const hashOk = verifyCustomId(customId, order.id, order.snapshotJson);
 
-  const showLicence = order.state === "captured" && hashOk && order.licenceKey;
+  const showLicence = ["captured", "refunding", "refund_pending", "refunded_partial"].includes(order.state) && hashOk && order.licenceKey;
+  const refunds: Json[] = Array.isArray(unit?.payments?.refunds) ? unit.payments.refunds : [];
 
   return (
     <>
       <StateNotice state={order.state} />
-      {order.state === "capturing" ? retry : null}
+      {order.state === "capturing" || order.state === "refunding" || order.state === "refund_pending" ? retry : null}
+      {order.state === "captured" && !order.buyerKey ? <ClaimPanel orderId={order.id} login={login} /> : null}
 
       {hashOk ? (
         <Notice tone="ok">Fact hash verified</Notice>
@@ -128,6 +133,25 @@ function Details({ order, po, retry }: { order: Order; po: Json; retry: ReactNod
           <Row label="custom_id" value={customId} mono />
         </dl>
       </section>
+
+      {refunds.length > 0 ? (
+        <section aria-labelledby="refund-heading" className={card}>
+          <h2 id="refund-heading" className="text-sm font-semibold">
+            Refund, as recorded by PayPal
+          </h2>
+          {refunds.map((r) => (
+            <dl key={String(r.id)} className="mt-3 divide-y divide-stone-200 text-sm dark:divide-stone-800">
+              <Row label="Refund id" value={r.id} mono />
+              <Row label="Refund status" value={r.status} />
+              <Row label="Refund amount" value={money(r.amount)} paypalMoney />
+              <Row label="custom_id" value={r.custom_id} mono />
+              <div className="py-2">
+                {claimHash && r.custom_id === claimHash ? <Notice tone="ok">Claim hash verified</Notice> : <Notice tone="bad">Claim hash MISMATCH</Notice>}
+              </div>
+            </dl>
+          ))}
+        </section>
+      ) : null}
     </>
   );
 }
@@ -173,6 +197,16 @@ function StateNotice({ state }: { state: string }) {
       return <Notice tone="warn">Payment cancelled — you were not charged and no licence was issued.</Notice>;
     case "expired":
       return <Notice tone="warn">This price quote expired — you were not charged and no licence was issued.</Notice>;
+    case "refunding":
+      return <Notice tone="info">Your refund is being sent to PayPal — refresh in a few seconds</Notice>;
+    case "refund_pending":
+      return <Notice tone="info">Your refund is pending at PayPal — refresh later</Notice>;
+    case "refunded_partial":
+      return (
+        <div>
+          <Chip tone="ok">Payment captured, refund issued</Chip>
+        </div>
+      );
     case "mismatch":
       return <Notice tone="bad">Amount mismatch — no licence</Notice>;
     default:
