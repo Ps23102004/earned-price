@@ -13,6 +13,8 @@ const nextConfig: NextConfig = {
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "X-Frame-Options", value: "DENY" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          // HTTPS only from here on (browsers ignore this header on plain-http local development).
+          { key: "Strict-Transport-Security", value: "max-age=31536000" },
         ],
       },
     ];

@@ -143,6 +143,8 @@ export async function handleMcp(d: McpDeps, msg: unknown): Promise<RpcResponse |
   const method = (msg as RpcRequest).method as string;
   const isNotification = id === undefined;
   const p: Json = isObj(params) ? params : {};
+  // JSON-RPC: a message without an id is a notification and never gets a response, whatever its method.
+  if (isNotification) return undefined;
   switch (method) {
     case "initialize": {
       const asked = typeof p.protocolVersion === "string" ? p.protocolVersion : "";
@@ -161,7 +163,6 @@ export async function handleMcp(d: McpDeps, msg: unknown): Promise<RpcResponse |
     case "tools/call":
       return ok(id, await callTool(d, p.name, p.arguments));
     default:
-      if (isNotification || method.startsWith("notifications/")) return undefined;
       return err(id, -32601, "method not found");
   }
 }

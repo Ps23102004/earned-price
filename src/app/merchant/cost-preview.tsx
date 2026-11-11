@@ -74,7 +74,7 @@ export function CostPreview({ ruleId, compareRuleId }: { ruleId: string; compare
                   <td>{shown.preview.sharePercent}%</td>
                 </tr>
                 <tr>
-                  <th scope="row" className="py-1 font-sans font-normal">Average discount</th>
+                  <th scope="row" className="py-1 font-sans font-normal">Average discount (all sampled accounts)</th>
                   <td>{shown.preview.before.averageDiscountPercent}%</td>
                   <td>{shown.preview.averageDiscountPercent}%</td>
                 </tr>

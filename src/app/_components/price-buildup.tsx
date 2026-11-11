@@ -129,7 +129,7 @@ function Row({ row, shown }: { row: ExplainRow; shown: boolean }) {
       } ${row.status === "applied" ? "bg-emerald-50/60 dark:bg-emerald-950/20" : ""}`}
     >
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h3 className="text-sm font-semibold">
+        <h3 className="min-w-0 break-words text-sm font-semibold">
           {row.label} <span className="font-mono font-normal">{row.discountPercent}% off</span>
         </h3>
         <Chip tone={statusTone[row.status]}>{STATUS_TEXT[row.status]}</Chip>
@@ -157,7 +157,7 @@ export function PriceBuildUp({ quote }: { quote: Quote }) {
     <div>
       <div className="flex flex-wrap items-center gap-2">
         {badge ? <Chip tone="info">{badge}</Chip> : null}
-        {quote.truncated ? <Chip tone="warn">{TRUNCATED_NOTICE}</Chip> : null}
+        {quote.truncated ? <Chip tone="warn">{quote.source === "sample" ? "This recorded sample was capped at its 300 most recent merged PRs" : TRUNCATED_NOTICE}</Chip> : null}
       </div>
 
       <div className="mt-3 flex items-baseline justify-between gap-3 border-b border-stone-200 pb-3 dark:border-stone-800">

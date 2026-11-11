@@ -27,7 +27,7 @@ type Finding = {
 type Hunt = { status: "ok"; ruleId: string; source: "live" | "cached"; computedAt: string; strategies: Strategy[]; findings: Finding[] };
 type HuntResult = Hunt | Unavailable;
 
-type Current = { ruleId: string; rule: unknown; readback: string; source?: string; diff?: string[]; previousRuleId?: string };
+type Current = { ruleId: string; rule: unknown; readback: string; source?: string; diff?: string[]; previousRuleId?: string; fromSentence?: string };
 
 const day = (iso?: string) => {
   const d = iso ? new Date(iso) : undefined;
@@ -43,6 +43,14 @@ const FACT_LABEL: Record<string, string> = {
   isFork: "Repository is a fork",
 };
 const factLabel = (k: string) => FACT_LABEL[k] ?? k.replace(/([A-Z])/g, " $1").replace(/^./, (c) => c.toUpperCase());
+// Validator messages name JSON paths ("tiers[0].conditions[1]: value must be an integer ..."); say it in the form's words.
+const humanReason = (r: string) =>
+  r
+    .replace(/tiers\[(\d+)\]\.conditions\[(\d+)\]:?/g, (_m, t, c) => `Tier ${Number(t) + 1}, condition ${Number(c) + 1}:`)
+    .replace(/tiers\[(\d+)\]:?/g, (_m, t) => `Tier ${Number(t) + 1}:`)
+    .replace(/discountPercent/g, "% off")
+    .replace(/\bvalue must be\b/g, "\"At least\" must be")
+    .replace(/\ban integer\b/g, "a whole number");
 const factValue = (v: string | number | boolean) => (typeof v === "boolean" ? (v ? "yes" : "no") : String(v));
 
 async function call(url: string, body: unknown) {
@@ -100,7 +108,7 @@ export function MerchantClient() {
       }
       setCompile(json as CompileResult);
       if (json.status === "compiled") {
-        setCurrent({ ruleId: json.ruleId, rule: json.rule, readback: json.readback, source: json.source === "cached" ? `Recorded result · ${day(json.cachedAt)}` : "Live model" });
+        setCurrent({ fromSentence: sentence.trim(), ruleId: json.ruleId, rule: json.rule, readback: json.readback, source: json.source === "cached" ? `Recorded result · ${day(json.cachedAt)}` : "Live model" });
         setHunt(null);
       } else {
         setCurrent(null);
@@ -158,7 +166,7 @@ export function MerchantClient() {
         setError(String(json.error ?? "Tightening refused.") + (json.reasons ? ` ${(json.reasons as string[]).join("; ")}` : ""));
         return;
       }
-      setCurrent({ ruleId: json.ruleId, rule: json.rule, readback: json.readback, source: "tightened", diff: json.diff, previousRuleId: current.ruleId });
+      setCurrent({ ruleId: json.ruleId, rule: json.rule, readback: json.readback, source: "tightened", fromSentence: current.fromSentence, diff: json.diff, previousRuleId: current.ruleId });
       setHunt(null);
     } catch {
       setError("Could not reach the server. Try again.");
@@ -166,6 +174,10 @@ export function MerchantClient() {
       setBusy(null);
     }
   }
+
+  // A compiled rule belongs to the sentence it came from; once the sentence changes, hunting or publishing it would
+  // act on a rule the page no longer shows. Hand-built rules have no sentence and are never stale.
+  const stale = !!current && current.fromSentence !== undefined && current.fromSentence !== sentence.trim();
 
   async function onPublish() {
     if (!current) return;
@@ -209,12 +221,12 @@ export function MerchantClient() {
           id="sentence"
           value={sentence}
           onChange={(e) => setSentence(e.target.value)}
-          maxLength={600}
+          maxLength={500}
           rows={4}
           className="mt-1 w-full rounded-lg border border-stone-300 bg-white p-3 text-sm dark:border-stone-700 dark:bg-stone-950"
         />
         <div className="mt-1 flex justify-between text-xs text-stone-600 dark:text-stone-400">
-          <span>{sentence.length} / 600 characters</span>
+          <span>{sentence.length} / 500 characters</span>
         </div>
         <div className="mt-3 flex flex-wrap gap-2" role="group" aria-label="Quick picks">
           {[
@@ -243,6 +255,11 @@ export function MerchantClient() {
             </span>
           ) : null}
         </div>
+        {stale ? (
+          <p role="status" className="mt-3 text-sm text-amber-700 dark:text-amber-300">
+            The sentence changed since the rule below was compiled. Compile again before hunting or publishing.
+          </p>
+        ) : null}
         <RuleBuilder busy={busy !== null} onBuild={onBuild} />
       </section>
 
@@ -286,7 +303,7 @@ export function MerchantClient() {
                 <>Unavailable: {compile.reason}</>
               ) : (
                 <>
-                  {compile.status === "refused" ? "Refused" : "Invalid"}: {(compile.reasons ?? []).join("; ")}. Nothing was published.
+                  {compile.status === "refused" ? "Refused" : "Invalid"}: {(compile.reasons ?? []).map(humanReason).join("; ")}. Nothing was saved or published.
                   {compile.cachedAt ? ` (recorded refusal, ${day(compile.cachedAt)})` : ""}
                 </>
               )}
@@ -303,7 +320,7 @@ export function MerchantClient() {
           Every example below was re-checked by code against the current rule.
         </p>
         <div className="mt-3 flex flex-wrap items-center gap-3">
-          <button type="button" className={buttonClass} onClick={onHunt} disabled={!current || busy !== null}>
+          <button type="button" className={buttonClass} onClick={onHunt} disabled={!current || stale || busy !== null}>
             Hunt for loopholes
           </button>
           {busy === "hunt" ? (
@@ -335,6 +352,11 @@ export function MerchantClient() {
                   </li>
                 ))}
               </ul>
+            ) : null}
+            {huntOk.strategies.length > huntOk.findings.length && huntOk.findings.length > 0 ? (
+              <p className="text-xs text-stone-600 dark:text-stone-400">
+                Strategies without an example below were searched for, and no real account that wins a tier that way was found.
+              </p>
             ) : null}
             {huntOk.findings.length === 0 ? (
               <p className="text-sm text-stone-600 dark:text-stone-400">No loophole found for this rule.</p>
@@ -393,10 +415,10 @@ export function MerchantClient() {
           4. Publish
         </h2>
         <p className="mt-2 text-sm text-stone-600 dark:text-stone-400">
-          Publishing prices this browser&apos;s shop under the rule and gives you a checkout link. Anyone who opens the link is priced under it too; everyone else keeps the default rule.
+          Publishing prices this browser&apos;s shop under the rule and gives you a checkout link. Anyone who opens the link is priced under it too; everyone else keeps the default rule. Revert to default changes only this browser: links you already shared keep working.
         </p>
         <div className="mt-3 flex flex-wrap items-center gap-3">
-          <button type="button" className={buttonClass} onClick={onPublish} disabled={!current || busy !== null}>
+          <button type="button" className={buttonClass} onClick={onPublish} disabled={!current || stale || busy !== null}>
             Publish and get a checkout link
           </button>
           <button
@@ -412,16 +434,21 @@ export function MerchantClient() {
           {published ? (
             <>
               <Chip tone="ok">Published in this browser</Chip>
-              <pre className="mt-2 whitespace-pre-wrap rounded-lg bg-stone-100 p-3 text-sm dark:bg-stone-950">{published.readback}</pre>
+              <pre className="mt-2 whitespace-pre-wrap break-words rounded-lg bg-stone-100 p-3 text-sm dark:bg-stone-950">{published.readback}</pre>
               <div className="mt-3 flex flex-wrap items-center gap-2 text-sm">
                 <span className="font-medium">Checkout link</span>
-                <code className="min-w-0 break-all rounded bg-stone-100 px-2 py-1 text-xs dark:bg-stone-950">{`${typeof window === "undefined" ? "" : window.location.origin}/shop/${published.ruleId}`}</code>
+                <a
+                  href={`/shop/${published.ruleId}`}
+                  target="_blank"
+                  rel="noopener"
+                  className="min-w-0 break-all rounded bg-stone-100 px-2 py-1 font-mono text-xs underline underline-offset-2 dark:bg-stone-950"
+                >{`${typeof window === "undefined" ? "" : window.location.origin}/shop/${published.ruleId}`}</a>
                 <CopyButton value={`${typeof window === "undefined" ? "" : window.location.origin}/shop/${published.ruleId}`} label="checkout link" />
               </div>
-              <p className="mt-1 text-xs text-stone-600 dark:text-stone-400">Anyone who opens this link is priced under this rule. Send it to a second browser to see it.</p>
+              <p className="mt-1 text-xs text-stone-600 dark:text-stone-400">Anyone who opens this link is priced under this rule. Open it in a second browser or a private window to see it as a buyer.</p>
             </>
           ) : (
-            <p className="text-sm text-stone-600 dark:text-stone-400">The shop uses the default rule.</p>
+            <p className="text-sm text-stone-600 dark:text-stone-400">This browser&apos;s shop uses the default rule.</p>
           )}
         </div>
       </section>

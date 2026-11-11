@@ -86,3 +86,11 @@ describe("agent interface (MCP, read-only)", () => {
     expect(l.result.tools.some((t) => /order|pay|capture|refund|claim|publish/i.test(t.name))).toBe(false);
   });
 });
+
+describe("JSON-RPC notifications", () => {
+  it("a message without an id never gets a response, whatever the method", async () => {
+    for (const method of ["ping", "tools/list", "tools/call", "initialize", "nonsense"]) {
+      expect(await handleMcp(deps(), { jsonrpc: "2.0", method, params: { name: "get_rule", arguments: {} } })).toBeUndefined();
+    }
+  });
+});

@@ -29,16 +29,16 @@ async function postJson(url: string, body?: unknown) {
 const errText = (e: unknown) => (e instanceof Error ? e.message : String((e as { message?: unknown })?.message ?? e));
 
 const SAMPLES: { name: SampleName; title: string; body: string }[] = [
-  { name: "qualifies", title: "Qualifies", body: "A contributor to a large open-source project. Meets the top tier." },
+  { name: "qualifies", title: "Qualifies", body: "A contributor to a large open-source project. Meets the top tier of the default rule." },
   {
     name: "nearly",
     title: "Nearly qualifies",
-    body: "Close to the top tier, with one fact short. Shows exactly what is missing.",
+    body: "Close to the default rule's top tier, with one fact short. Shows exactly what is missing.",
   },
   {
     name: "loophole",
     title: "Loophole account (top tier now blocked)",
-    body: "Would have won 50% under the first version of the merchant's rule. The hardened rule blocks that tier and shows why.",
+    body: "Won 50% under the first draft of the rule by merging into its own repositories; the default rule excludes own repositories, so that tier is not met.",
   },
 ];
 
@@ -320,7 +320,7 @@ export function ShopClient({
             ) : null}
             {phase === "quoted" ? (
               <p className="text-xs text-stone-500 dark:text-stone-400">
-                Want a different price? Pick another profile above to get a new quote.
+                PayPal&apos;s buttons can take a few seconds to appear. Want a different price? Pick another profile above to get a new quote.
               </p>
             ) : null}
           </div>
@@ -384,7 +384,7 @@ export function Orders() {
       {rows === null && !failed ? <p className="mt-2 text-sm text-stone-500">Loading…</p> : null}
       {rows ? (
         <ul className="mt-2 divide-y divide-stone-200 rounded-xl border border-stone-200 dark:divide-stone-800 dark:border-stone-800">
-          {rows.length === 0 ? <li className="p-3 text-sm text-stone-500">No orders yet.</li> : null}
+          {rows.length === 0 ? <li className="p-3 text-sm text-stone-600 dark:text-stone-300">No orders yet.</li> : null}
           {rows.map((o) => (
             <li key={o.orderId}>
               <Link

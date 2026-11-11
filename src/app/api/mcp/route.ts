@@ -39,8 +39,14 @@ export async function POST(req: Request) {
   };
 
   const batch = Array.isArray(msg);
-  const items: unknown[] = batch ? (msg as unknown[]).slice(0, 10) : [msg];
-  const out = (await Promise.all(items.map((m) => handleMcp(deps, m).catch(() => ({ jsonrpc: "2.0" as const, id: null, error: { code: -32603, message: "internal error" } }))))).filter((r) => r !== undefined);
+  const all: unknown[] = batch ? (msg as unknown[]) : [msg];
+  if (batch && all.length === 0) return Response.json({ jsonrpc: "2.0", id: null, error: { code: -32600, message: "empty batch" } }, { status: 400, headers: JSON_HEADERS });
+  // At most 10 messages per batch are run; the rest get an explicit error instead of being dropped silently.
+  const MAX_BATCH = 10;
+  const idOf = (m: unknown) => (typeof m === "object" && m !== null && "id" in m ? (m as { id: unknown }).id : undefined);
+  const run = all.slice(0, MAX_BATCH).map((m) => handleMcp(deps, m).catch(() => ({ jsonrpc: "2.0" as const, id: idOf(m) ?? null, error: { code: -32603, message: "internal error" } })));
+  const over = all.slice(MAX_BATCH).filter((m) => idOf(m) !== undefined).map((m) => ({ jsonrpc: "2.0" as const, id: idOf(m), error: { code: -32600, message: `batch limit is ${MAX_BATCH} messages` } }));
+  const out = [...(await Promise.all(run)), ...over].filter((r) => r !== undefined);
   if (out.length === 0) return new Response(null, { status: 202, headers: { "Cache-Control": "no-store" } });
   return Response.json(batch ? out : out[0], { headers: JSON_HEADERS });
 }
