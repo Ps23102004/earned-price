@@ -17,7 +17,7 @@ Six independent models judged the README, an evidence log and a description of w
 | Finding | Raised by | Action |
 |---|---|---|
 | No public URL, video or Devpost text at the time | all four | Deploy steps in `docs/DEPLOY.md` (owner's accounts); script and text in `docs/SUBMISSION.md` |
-| Hosted AI is cache-only; a new sentence says "unavailable" | all four | Added five more one-click examples, all precomputed; recorded refusals (uncheckable sentences) are now cached and labelled, so the refusal demo works on the hosted build; README states the cache-only limit up front |
+| Hosted AI is cache-only; a new sentence says "unavailable" | all four | Added five more one-click examples, all precomputed (later: the hosted model compiles new sentences live, capped); recorded refusals (uncheckable sentences) are now cached and labelled, so the refusal demo works on the hosted build; README states the cache-only limit up front |
 | A buyer could publish a generous rule and claim a refund under it (Fable's 60-second break) | Fable | **Fixed:** a refund is priced under the order's own rule or the shop default, never the claimer's published rule; regression test added |
 | Publishing is per browser, so no real multi-merchant product | all four | Kept by design (no merchant accounts); stated in the README and the video script |
 | 39/40 compiler score is tuned, not held out | Haiku, Sonnet | Caveat in the README; **held-out run now done** (26/29, see docs/process/L5b-heldout-first-run.md) |
@@ -36,7 +36,7 @@ Six independent models judged the README, an evidence log and a description of w
 | Cost preview is unrepresentative and could mislead a merchant | **Fixed:** a plain warning sits directly above the percentage |
 | Self-merge tightening misses org-owned repos (react/react is Organization-owned) | Already a listed limitation; not changed |
 | Samples act like coupons; sample redemption is per browser session | By design for judge access; documented |
-| No evidence row for a live GitHub OAuth purchase | Open: needs the owner's GitHub sign-in on the deployed URL (also proof P4) |
+| No evidence row for a live GitHub OAuth purchase | **Done later (Nov 11):** purchases signed in with a real GitHub account on the deployed site, at list price and with a 20% discount (see docs/EVIDENCE.md) |
 
 ## Round 3 (after the UX, cost-preview and PayPal-text changes)
 Claude Sonnet 5.5, Claude Opus 5.5, Claude Fable, Claude Opus 4.6 Thinking, Gemini 3.8 Flash and Claude Haiku 5.5, on a refreshed packet.
@@ -56,7 +56,7 @@ Movement against earlier rounds: UX 5-6 -> 6-7; Clarity 4-8 -> 6-8; PayPal and T
 |---|---|
 | Judges cannot try their own rule on the hosted build; the AI is a recording (all six) | **Built:** "Or build a rule by hand (no AI needed)": same whitelist and validator, code-generated read-back, cost preview, publish and repricing of the shop; `AI_API_KEY` support so a free-tier hosted model can be switched on (docs/DEPLOY.md); hand-built path tested |
 | Showcase numbers look like a blanket price cut (Opus, Fable, Pro) | **Built:** a code-computed heads-up appears when more than half the sample qualifies; before/after table already shows tier-level effect |
-| No evidence row with a real GitHub sign-in purchase (Sonnet, Opus, Fable) | Open: needs the owner's GitHub login on the deployed URL |
+| No evidence row with a real GitHub sign-in purchase (Sonnet, Opus, Fable) | **Done later (Nov 11):** same two purchases, docs/EVIDENCE.md |
 | Merchant page is per browser (Pro, Sonnet) | By design; a persistent merchant slug would need merchant identity, not added |
 | Doc drift (refund id vs attempt id; test counts) (Opus, Fable) | **Fixed:** wording aligned in README, evidence log and script |
 | Refund does not return PayPal's fee (Opus) | Stated in README limitations |
