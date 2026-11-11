@@ -9,6 +9,7 @@ Claims match the repository and the live site as of Nov 11. Re-check `docs/EVIDE
 - **The GitHub sign-in scene needs a rule your account genuinely meets**, or the price stays $49.00. Before recording, build a rule by hand with a tier your account satisfies (account age or public repositories), publish it, and use that link. Otherwise show the "Qualifies" sample for the price ticking down.
 - Each GitHub account or sample profile redeems once: use the demo-only reset between takes.
 - Do not show the 1Password page or any third-party logo. Say "application forms", not a company name.
+- **Test access:** the primary sandbox buyer is on the site in judge mode. A backup buyer exists (`sb-backup-buyer-20261111@personal.example.com`, $10,000 balance, a linked Visa and a bank account), but its password is not known: set one in the PayPal developer dashboard (Sandbox Accounts, View/Edit, Change password) before putting it anywhere. Paying with the linked card works inside the PayPal window (the buyer picks the card at PayPal's review step); PayPal's order record does not name the instrument, so say "can fund with a linked card or bank", not "pay with a test card". Do not add a typed test-card number to the page.
 
 ## Video script (target 2:40, hard limit 3:00)
 
