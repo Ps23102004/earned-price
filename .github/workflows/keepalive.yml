@@ -1,0 +1,19 @@
+# Secondary keep-alive (UptimeRobot is the primary). Render's free tier sleeps after 15 minutes without traffic.
+# GitHub may delay scheduled runs under load, so this alone is not enough. Needs the repository variable APP_URL.
+name: keepalive
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+permissions: {}
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Ping /api/health
+        env:
+          APP_URL: ${{ vars.APP_URL }}
+        run: |
+          test -n "$APP_URL" || { echo "repository variable APP_URL is not set"; exit 1; }
+          curl --fail --silent --show-error --max-time 90 --retry 2 --retry-delay 10 "$APP_URL/api/health"

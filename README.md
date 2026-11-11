@@ -10,6 +10,7 @@ A merchant types one sentence ("half off for anyone with a PR merged into a 1,00
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — frozen design: rule type, facts snapshot, money-path state machine, invariants, December-survival table
 - [docs/FACTS.md](docs/FACTS.md) — every PayPal / GitHub / hosting fact the design relies on, with source and verification status
 - [docs/EVIDENCE.md](docs/EVIDENCE.md) — real sandbox calls (IDs, amounts, dates) read back from PayPal
+- [docs/DEPLOY.md](docs/DEPLOY.md) — Render + Neon deploy checklist, keep-alive, first checks on the live URL
 - [docs/PLAN.md](docs/PLAN.md) — phases, loops, model orchestration, cut order
 
 ## Hard rules

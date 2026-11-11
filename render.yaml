@@ -1,0 +1,47 @@
+# Render Blueprint: one free web service. Secrets are entered in the Render dashboard (sync: false), never committed.
+# Keep this the only Free service in the workspace: 750 free instance-hours a month cover exactly one always-on service.
+services:
+  - type: web
+    name: earned-price
+    runtime: node
+    plan: free
+    region: oregon
+    buildCommand: pnpm install --frozen-lockfile && pnpm build
+    startCommand: pnpm start
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: 22.23.1
+      - key: PAYPAL_ENV
+        value: sandbox
+      - key: AI_LIVE
+        value: "0"
+      - key: JUDGE_MODE
+        value: "1"
+      - key: TRUSTED_PROXY_HOPS
+        value: "1"
+      - key: APP_URL
+        sync: false
+      - key: PAYPAL_CLIENT_ID
+        sync: false
+      - key: PAYPAL_CLIENT_SECRET
+        sync: false
+      - key: NEXT_PUBLIC_PAYPAL_CLIENT_ID
+        sync: false
+      - key: JUDGE_BUYER_EMAIL
+        sync: false
+      - key: JUDGE_BUYER_PASSWORD
+        sync: false
+      - key: GITHUB_CLIENT_ID
+        sync: false
+      - key: GITHUB_CLIENT_SECRET
+        sync: false
+      - key: GITHUB_SERVER_TOKEN
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: SESSION_SECRET
+        sync: false
+      - key: LICENSE_HMAC_SECRET
+        sync: false
