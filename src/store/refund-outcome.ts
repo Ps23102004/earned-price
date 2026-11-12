@@ -81,3 +81,11 @@ export function planRefundReconcile(i: RefundPlanInput, read: PayPalRead): Refun
   if (ours) return decide(ours);
   return i.mode === "act" ? { do: "repost" } : { do: "none" };
 }
+
+/**
+ * Which facts a claim uses: the sample the request names, else the signed-in GitHub account, else the session's last
+ * sample. "Claim refund as <login>" names no sample, so a sample picked earlier in the session must not override GitHub.
+ */
+export function claimSample<S extends string>(asked: S | undefined, session: { github?: unknown; sample?: S }): S | undefined {
+  return asked ?? (session.github ? undefined : session.sample);
+}

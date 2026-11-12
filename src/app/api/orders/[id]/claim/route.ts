@@ -2,6 +2,7 @@ import { isSampleName } from "@/facts/samples";
 import { readLimitedJson } from "@/http";
 import { allow, clientIp } from "@/ratelimit";
 import { guarded } from "@/session";
+import { claimSample } from "@/store/refund-outcome";
 import { claimRefund } from "@/store/refunds";
 
 export function POST(req: Request, ctx: { params: Promise<{ id: string }> }) {
@@ -18,6 +19,6 @@ export function POST(req: Request, ctx: { params: Promise<{ id: string }> }) {
       session.sample = sample;
       await session.save();
     }
-    return claimRefund(id, { sid: session.sid, ip, github: session.github, sample: isSampleName(sample) ? sample : session.sample });
+    return claimRefund(id, { sid: session.sid, ip, github: session.github, sample: claimSample(isSampleName(sample) ? sample : undefined, session) });
   }, req);
 }

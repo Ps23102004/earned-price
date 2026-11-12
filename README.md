@@ -40,11 +40,18 @@ A merchant types one sentence ("half off for anyone with a PR merged into a 1,00
   <img src="docs/images/cost-preview.png" alt="The cost preview: a warning that the sample is not representative, the share of 42 recorded accounts that qualify, the average discount, what the rule gives away per 1,000 sales, and a before/after table for the tightening" width="60%">
 </p>
 
-Where the AI sits: it proposes (compiles a sentence into a rule, proposes loophole strategies that code then searches for and checks). It never sees or sets an amount, and nothing it outputs is executed as a query, a URL or a publish. The agent interface is read-only by design. For the read-back side, PayPal's own MCP server (`@paypal/mcp`, limited to its one read-only tool, `get_order`) lets the same agent read an order back from PayPal: `scripts/paypal-mcp.sh` starts it against the sandbox with a token made fresh from `.env` each session, never pasted or stored. Nothing in the agent path can create, pay or refund.
+Where the AI sits: it proposes (compiles a sentence into a rule, proposes loophole strategies that code then searches for and checks). It never sees a price, a buyer or a buyer's facts; it may propose a rule's percentages, which the merchant reads in the code-written read-back before publishing, and code computes every amount. Nothing it outputs is executed as a query, a URL or a publish. The agent interface is read-only by design. For the read-back side, PayPal's own MCP server (`@paypal/mcp`, limited to its one read-only tool, `get_order`) lets the same agent read an order back from PayPal: `scripts/paypal-mcp.sh` starts it against the sandbox with a token made fresh from `.env` each session, never pasted or stored. Nothing in the agent path can create, pay or refund.
 
 ## Evidence, not claims
+
+| Real sandbox purchase (read back from PayPal) | PayPal order | Amounts |
+|---|---|---|
+| Deployed site, real GitHub buyer, hand-built 20% rule | 8UL89980VA964960L | item total 49.00, discount 9.80, total 39.20 |
+| Deployed site, real GitHub buyer, default rule (no tier met) | 3CS134817H552132M | 49.00, no discount line |
+| Buy first, prove later (guest, then recorded sample) | 1RE633727M225204R | capture 49.00, refund 1N172741B43359912 of 24.50 |
+
 - `docs/EVIDENCE.md`: every money feature has a row with the PayPal order, capture and refund ids and the amounts PayPal returned (sandbox): discounted capture, idempotent refunds, redemption limit and reset, buy-then-refund, and purchases on the deployed site signed in with a real GitHub account (at list price, and with a 20% discount earned from live facts).
-- Tests: `pnpm test` (about 900 tests, including the agent interface; the money path runs against a real Postgres with PayPal mocked, plus independently written tests from the specs in `docs/specs/`).
+- Tests: `pnpm test` (920 tests; without `DATABASE_URL`, 893 run and the 27 Postgres-backed money-path tests are skipped; including the agent interface; the money path runs against a real Postgres with PayPal mocked, plus independently written tests from the specs in `docs/specs/`).
 - Rule compiler evaluation: on a **held-out set** of 29 fresh sentences written by a different model without seeing the prompt, the local compiler scored **26/29** with one uncheckable sentence leaking (a language condition silently dropped), which is below the evaluation's own pass bar of 27 and was recorded as a fail; that leak was fixed in code and the later 29/29 and 40/40 are development-set numbers, not held-out (`docs/process/L5b-heldout-first-run.md`, `docs/process/L5-compiler-eval.md`). The original 40-case set was used to tune the prompt. The same 29 sentences run against the **hosted model the demo uses** scored 29/29 with no leaks, but that is a development-set number (the fixes followed the first run) and only 20 of the 29 reached the model, because 9 were refused by code first (`docs/process/L5c-heldout-hosted.md`).
 - Independent reviews of the money path found real bugs that were fixed with regression tests (stuck captures, a reconcile path that skipped the redemption claim, a refund `custom_id` reuse); an independent red-team pass against the local app (no approved payments, no GitHub sign-in exercised) found no critical or high issue and its fixes are listed in `docs/process/L6-redteam.md`.
 
@@ -57,7 +64,7 @@ Where the AI sits: it proposes (compiles a sentence into a rule, proposes loopho
 - [docs/process/PLAN.md](docs/process/PLAN.md) — phases, loops, model orchestration, cut order
 
 ## Hard rules
-- AI proposes; deterministic code decides everything about money. No model ever sets or sees an amount.
+- AI proposes; deterministic code decides everything about money. No model sees a price, a buyer or a buyer's facts, and code computes every amount (a model may propose a rule's percentages; the merchant publishes only after reading the code-written read-back).
 - Every money figure shown after payment is read back from PayPal.
 - Nothing simulated is presented as real; cached and recorded data is labelled with its date.
 - PayPal sandbox only; no real money.
@@ -68,6 +75,7 @@ pnpm install
 cp .env.example .env   # fill in the keys; docs/DEPLOY.md lists which account gives which key
 pnpm db:migrate
 pnpm dev               # http://127.0.0.1:3000
+pnpm typecheck         # runs next typegen first; plain tsc fails on a fresh clone
 ```
 The merchant compiler uses a local OpenAI-compatible model (Ollama, `AI_BASE_URL` / `AI_MODEL`) in development. The deployed demo runs with `AI_LIVE=1` against a hosted OpenAI-compatible model (capped: 10 live compiles per hour per address and 200 per day in total) and says so plainly when the model does not answer or the cap is reached: a new sentence then gets a "try again later" message, while the example sentences and the Brief example's hunt still answer from recorded, dated results and the hand-built form always works.
 

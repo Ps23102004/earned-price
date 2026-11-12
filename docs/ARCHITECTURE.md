@@ -132,7 +132,7 @@ Invariants in the schema: one redemption per buyer (PK), one claim per order (`r
 - `paypal/client.ts`: `PAYPAL_ENV === 'sandbox'` and base URL constant `https://api-m.sandbox.paypal.com` (P3), else `instrumentation.ts` logs and calls `process.exit(1)` (a throw alone is not guaranteed to stop `next start`); a test asserts the exit.
 - Token cached until `expires_in − 60 s` (P2).
 - Every PayPal write: `PayPal-Request-Id` ≤ 38 chars from a stored row id (+attempt for capture), `Prefer: return=representation`; every amount sent comes from a DB row; every amount shown after payment comes from a PayPal GET; `money.ts` is the only cents↔`"24.50"` conversion, exhaustively tested.
-- Judge reset and tamper endpoints exist only with `JUDGE_MODE=1`; publish, claim, reset, quote are Origin-checked and rate-limited.
+- The judge reset endpoint exists only with `JUDGE_MODE=1`; publish, claim, reset, quote are Origin-checked and rate-limited.
 - Session-bound orders: `create`/`capture`/`claim` require `orders.session_id = sid` (or the signed OAuth `returnTo`).
 
 ### 3.9 What could break in December, and the answer
